@@ -1,0 +1,84 @@
+name: destroy-sfsw-infra
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write  
+
+jobs:
+  infra-destroy:
+    defaults:
+      run:
+        working-directory: terraform-app-infra
+    environment: dev    
+    runs-on: ubuntu-latest
+    env:
+      ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
+      ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+      ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
+
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: HashiCorp - Setup Terraform
+      uses: hashicorp/setup-terraform@v3      
+      with:
+        terraform_version: "1.11.1"
+
+    - name: Echo GitHub Runner IP
+      run: echo "GITHUB_RUNNER_IP=$(curl -s https://ifconfig.me)" >> $GITHUB_ENV
+    
+    - name: Verify Terraform Installation
+      run: |
+        echo "PATH: $PATH"
+        which terraform || echo "Terraform binary not found"
+        terraform -version || echo "Terraform version check failed"
+
+    - name: Azure CLI Login
+      uses: azure/login@v2.2.0
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: Enable Storage Access
+      run: |
+        az storage account update \
+          --resource-group ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }} \
+          --name ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }} \
+          --public-network-access Enabled \
+          --default-action Deny
+        
+          az storage account network-rule add \
+          --resource-group ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }} \
+          --account-name ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }} \
+          --ip-address $GITHUB_RUNNER_IP
+
+    - name: Sleep for 30s
+      run: |
+        sleep 30
+      
+    - name: Verify Network Rule
+      run: |
+        az storage account show \
+          --resource-group ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }} \
+          --name ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }} \
+          --query "{publicNetworkAccess:publicNetworkAccess, defaultAction:networkRuleSet.defaultAction}" \
+          --output table
+
+    - name: Terraform init
+      run: |
+        terraform init \
+          -backend-config="resource_group_name=${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}" \
+          -backend-config="storage_account_name=${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}" \
+          -backend-config="container_name=${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME }}" \
+          -backend-config="key=${{ secrets.BACKEND_AZURE_TF_STATE_KEY }}"
+  
+    - name: Terraform Destroy
+      id: destroy
+      run: terraform destroy -auto-approve -var "resource_group_name=${{secrets.AZURE_RESOURCE_GROUP_NAME}}"
+
