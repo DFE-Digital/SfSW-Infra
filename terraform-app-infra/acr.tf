@@ -4,4 +4,5 @@ resource "azurerm_container_registry" "acr" {
   location            = azurerm_resource_group.webapp_rg.location
   sku                 = "Basic"
   admin_enabled       = false
+  public_network_access_enabled = false
 }

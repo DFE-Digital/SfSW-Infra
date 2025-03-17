@@ -16,8 +16,3 @@ resource "azurerm_linux_web_app" "app_service" {
 
   site_config {}
 }
-
-resource "azurerm_app_service_virtual_network_swift_connection" "app_service_vnet_connection" {
-  app_service_id = azurerm_linux_web_app.app_service.id
-  subnet_id      = azurerm_subnet.app_service_subnet.id
-}
