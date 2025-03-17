@@ -60,11 +60,19 @@ resource "azurerm_subnet_network_security_group_association" "app_service_subnet
   network_security_group_id = azurerm_network_security_group.app_service_nsg.id
 }
 
+
+
+
+
+
+
+
 #-----------------------------------------------------------------------------
 
 # Private endpoints
 
 #-----------------------------------------------------------------------------
+
 
 # PE, DNS zone and link for App Service:
 resource "azurerm_private_endpoint" "app_service_private_endpoint" {
@@ -130,7 +138,6 @@ resource "azurerm_private_dns_zone_virtual_network_link" "acr_dns_link" {
   private_dns_zone_name = azurerm_private_dns_zone.acr_private_dns_zone.name
   virtual_network_id    = azurerm_virtual_network.webapp_vnet.id
 }
-
 
 
 

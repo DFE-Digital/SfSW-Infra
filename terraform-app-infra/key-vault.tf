@@ -4,7 +4,7 @@ resource "random_string" "suffix" {
   upper   = false
 }
 
-resource "azurerm_key_vault" "kv" {
+resource "azurerm_key_vault" "key_vault" {
   name                       = "kv-${var.project_name}-${var.instance}-${random_string.suffix.result}"
   location                   = azurerm_resource_group.webapp_rg.location
   resource_group_name        = azurerm_resource_group.webapp_rg.name
