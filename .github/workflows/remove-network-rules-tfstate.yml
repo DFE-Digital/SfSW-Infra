@@ -1,0 +1,122 @@
+name: Remove Network Rules
+on:
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - main
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  remove-network-rules-tfstate:
+    environment: dev
+    runs-on: ubuntu-latest
+    env:
+      ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
+      ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+      ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure CLI Login
+        uses: azure/login@v2.2.0
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Disable Public Network Access if Enabled
+        run: |
+          STATUS=$(az storage account show \
+            --resource-group ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }} \
+            --name ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }} \
+            --query "publicNetworkAccess" -o tsv)
+      
+          if [ "$STATUS" == "Enabled" ]; then
+            echo "Public network access is enabled. Disabling it now."
+            az storage account update \
+              --resource-group ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }} \
+              --name ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }} \
+              --public-network-access Disabled > /dev/null
+          else
+            echo "Public network access is already disabled. No action taken."
+          fi
+        
+      - name: Fetch Network Rules
+        run: |
+          RULES=$(az storage account network-rule list \
+            --account-name ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }} \
+            --resource-group ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }} \
+            --query "ipRules[*].ipAddressOrRange" -o tsv)
+        
+          {
+            echo "RULES<<EOF"
+            echo "$RULES"
+            echo "EOF"
+          } >> $GITHUB_ENV
+
+      - name: Check Network Rules
+        run: |
+          RULES="${{ env.RULES }}"
+        
+          if [ -z "$RULES" ]; then
+            echo "No network rules found."
+            echo "RULE_COUNT=0" >> $GITHUB_ENV
+          else
+            RULE_COUNT=$(echo "$RULES" | grep -c . || echo 0)
+            echo "RULE_COUNT=$RULE_COUNT" >> $GITHUB_ENV
+            echo "Network rules found ($RULE_COUNT):"
+            echo "$RULES"
+          fi
+    
+      - name: Remove Network Rules
+        run: |
+          if [ "$RULE_COUNT" -eq 0 ]; then
+            echo "No rules to remove."
+            exit 0
+          fi
+      
+          echo "Removing $RULE_COUNT network rules..."
+      
+          echo "$RULES" | while read -r IP; do
+            echo "Removing rule for IP: $IP"
+            az storage account network-rule remove \
+              --account-name ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }} \
+              --resource-group ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }} \
+              --ip-address "$IP" > /dev/null
+          done
+      
+          echo "All network rules removed."
+
+      - name: Fetch Network Rules
+        run: |
+          RULES=$(az storage account network-rule list \
+            --account-name ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }} \
+            --resource-group ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }} \
+            --query "ipRules[*].ipAddressOrRange" -o tsv)
+        
+          {
+            echo "RULES<<EOF"
+            echo "$RULES"
+            echo "EOF"
+          } >> $GITHUB_ENV
+
+      - name: Check Network Rules
+        run: |
+          RULES="${{ env.RULES }}"
+        
+          if [ -z "$RULES" ]; then
+            echo "No network rules found."
+            echo "RULE_COUNT=0" >> $GITHUB_ENV
+          else
+            RULE_COUNT=$(echo "$RULES" | grep -c . || echo 0)
+            echo "RULE_COUNT=$RULE_COUNT" >> $GITHUB_ENV
+            echo "Network rules found ($RULE_COUNT):"
+            echo "$RULES"
+          fi
+    

@@ -7,7 +7,7 @@
 
 resource "azurerm_virtual_network" "webapp_vnet" {
   name                = "vnet-${var.project_name}-${var.instance}"
-  address_space       = ["10.0.0.0/21"]
+  address_space       = ["${var.webapp_vnet}"]
   location            = azurerm_resource_group.webapp_rg.location
   resource_group_name = azurerm_resource_group.webapp_rg.name
 }
@@ -16,7 +16,7 @@ resource "azurerm_subnet" "private_endpoints_subnet" {
   name                 = "snet-privateendpoints-${var.project_name}-${var.instance}"
   resource_group_name  = azurerm_resource_group.webapp_rg.name
   virtual_network_name = azurerm_virtual_network.webapp_vnet.name
-  address_prefixes     = ["10.0.0.0/24"]
+  address_prefixes     = ["${var.private_endpoints_snet}"]
   private_endpoint_network_policies = "NetworkSecurityGroupEnabled"
 }
 
@@ -24,7 +24,7 @@ resource "azurerm_subnet" "app_gateway_subnet" {
   name                 = "snet-appgw-${var.project_name}-${var.instance}"
   resource_group_name  = azurerm_resource_group.webapp_rg.name
   virtual_network_name = azurerm_virtual_network.webapp_vnet.name
-  address_prefixes     = ["10.0.1.0/24"]
+  address_prefixes     = ["${var.app_gateway_snet}"]
   private_endpoint_network_policies = "NetworkSecurityGroupEnabled"
 }
 
@@ -32,39 +32,9 @@ resource "azurerm_subnet" "app_service_subnet" {
   name                 = "snet-appservice-${var.project_name}-${var.instance}"
   resource_group_name  = azurerm_resource_group.webapp_rg.name
   virtual_network_name = azurerm_virtual_network.webapp_vnet.name
-  address_prefixes     = ["10.0.2.0/24"]
+  address_prefixes     = ["${var.app_service_snet}"]
   private_endpoint_network_policies = "NetworkSecurityGroupEnabled"
 }
-
-# NSG for App Service
-resource "azurerm_network_security_group" "app_service_nsg" {
-  name                = "nsg-app-service-${var.project_name}-${var.instance}"
-  location            = azurerm_resource_group.webapp_rg.location
-  resource_group_name = azurerm_resource_group.webapp_rg.name
-
-  security_rule {
-    name                       = "block-all-inbound"
-    priority                   = 100
-    direction                  = "Inbound"
-    access                     = "Deny"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "*"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-}
-
-resource "azurerm_subnet_network_security_group_association" "app_service_subnet_nsg_association" {
-  subnet_id                 = azurerm_subnet.app_service_subnet.id
-  network_security_group_id = azurerm_network_security_group.app_service_nsg.id
-}
-
-
-
-
-
-
 
 
 #-----------------------------------------------------------------------------
