@@ -1,5 +1,10 @@
-variable "resource_group_name" {
-  description = "The name of the Azure resource group"
+variable "app_gateway_snet" {
+  description = "Subnet address prefix"
+  type        = string
+}
+
+variable "app_service_snet" {
+  description = "Subnet address prefix"
   type        = string
 }
 
@@ -14,16 +19,31 @@ variable "instance" {
 }
 
 variable "location" {
-  type        = string
   description = "Azure region"
+  type        = string
+}
+
+variable "private_endpoints_snet" {
+  description = "Subnet address prefix"
+  type        = string
 }
 
 variable "project_code" {
-  type        = string
   description = "Project code"
+  type        = string
 }
 
 variable "project_name" {
-  type        = string
   description = "Abbreviated project name"
+  type        = string
+}
+
+variable "resource_group_name" {
+  description = "The name of the Azure resource group"
+  type        = string
+}
+
+variable "webapp_vnet" {
+  description = "VNet address range"
+  type        = string
 }
