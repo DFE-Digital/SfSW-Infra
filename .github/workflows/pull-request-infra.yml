@@ -1,0 +1,191 @@
+name: Pull Request Infra
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  quality-checks-and-pr:
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    defaults:
+      run:
+        working-directory: terraform-app-infra
+    name: Checks-Plan-PR
+    environment: dev
+    runs-on: ubuntu-latest
+    env:
+      ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
+      ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+      ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: HashiCorp - Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.11.1"
+
+      - name: Echo GitHub Runner IP
+        run: |
+          GITHUB_RUNNER_IP=$(curl -s https://ifconfig.me)
+          echo "GITHUB_RUNNER_IP=$GITHUB_RUNNER_IP" >> $GITHUB_ENV
+          echo "GitHub Runner IP: $GITHUB_RUNNER_IP"
+
+      - name: Azure CLI Login
+        uses: azure/login@v2.2.0
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Terraform Fmt
+        run: |
+          terraform fmt -check || echo "Formatting issues detected:"
+          terraform fmt -check -diff
+        continue-on-error: true
+
+      - name: Run Checkov
+        uses: bridgecrewio/checkov-action@v12
+        id: checkov
+        with:
+          directory: .
+          framework: terraform
+          output_format: sarif
+          output_file_path: ./results.sarif
+          soft_fail: true
+
+          # - name: Upload SARIF file
+          #   uses: github/codeql-action/upload-sarif@v3
+          #   with:
+          #     sarif_file: results.sarif
+
+      - name: Read SARIF Results
+        id: sarif
+        run: echo "CHECKOV_RESULT=$(cat results.sarif)" >> $GITHUB_ENV
+
+      - name: Run Trivy file scan
+        uses: aquasecurity/trivy-action@18f2510ee396bbf400402947b394f2dd8c87dbb0
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          ignore-unfixed: false
+          format: "sarif"
+          output: "trivy-results.sarif"
+          severity: "CRITICAL,HIGH,MEDIUM,LOW"
+          exit-code: 0
+          vuln-type: os,library
+          scanners: vuln,secret,misconfig,license
+
+          # - name: Upload Trivy scan results to GitHub Security tab
+          #   uses: github/codeql-action/upload-sarif@v3
+          #   with:
+          #     sarif_file: 'trivy-results.sarif'
+
+      - name: Enable tfstate Network Access
+        uses: ./.github/actions/manage-tfstate-network-access
+        with:
+          backend-storage-account-name: ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}
+          backend-resource-group-name: ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}
+          github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
+          enable-network-access: true
+
+      - name: Sleep for 20s
+        run: |
+          sleep 20
+
+      - name: Terraform init
+        run: |
+          terraform init \
+            -backend-config="resource_group_name=${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}" \
+            -backend-config="storage_account_name=${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}" \
+            -backend-config="container_name=${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME }}" \
+            -backend-config="key=${{ secrets.BACKEND_AZURE_TF_STATE_KEY }}"
+
+      - name: Terraform Validate
+        run: terraform validate
+        continue-on-error: true
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -input=false -var "resource_group_name=${{secrets.AZURE_RESOURCE_GROUP_NAME}}"
+
+      - name: Disable tfstate Network Access
+        uses: ./.github/actions/manage-tfstate-network-access
+        if: ${{ always() }}
+        with:
+          backend-storage-account-name: ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}
+          backend-resource-group-name: ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}
+          github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
+          enable-network-access: false
+
+      - name: Sleep for 20s
+        run: |
+          sleep 20
+    
+      - name: Check tfstate Network Rules
+        uses: ./.github/actions/check-tfstate-network-rules      
+        if: ${{ always() }}
+        id: network-rules        
+        with:
+          backend-storage-account-name: ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}
+          backend-resource-group-name: ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}
+
+      - name: Update Pull Request with Checkov and Terraform Plan
+        uses: actions/github-script@v7
+        env:
+          CHECKOV_RESULT: "${{ steps.checkov.outputs.stdout }}"
+          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+          NETWORK_RULES: "${{ steps.network-rules.stdout }}"
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const checkovOutcome = `${{ steps.checkov.outcome }}`;
+            const planOutcome = `${{ steps.plan.outcome }}`;
+            const checkovResult = process.env.CHECKOV_RESULT || "No Checkov results available.";
+            const planResult = process.env.PLAN || "No Terraform plan available.";
+            const networkRulesResult = process.env.NETWORK_RULES || "No network rules results available";
+
+            const output = `
+            #### Checkov Scan 🔍 \`${checkovOutcome}\`
+            #### Terraform Plan 📖 \`${planOutcome}\`
+            #### Network Rules 📖 \`${planOutcome}\`
+            <details><summary>Show Checkov Results</summary>
+
+            \`\`\`
+            ${checkovResult}
+            \`\`\`
+
+            </details>
+
+            <details><summary>Show Network Rules Results</summary>
+
+            \`\`\`
+            ${networkRulesResult}
+            \`\`\`
+
+            </details>
+
+            <details><summary>Show Terraform Plan</summary>
+
+            \`\`\`
+            ${planResult}
+            \`\`\`
+
+            </details>
+
+            *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            });

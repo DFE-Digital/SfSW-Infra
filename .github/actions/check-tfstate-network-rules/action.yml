@@ -1,0 +1,54 @@
+name: Check tfstate Network Rules
+description: Checks if there are any network rules applied to the storage account for Terraform state
+inputs:
+  backend-storage-account-name:
+    description: "Terraform Azure Storage Account Name"
+    required: true
+  backend-resource-group-name:
+    description: "Terraform Azure Resource Group Name"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Verify Public Network Access and Default Action
+      shell: bash    
+      if: ${{ always() }}
+      run: |
+        az storage account show \
+          --resource-group ${{ inputs.backend-resource-group-name  }} \
+          --name ${{ inputs.backend-storage-account-name }} \
+          --query "{publicNetworkAccess:publicNetworkAccess, defaultAction:networkRuleSet.defaultAction}" \
+          --output table
+
+    - name: Fetch Network Rules
+      shell: bash    
+      if: ${{ always() }}
+      run: |
+        RULES=$(az storage account network-rule list \
+          --account-name ${{ inputs.backend-storage-account-name }} \
+          --resource-group ${{ inputs.backend-resource-group-name  }} \
+          --query "ipRules[*].ipAddressOrRange" -o tsv)
+
+        {
+          echo "RULES<<EOF"
+          echo "$RULES"
+          echo "EOF"
+        } >> $GITHUB_ENV
+
+    - name: Check Network Rules
+      shell: bash    
+      if: ${{ always() }}
+      run: |
+        RULES="${{ env.RULES }}"
+
+        if [ -z "$RULES" ]; then
+          echo "No network rules found."
+          echo "RULE_COUNT=0" >> $GITHUB_ENV
+          exit 0
+        else
+          RULE_COUNT=$(echo "$RULES" | grep -c . || echo 0)
+          echo "RULE_COUNT=$RULE_COUNT" >> $GITHUB_ENV
+          echo "Network rules found ($RULE_COUNT):"
+          echo "$RULES"
+          exit 1          
+        fi

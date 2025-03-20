@@ -1,4 +1,4 @@
-name: destroy-sfsw-infra
+name: Destroy SfSW Infra
 on:
   workflow_dispatch:
 
@@ -20,7 +20,6 @@ jobs:
       ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
 
     steps:
-
     - name: Checkout code
       uses: actions/checkout@v4
 
@@ -45,30 +44,17 @@ jobs:
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-    - name: Enable Storage Access
-      run: |
-        az storage account update \
-          --resource-group ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }} \
-          --name ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }} \
-          --public-network-access Enabled \
-          --default-action Deny
-        
-          az storage account network-rule add \
-          --resource-group ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }} \
-          --account-name ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }} \
-          --ip-address $GITHUB_RUNNER_IP
+    - name: Enable tfstate Network Access
+      uses: ./.github/actions/manage-tfstate-network-access
+      with:
+        backend-storage-account-name: ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}
+        backend-resource-group-name: ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}
+        github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
+        enable-network-access: true
 
-    - name: Sleep for 30s
+    - name: Sleep for 20s
       run: |
-        sleep 30
-      
-    - name: Verify Network Rule
-      run: |
-        az storage account show \
-          --resource-group ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }} \
-          --name ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }} \
-          --query "{publicNetworkAccess:publicNetworkAccess, defaultAction:networkRuleSet.defaultAction}" \
-          --output table
+        sleep 20
 
     - name: Terraform init
       run: |
@@ -82,3 +68,23 @@ jobs:
       id: destroy
       run: terraform destroy -auto-approve -var "resource_group_name=${{secrets.AZURE_RESOURCE_GROUP_NAME}}"
 
+    - name: Disable tfstate Network Access
+      uses: ./.github/actions/manage-tfstate-network-access
+      if: ${{ always() }}
+      with:
+        backend-storage-account-name: ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}
+        backend-resource-group-name: ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}
+        github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
+        enable-network-access: false
+
+    - name: Sleep for 20s
+      run: |
+        sleep 20
+  
+    - name: Check tfstate Network Rules
+      uses: ./.github/actions/check-tfstate-network-rules      
+      if: ${{ always() }}
+      id: network-rules        
+      with:
+        backend-storage-account-name: ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}
+        backend-resource-group-name: ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}
