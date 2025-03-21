@@ -80,3 +80,15 @@ resource "azurerm_subnet_network_security_group_association" "private_endpoints_
   subnet_id                 = azurerm_subnet.private_endpoints_subnet.id
   network_security_group_id = azurerm_network_security_group.private_endpoints_nsg.id
 }
+
+# NSG for monitoring
+resource "azurerm_network_security_group" "monitoring_nsg" {
+  name                = "nsg-monitoring-${var.project_name}-${var.instance}"
+  location            = azurerm_resource_group.webapp_rg.location
+  resource_group_name = azurerm_resource_group.webapp_rg.name
+}
+
+resource "azurerm_subnet_network_security_group_association" "monitoring_subnet_nsg_association" {
+  subnet_id                 = azurerm_subnet.monitoring_subnet.id
+  network_security_group_id = azurerm_network_security_group.monitoring_nsg.id
+}
