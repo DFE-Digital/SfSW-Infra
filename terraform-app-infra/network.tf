@@ -13,29 +13,36 @@ resource "azurerm_virtual_network" "webapp_vnet" {
 }
 
 resource "azurerm_subnet" "private_endpoints_subnet" {
-  name                 = "snet-privateendpoints-${var.project_name}-${var.instance}"
-  resource_group_name  = azurerm_resource_group.webapp_rg.name
-  virtual_network_name = azurerm_virtual_network.webapp_vnet.name
-  address_prefixes     = ["${var.private_endpoints_snet}"]
+  name                              = "snet-privateendpoints-${var.project_name}-${var.instance}"
+  resource_group_name               = azurerm_resource_group.webapp_rg.name
+  virtual_network_name              = azurerm_virtual_network.webapp_vnet.name
+  address_prefixes                  = ["${var.private_endpoints_snet}"]
   private_endpoint_network_policies = "NetworkSecurityGroupEnabled"
 }
 
 resource "azurerm_subnet" "app_gateway_subnet" {
-  name                 = "snet-appgw-${var.project_name}-${var.instance}"
-  resource_group_name  = azurerm_resource_group.webapp_rg.name
-  virtual_network_name = azurerm_virtual_network.webapp_vnet.name
-  address_prefixes     = ["${var.app_gateway_snet}"]
+  name                              = "snet-appgw-${var.project_name}-${var.instance}"
+  resource_group_name               = azurerm_resource_group.webapp_rg.name
+  virtual_network_name              = azurerm_virtual_network.webapp_vnet.name
+  address_prefixes                  = ["${var.app_gateway_snet}"]
   private_endpoint_network_policies = "NetworkSecurityGroupEnabled"
 }
 
 resource "azurerm_subnet" "app_service_subnet" {
-  name                 = "snet-appservice-${var.project_name}-${var.instance}"
-  resource_group_name  = azurerm_resource_group.webapp_rg.name
-  virtual_network_name = azurerm_virtual_network.webapp_vnet.name
-  address_prefixes     = ["${var.app_service_snet}"]
+  name                              = "snet-appservice-${var.project_name}-${var.instance}"
+  resource_group_name               = azurerm_resource_group.webapp_rg.name
+  virtual_network_name              = azurerm_virtual_network.webapp_vnet.name
+  address_prefixes                  = ["${var.app_service_snet}"]
   private_endpoint_network_policies = "NetworkSecurityGroupEnabled"
 }
 
+resource "azurerm_subnet" "monitoring_subnet" {
+  name                              = "monitoring-subnet"
+  resource_group_name               = azurerm_resource_group.webapp_rg.name
+  virtual_network_name              = azurerm_virtual_network.webapp_vnet.name
+  address_prefixes                  = ["${var.monitoring_snet}"]
+  private_endpoint_network_policies = "NetworkSecurityGroupEnabled"
+}
 
 #-----------------------------------------------------------------------------
 
@@ -43,12 +50,72 @@ resource "azurerm_subnet" "app_service_subnet" {
 
 #-----------------------------------------------------------------------------
 
+# PE, DNS zone and link for App Service:
+# Private Endpoint for AMPLS (shared for both services)
+resource "azurerm_private_endpoint" "ampls_pe" {
+  name                = "pe-ampls-${var.project_name}-${var.instance}"
+  location            = azurerm_resource_group.webapp_rg.location
+  resource_group_name = azurerm_resource_group.webapp_rg.name
+  subnet_id           = azurerm_subnet.monitoring_subnet.id
+
+  private_service_connection {
+    name                           = "ampls-connection"
+    private_connection_resource_id = azurerm_monitor_private_link_scope.ampls.id
+    subresource_names              = ["azuremonitor"]
+    is_manual_connection           = false
+  }
+  private_dns_zone_group {
+    name                 = "monitor-dns-group"
+    private_dns_zone_ids = [azurerm_private_dns_zone.monitor_dns.id]
+  }
+}
+
+resource "azurerm_private_dns_zone" "monitor_dns" {
+  name                = "privatelink.monitor.azure.com"
+  resource_group_name = azurerm_resource_group.webapp_rg.name
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "monitor_vnet_link" {
+  name                  = "monitor-dns-link-${var.project_name}-${var.instance}"
+  resource_group_name   = azurerm_resource_group.webapp_rg.name
+  private_dns_zone_name = azurerm_private_dns_zone.monitor_dns.name
+  virtual_network_id    = azurerm_virtual_network.webapp_vnet.id
+}
+
+# Azure Monitor Private Link Scope (AMPLS) for both Log Analytics and Application Insights
+resource "azurerm_monitor_private_link_scope" "ampls" {
+  name                = "ampls-${var.project_name}-${var.instance}"
+  resource_group_name = azurerm_resource_group.webapp_rg.name
+}
+
+# Link Log Analytics to AMPLS
+resource "azurerm_monitor_private_link_scoped_service" "log_analytics_link" {
+  name                = "log-link-${var.project_name}-${var.instance}"
+  resource_group_name = azurerm_resource_group.webapp_rg.name
+  scope_name          = azurerm_monitor_private_link_scope.ampls.name
+  linked_resource_id  = azurerm_log_analytics_workspace.log_analytics_ws.id
+}
+
+# Link Application Insights to AMPLS
+resource "azurerm_monitor_private_link_scoped_service" "app_insights_link" {
+  name                = "ai-link-${var.project_name}-${var.instance}"
+  resource_group_name = azurerm_resource_group.webapp_rg.name
+  scope_name          = azurerm_monitor_private_link_scope.ampls.name
+  linked_resource_id  = azurerm_application_insights.app_insights_web.id
+}
+
+
+
+
+
+
+
 
 # PE, DNS zone and link for App Service:
 resource "azurerm_private_endpoint" "app_service_private_endpoint" {
   name                = "pe-app-service-${var.project_name}-${var.instance}"
   resource_group_name = azurerm_resource_group.webapp_rg.name
-  location            = azurerm_resource_group.webapp_rg.location  
+  location            = azurerm_resource_group.webapp_rg.location
   subnet_id           = azurerm_subnet.app_service_subnet.id
 
   private_service_connection {
@@ -60,7 +127,7 @@ resource "azurerm_private_endpoint" "app_service_private_endpoint" {
   private_dns_zone_group {
     name                 = "app-service-dns-group"
     private_dns_zone_ids = [azurerm_private_dns_zone.app_service_private_dns_zone.id]
-  }  
+  }
 }
 
 resource "azurerm_private_dns_zone" "app_service_private_dns_zone" {
@@ -82,7 +149,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "app_service_dns_link" 
 resource "azurerm_private_endpoint" "acr_private_endpoint" {
   name                = "pe-acr-${var.project_name}-${var.instance}"
   resource_group_name = azurerm_resource_group.webapp_rg.name
-  location            = azurerm_resource_group.webapp_rg.location  
+  location            = azurerm_resource_group.webapp_rg.location
   subnet_id           = azurerm_subnet.private_endpoints_subnet.id
 
   private_service_connection {
@@ -94,7 +161,7 @@ resource "azurerm_private_endpoint" "acr_private_endpoint" {
   private_dns_zone_group {
     name                 = "acr-dns-group"
     private_dns_zone_ids = [azurerm_private_dns_zone.acr_private_dns_zone.id]
-  }  
+  }
 }
 
 resource "azurerm_private_dns_zone" "acr_private_dns_zone" {
@@ -115,7 +182,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "acr_dns_link" {
 resource "azurerm_private_endpoint" "key_vault_private_endpoint" {
   name                = "pe-key-vault-${var.project_name}-${var.instance}"
   resource_group_name = azurerm_resource_group.webapp_rg.name
-  location            = azurerm_resource_group.webapp_rg.location  
+  location            = azurerm_resource_group.webapp_rg.location
   subnet_id           = azurerm_subnet.private_endpoints_subnet.id
 
   private_service_connection {
@@ -127,7 +194,7 @@ resource "azurerm_private_endpoint" "key_vault_private_endpoint" {
   private_dns_zone_group {
     name                 = "keyvault-dns-group"
     private_dns_zone_ids = [azurerm_private_dns_zone.key_vault_private_dns_zone.id]
-  }  
+  }
 }
 
 resource "azurerm_private_dns_zone" "key_vault_private_dns_zone" {
@@ -154,7 +221,7 @@ resource "azurerm_private_endpoint" "app_sa_private_endpoint" {
 
   private_service_connection {
     name                           = "privatelink-storage-${var.project_name}-${var.instance}"
-    private_connection_resource_id = azurerm_storage_account.app_sa.id
+    private_connection_resource_id = azurerm_storage_account.error_page_sa.id
     subresource_names              = ["blob"]
     is_manual_connection           = false
   }

@@ -23,6 +23,11 @@ variable "location" {
   type        = string
 }
 
+variable "monitoring_snet" {
+  description = "Subnet address prefix"
+  type        = string
+}
+
 variable "private_endpoints_snet" {
   description = "Subnet address prefix"
   type        = string

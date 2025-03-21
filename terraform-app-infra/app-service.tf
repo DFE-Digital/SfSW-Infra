@@ -15,4 +15,8 @@ resource "azurerm_linux_web_app" "app_service" {
   public_network_access_enabled = false
 
   site_config {}
+
+  app_settings = {
+    "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.app_insights_web.instrumentation_key
+  }  
 }
