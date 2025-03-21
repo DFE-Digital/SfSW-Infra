@@ -221,7 +221,7 @@ resource "azurerm_private_endpoint" "app_sa_private_endpoint" {
 
   private_service_connection {
     name                           = "privatelink-storage-${var.project_name}-${var.instance}"
-    private_connection_resource_id = azurerm_storage_account.error_page_sa.id
+    private_connection_resource_id = azurerm_storage_account.app_sa.id
     subresource_names              = ["blob"]
     is_manual_connection           = false
   }
