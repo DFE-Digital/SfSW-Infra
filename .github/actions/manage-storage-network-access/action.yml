@@ -59,7 +59,7 @@ runs:
           --account-name ${{ inputs.storage-account-name }} \
           --ip-address ${{ inputs.github-runner-ip }} > /dev/null
 
-    - name: Sleep for 20s
+    - name: Sleep for 30s
       shell: bash
       run: |
-        sleep 20
+        sleep 30

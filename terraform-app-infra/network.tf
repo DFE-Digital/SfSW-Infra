@@ -51,68 +51,6 @@ resource "azurerm_subnet" "monitoring_subnet" {
 #-----------------------------------------------------------------------------
 
 # PE, DNS zone and link for App Service:
-# Private Endpoint for AMPLS (shared for both services)
-resource "azurerm_private_endpoint" "ampls_pe" {
-  name                = "pe-ampls-${var.project_name}-${var.instance}"
-  location            = azurerm_resource_group.webapp_rg.location
-  resource_group_name = azurerm_resource_group.webapp_rg.name
-  subnet_id           = azurerm_subnet.monitoring_subnet.id
-
-  private_service_connection {
-    name                           = "ampls-connection"
-    private_connection_resource_id = azurerm_monitor_private_link_scope.ampls.id
-    subresource_names              = ["azuremonitor"]
-    is_manual_connection           = false
-  }
-  private_dns_zone_group {
-    name                 = "monitor-dns-group"
-    private_dns_zone_ids = [azurerm_private_dns_zone.monitor_dns.id]
-  }
-  depends_on = [azurerm_subnet.monitoring_subnet]
-}
-
-resource "azurerm_private_dns_zone" "monitor_dns" {
-  name                = "privatelink.monitor.azure.com"
-  resource_group_name = azurerm_resource_group.webapp_rg.name
-}
-
-resource "azurerm_private_dns_zone_virtual_network_link" "monitor_vnet_link" {
-  name                  = "monitor-dns-link-${var.project_name}-${var.instance}"
-  resource_group_name   = azurerm_resource_group.webapp_rg.name
-  private_dns_zone_name = azurerm_private_dns_zone.monitor_dns.name
-  virtual_network_id    = azurerm_virtual_network.webapp_vnet.id
-}
-
-# Azure Monitor Private Link Scope (AMPLS) for both Log Analytics and Application Insights
-resource "azurerm_monitor_private_link_scope" "ampls" {
-  name                = "ampls-${var.project_name}-${var.instance}"
-  resource_group_name = azurerm_resource_group.webapp_rg.name
-}
-
-# Link Log Analytics to AMPLS
-resource "azurerm_monitor_private_link_scoped_service" "log_analytics_link" {
-  name                = "log-link-${var.project_name}-${var.instance}"
-  resource_group_name = azurerm_resource_group.webapp_rg.name
-  scope_name          = azurerm_monitor_private_link_scope.ampls.name
-  linked_resource_id  = azurerm_log_analytics_workspace.log_analytics_ws.id
-}
-
-# Link Application Insights to AMPLS
-resource "azurerm_monitor_private_link_scoped_service" "app_insights_link" {
-  name                = "ai-link-${var.project_name}-${var.instance}"
-  resource_group_name = azurerm_resource_group.webapp_rg.name
-  scope_name          = azurerm_monitor_private_link_scope.ampls.name
-  linked_resource_id  = azurerm_application_insights.app_insights_web.id
-}
-
-
-
-
-
-
-
-
-# PE, DNS zone and link for App Service:
 resource "azurerm_private_endpoint" "app_service_private_endpoint" {
   name                = "pe-app-service-${var.project_name}-${var.instance}"
   resource_group_name = azurerm_resource_group.webapp_rg.name
@@ -179,6 +117,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "acr_dns_link" {
 
 
 
+
 # PE, DNS zone and link for key vault:
 resource "azurerm_private_endpoint" "key_vault_private_endpoint" {
   name                = "pe-key-vault-${var.project_name}-${var.instance}"
@@ -242,4 +181,63 @@ resource "azurerm_private_dns_zone_virtual_network_link" "app_sa_dns_link" {
   resource_group_name   = azurerm_resource_group.webapp_rg.name
   private_dns_zone_name = azurerm_private_dns_zone.app_sa_private_dns_zone.name
   virtual_network_id    = azurerm_virtual_network.webapp_vnet.id
+}
+
+
+
+# Private Endpoint for AMPLS (shared for both services)
+resource "azurerm_private_endpoint" "ampls_pe" {
+  name                = "pe-ampls-${var.project_name}-${var.instance}"
+  location            = azurerm_resource_group.webapp_rg.location
+  resource_group_name = azurerm_resource_group.webapp_rg.name
+  subnet_id           = azurerm_subnet.monitoring_subnet.id
+
+  private_service_connection {
+    name                           = "ampls-connection"
+    private_connection_resource_id = azurerm_monitor_private_link_scope.ampls.id
+    subresource_names              = ["azuremonitor"]
+    is_manual_connection           = false
+  }
+  private_dns_zone_group {
+    name                 = "monitor-dns-group"
+    private_dns_zone_ids = [azurerm_private_dns_zone.monitor_dns.id]
+  }
+  depends_on = [
+    azurerm_subnet.monitoring_subnet,
+    aazurerm_monitor_private_link_scope.ampls
+    ]
+}
+
+resource "azurerm_private_dns_zone" "monitor_dns" {
+  name                = "privatelink.monitor.azure.com"
+  resource_group_name = azurerm_resource_group.webapp_rg.name
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "monitor_vnet_link" {
+  name                  = "monitor-dns-link-${var.project_name}-${var.instance}"
+  resource_group_name   = azurerm_resource_group.webapp_rg.name
+  private_dns_zone_name = azurerm_private_dns_zone.monitor_dns.name
+  virtual_network_id    = azurerm_virtual_network.webapp_vnet.id
+}
+
+# Azure Monitor Private Link Scope (AMPLS) for both Log Analytics and Application Insights
+resource "azurerm_monitor_private_link_scope" "ampls" {
+  name                = "ampls-${var.project_name}-${var.instance}"
+  resource_group_name = azurerm_resource_group.webapp_rg.name
+}
+
+# Link Log Analytics to AMPLS
+resource "azurerm_monitor_private_link_scoped_service" "log_analytics_link" {
+  name                = "log-link-${var.project_name}-${var.instance}"
+  resource_group_name = azurerm_resource_group.webapp_rg.name
+  scope_name          = azurerm_monitor_private_link_scope.ampls.name
+  linked_resource_id  = azurerm_log_analytics_workspace.log_analytics_ws.id
+}
+
+# Link Application Insights to AMPLS
+resource "azurerm_monitor_private_link_scoped_service" "app_insights_link" {
+  name                = "ai-link-${var.project_name}-${var.instance}"
+  resource_group_name = azurerm_resource_group.webapp_rg.name
+  scope_name          = azurerm_monitor_private_link_scope.ampls.name
+  linked_resource_id  = azurerm_application_insights.app_insights_web.id
 }
