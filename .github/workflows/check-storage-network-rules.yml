@@ -30,8 +30,14 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Check tfstate Network Rules
-        uses: ./.github/actions/check-tfstate-network-rules
+        uses: ./.github/actions/check-storage-network-rules
         with:
-          backend-storage-account-name: ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}
-          backend-resource-group-name: ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}          
+          storage-account-name: ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}
+          resource-group-name: ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}     
+    
+      - name: Check Error Page Storage Network Rules
+        uses: ./.github/actions/check-storage-network-rules
+        with:
+          storage-account-name: "sasfswxd01"
+          resource-group-name: "s212d01-rg-sfswx-app"
 

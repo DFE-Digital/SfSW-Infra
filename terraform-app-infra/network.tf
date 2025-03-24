@@ -68,6 +68,7 @@ resource "azurerm_private_endpoint" "ampls_pe" {
     name                 = "monitor-dns-group"
     private_dns_zone_ids = [azurerm_private_dns_zone.monitor_dns.id]
   }
+  depends_on = [azurerm_subnet.monitoring_subnet]
 }
 
 resource "azurerm_private_dns_zone" "monitor_dns" {
@@ -221,7 +222,7 @@ resource "azurerm_private_endpoint" "app_sa_private_endpoint" {
 
   private_service_connection {
     name                           = "privatelink-storage-${var.project_name}-${var.instance}"
-    private_connection_resource_id = azurerm_storage_account.app_sa.id
+    private_connection_resource_id = azurerm_storage_account.error_page_sa.id
     subresource_names              = ["blob"]
     is_manual_connection           = false
   }

@@ -1,11 +1,11 @@
-name: Check tfstate Network Rules
-description: Checks if there are any network rules applied to the storage account for Terraform state
+name: Check storage Network Rules
+description: Checks if there are any network rules applied to a storage account
 inputs:
-  backend-storage-account-name:
-    description: "Terraform Azure Storage Account Name"
+  storage-account-name:
+    description: "Storage Account Name"
     required: true
-  backend-resource-group-name:
-    description: "Terraform Azure Resource Group Name"
+  resource-group-name:
+    description: "Resource Group Name for the Storage Account"
     required: true
 runs:
   using: "composite"
@@ -15,8 +15,8 @@ runs:
       if: ${{ always() }}
       run: |
         az storage account show \
-          --resource-group ${{ inputs.backend-resource-group-name  }} \
-          --name ${{ inputs.backend-storage-account-name }} \
+          --resource-group ${{ inputs.resource-group-name  }} \
+          --name ${{ inputs.storage-account-name }} \
           --query "{publicNetworkAccess:publicNetworkAccess, defaultAction:networkRuleSet.defaultAction}" \
           --output table
 
@@ -25,8 +25,8 @@ runs:
       if: ${{ always() }}
       run: |
         RULES=$(az storage account network-rule list \
-          --account-name ${{ inputs.backend-storage-account-name }} \
-          --resource-group ${{ inputs.backend-resource-group-name  }} \
+          --account-name ${{ inputs.storage-account-name }} \
+          --resource-group ${{ inputs.resource-group-name  }} \
           --query "ipRules[*].ipAddressOrRange" -o tsv)
 
         {

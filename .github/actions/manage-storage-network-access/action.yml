@@ -1,11 +1,11 @@
-name: Manage tfstate Network Access
-description: Manages network access to the storage account for Terraform state
+name: Manage Storage Network Access
+description: Manages network access to the storage account
 inputs:
-  backend-storage-account-name:
-    description: "Terraform Azure Storage Account Name"
+  storage-account-name:
+    description: "Storage Account Name"
     required: true
-  backend-resource-group-name:
-    description: "Terraform Azure Resource Group Name"
+  resource-group-name:
+    description: "Resource Group Name for the Storage Account"
     required: true
   github-runner-ip:
     description: "IP address of the current GitHub runner"
@@ -21,8 +21,8 @@ runs:
       shell: bash
       run: |
         az storage account update \
-          --resource-group ${{ inputs.backend-resource-group-name }} \
-          --name ${{ inputs.backend-storage-account-name }} \
+          --resource-group ${{ inputs.resource-group-name }} \
+          --name ${{ inputs.storage-account-name }} \
           --public-network-access Enabled \
           --default-action Deny > /dev/null
 
@@ -31,8 +31,8 @@ runs:
       shell: bash
       run: |
         az storage account network-rule add \
-        --resource-group ${{ inputs.backend-resource-group-name }} \
-        --account-name ${{ inputs.backend-storage-account-name }} \
+        --resource-group ${{ inputs.resource-group-name }} \
+        --account-name ${{ inputs.storage-account-name }} \
         --ip-address ${{ inputs.github-runner-ip }} > /dev/null
 
     - name: Disable Public Network Access
@@ -43,10 +43,10 @@ runs:
           echo "Disabling public network access due to workflow failure or cancellation."
         fi
         az storage account update \
-          --resource-group ${{ inputs.backend-resource-group-name }} \
-          --name ${{ inputs.backend-storage-account-name }} \
+          --resource-group ${{ inputs.resource-group-name }} \
+          --name ${{ inputs.storage-account-name }} \
           --public-network-access Disabled > /dev/null
-      
+
     - name: Remove Network Rule
       shell: bash
       if: ${{ inputs.enable-network-access == 'false' }}
@@ -55,7 +55,11 @@ runs:
           echo "Removing network rule due to workflow failure or cancellation."
         fi
         az storage account network-rule remove \
-          --resource-group ${{ inputs.backend-resource-group-name }} \
-          --account-name ${{ inputs.backend-storage-account-name }} \
+          --resource-group ${{ inputs.resource-group-name }} \
+          --account-name ${{ inputs.storage-account-name }} \
           --ip-address ${{ inputs.github-runner-ip }} > /dev/null
 
+    - name: Sleep for 20s
+      shell: bash
+      run: |
+        sleep 20

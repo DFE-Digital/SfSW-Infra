@@ -2,7 +2,7 @@ name: Deploy SfSW Infra
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 7 * * 1-5'    
+    - cron: '0 8 * * 1-5'     
   push:
     branches:
       - main
@@ -53,18 +53,14 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Enable tfstate Network Access
-        uses: ./.github/actions/manage-tfstate-network-access
+      - name: Enable Network Access for tfstate
+        uses: ./.github/actions/manage-storage-network-access
         with:
-          backend-storage-account-name: ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}
-          backend-resource-group-name: ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}
+          storage-account-name: ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}
+          resource-group-name: ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: true
-
-      - name: Sleep for 20s
-        run: |
-          sleep 20
-
+          
       - name: Terraform init
         run: |
           terraform init \
@@ -78,26 +74,73 @@ jobs:
         run: terraform plan -var "resource_group_name=${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}"
 
       - name: Terraform Apply
-        id: apply
-        run: terraform apply -auto-approve -var "resource_group_name=${{secrets.AZURE_RESOURCE_GROUP_NAME}}"
+        id: tf_apply
+        run: |
+          terraform apply -auto-approve -var "resource_group_name=${{ secrets.AZURE_RESOURCE_GROUP_NAME }}"
+          echo "storage_account_name=$(terraform output -raw storage_account_name)" >> $GITHUB_OUTPUT
+          echo "resource_group_name=$(terraform output -raw resource_group_name)" >> $GITHUB_OUTPUT
+          echo "container_name=$(terraform output -raw container_name)" >> $GITHUB_OUTPUT
 
-      - name: Disable tfstate Network Access
-        uses: ./.github/actions/manage-tfstate-network-access
+      - name: Enable Network Access for Error Page Storage
+        uses: ./.github/actions/manage-storage-network-access
+        with:
+          storage-account-name: ${{ steps.tf_apply.outputs.storage_account_name }}
+          resource-group-name: ${{ steps.tf_apply.outputs.resource_group_name }}
+          github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
+          enable-network-access: true
+          
+      - name: Upload Error Pages
+        run: |
+          for file in ../error-pages/*.html; do
+                filename=$(basename "$file")
+                if [ "$(az storage blob exists \
+                        --account-name ${{ steps.tf_apply.outputs.storage_account_name }} \
+                        --container-name ${{ steps.tf_apply.outputs.container_name }} \
+                        --name "$filename" \
+                        --auth-mode login \
+                        --query "exists" \
+                        --output tsv)" = "false" ]; then
+                  az storage blob upload \
+                    --account-name ${{ steps.tf_apply.outputs.storage_account_name }} \
+                    --container-name ${{ steps.tf_apply.outputs.container_name }} \
+                    --file "$file" \
+                    --name "$filename" \
+                    --auth-mode login
+                else
+                  echo "Blob $filename already exists, skipping upload."
+                fi
+              done
+
+      - name: Disable Network Access for tfstate 
+        uses: ./.github/actions/manage-storage-network-access
         if: ${{ always() }}
         with:
-          backend-storage-account-name: ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}
-          backend-resource-group-name: ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}
+          storage-account-name: ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}
+          resource-group-name: ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: false
 
-      - name: Sleep for 20s
-        run: |
-          sleep 20
-    
-      - name: Check tfstate Network Rules
-        uses: ./.github/actions/check-tfstate-network-rules      
+      - name: Disable Network Access for Error Page Storage
+        uses: ./.github/actions/manage-storage-network-access
+        if: ${{ always() }}
+        with:
+          storage-account-name: ${{ steps.tf_apply.outputs.storage_account_name }}
+          resource-group-name: ${{ steps.tf_apply.outputs.resource_group_name }}
+          github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
+          enable-network-access: false
+
+      - name: Check Network Rules for tfstate 
+        uses: ./.github/actions/check-storage-network-rules      
         if: ${{ always() }}
         id: network-rules        
         with:
-          backend-storage-account-name: ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}
-          backend-resource-group-name: ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}
+          storage-account-name: ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}
+          resource-group-name: ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}
+
+      - name: Check Network Rules for Error Page Storage
+        uses: ./.github/actions/check-storage-network-rules      
+        if: ${{ always() }}
+        id: network-rules-error-pages        
+        with:
+          storage-account-name: ${{ steps.tf_apply.outputs.storage_account_name }}
+          resource-group-name: ${{ steps.tf_apply.outputs.resource_group_name }}
