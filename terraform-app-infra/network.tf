@@ -204,7 +204,7 @@ resource "azurerm_private_endpoint" "ampls_pe" {
   }
   depends_on = [
     azurerm_subnet.monitoring_subnet,
-    aazurerm_monitor_private_link_scope.ampls
+    azurerm_monitor_private_link_scope.ampls
     ]
 }
 
