@@ -21,6 +21,13 @@ resource "azurerm_linux_web_app" "app_service" {
   }
 
   identity {
-    type = "SystemAssigned"
+    type = "SystemAssigned, UserAssigned"
+    identity_ids = [ azurerm_user_assigned_identity.mi_app_service.id ]
   }
+}
+
+resource "azurerm_user_assigned_identity" "mi_app_service" {
+  name = "mi-app-service"
+  resource_group_name = azurerm_resource_group.webapp_rg.name
+  location = azurerm_resource_group.webapp_rg.name
 }
