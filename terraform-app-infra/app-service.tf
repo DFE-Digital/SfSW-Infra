@@ -33,14 +33,14 @@ resource "azurerm_user_assigned_identity" "mi_app_service" {
   location = azurerm_resource_group.webapp_rg.location
 }
 
-resource "azurerm_role_assignment" "app_service_secrets_user" {
-  scope                = azurerm_key_vault.key_vault.id
-  role_definition_name = "Key Vault Secrets User"
-  principal_id         = azurerm_user_assigned_identity.mi_app_service.id
-}
+# resource "azurerm_role_assignment" "app_service_secrets_user" {
+#   scope                = azurerm_key_vault.key_vault.id
+#   role_definition_name = "Key Vault Secrets User"
+#   principal_id         = azurerm_user_assigned_identity.mi_app_service.id
+# }
 
-resource "azurerm_role_assignment" "app_service_secrets_sys" {
-  scope                = azurerm_key_vault.key_vault.id
-  role_definition_name = "Key Vault Secrets User"
-  principal_id         = azurerm_linux_web_app.app_service.identity[0].principal_id
-}
+# resource "azurerm_role_assignment" "app_service_secrets_sys" {
+#   scope                = azurerm_key_vault.key_vault.id
+#   role_definition_name = "Key Vault Secrets User"
+#   principal_id         = azurerm_linux_web_app.app_service.identity[0].principal_id
+# }
