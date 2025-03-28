@@ -64,7 +64,7 @@ jobs:
   
     - name: Terraform Destroy
       id: destroy
-      run: terraform destroy -auto-approve -lock=false -var "resource_group_name=${{ secrets.AZURE_RESOURCE_GROUP_NAME }}"
+      run: terraform destroy -auto-approve -lock=false -var "resource_group_name=${{ secrets.AZURE_RESOURCE_GROUP_NAME }}" -target=azurerm_resource_group.webapp_rg
 
     - name: Disable Network Access for tfstate 
       uses: ./.github/actions/manage-storage-network-access
