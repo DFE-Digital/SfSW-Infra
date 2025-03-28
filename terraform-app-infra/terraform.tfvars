@@ -1,5 +1,6 @@
 app_gateway_snet       = "10.0.1.0/24"
 app_service_snet       = "10.0.2.0/24"
+deploy_appgw           = 0
 environment            = "Dev"
 instance               = "d01"
 location               = "westeurope"
