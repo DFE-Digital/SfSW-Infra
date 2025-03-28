@@ -17,30 +17,28 @@ resource "azurerm_linux_web_app" "app_service" {
   site_config {}
 
   app_settings = {
-    "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.app_insights_web.instrumentation_key
+    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.app_insights_web.instrumentation_key
+    ASPNETCORE_HTTP_PORTS                       = 80
+    CPD_GOOGLEANALYTICSTAG                      = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.google_analytics_tag.versionless_id})"
+    CPD_SPACE_ID                                = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.cpd_space_id.versionless_id})"
+    CPD_PREVIEW_KEY                             = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.cpd_preview_key.versionless_id})"
+    CPD_DELIVERY_KEY                            = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.cpd_delivery_key.versionless_id})"
+    CPD_TENANTID                                = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.tenant_id.versionless_id})"
+    CPD_AZURE_ENVIRONMENT                       = "Dev"
+    CPD_CONTENTFUL_ENVIRONMENT                  = "Dev"
+    CPD_INSTRUMENTATION_CONNECTIONSTRING        = azurerm_application_insights.app_insights_web.connection_string
+    CPD_CLARITY                                 = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.cpd_clarity.versionless_id})"
+    CPD_FEATURE_POLLING_INTERVAL                = "300"
+    CPD_SEARCH_CLIENT_API_KEY                   = ""
+    CPD_SEARCH_ENDPOINT                         = ""
+    CPD_SEARCH_INDEX_NAME                       = ""
+    CPD_AZURE_DATA_PROTECTION_CONTAINER_NAME    = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.cpd_azure_data_protection_container_name.versionless_id})"
+    CPD_AZURE_STORAGE_ACCOUNT                   = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.cpd_azure_storage_account.versionless_id})"
+    CPD_AZURE_MANAGED_IDENTITY_ID               = "ai-search?"
+    CPD_AZURE_STORAGE_ACCOUNT_URI_FORMAT_STRING = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.cpd_azure_storage_account_uri_format_string.versionless_id})"
+    DOCKER_ENABLE_CI                            = "true"
   }
-
   identity {
-    type = "SystemAssigned, UserAssigned"
-    identity_ids = [ azurerm_user_assigned_identity.mi_app_service.id ]
+    type = "SystemAssigned"
   }
 }
-
-
-resource "azurerm_user_assigned_identity" "mi_app_service" {
-  name = "mi-app-service"
-  resource_group_name = azurerm_resource_group.webapp_rg.name
-  location = azurerm_resource_group.webapp_rg.location
-}
-
-# resource "azurerm_role_assignment" "app_service_secrets_user" {
-#   scope                = azurerm_key_vault.key_vault.id
-#   role_definition_name = "Key Vault Secrets User"
-#   principal_id         = azurerm_user_assigned_identity.mi_app_service.id
-# }
-
-# resource "azurerm_role_assignment" "app_service_secrets_sys" {
-#   scope                = azurerm_key_vault.key_vault.id
-#   role_definition_name = "Key Vault Secrets User"
-#   principal_id         = azurerm_linux_web_app.app_service.identity[0].principal_id
-# }

@@ -5,3 +5,9 @@ resource "azurerm_resource_group" "webapp_rg" {
   location = var.location
   tags = local.tags
 }
+
+resource "azurerm_resource_group" "shared_rg" {
+  name     = "${var.project_code}${var.instance}-rg-${var.project_name}-shared"
+  location = var.location
+  tags = local.tags
+}
