@@ -3,9 +3,9 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '0 8 * * 1-5'     
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
 
 permissions:
   id-token: write
@@ -28,6 +28,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      # - name: Set TF_LOG to DEBUG
+      #   run: echo "TF_LOG=DEBUG" >> $GITHUB_ENV
 
       - name: HashiCorp - Setup Terraform
         uses: hashicorp/setup-terraform@v3

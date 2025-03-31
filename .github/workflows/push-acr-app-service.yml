@@ -1,0 +1,96 @@
+name: Push and Deploy Nginx Image to App Service
+on:
+  workflow_dispatch:
+
+env:
+  REGISTRY_NAME: acrsfswd01
+  IMAGE_NAME: nginx:demo
+  APP_SERVICE_NAME: app-sfsw-d01
+
+permissions:
+    id-token: write
+    contents: read
+    pull-requests: write
+
+jobs:
+  push-and-deploy:
+    runs-on: ubuntu-latest
+    environment: dev
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # - name: Set TF_LOG to DEBUG
+    #   run: echo "TF_LOG=DEBUG" >> $GITHUB_ENV
+
+    - name: Set GitHub Runner IP
+      run: echo "GITHUB_RUNNER_IP=$(curl -s ifconfig.me)" >> $GITHUB_ENV
+
+    - name: Read Config
+      run: |
+        PROJECT_CODE=$(yq eval '.project_code' .github/config.yml)
+        PROJECT_NAME=$(yq eval '.project_name' .github/config.yml)
+        INSTANCE=$(yq eval '.instance' .github/config.yml)
+        echo "PROJECT_CODE=$PROJECT_CODE" >> $GITHUB_ENV
+        echo "PROJECT_NAME=$PROJECT_NAME" >> $GITHUB_ENV
+        echo "INSTANCE=$INSTANCE" >> $GITHUB_ENV
+
+    - name: Set GitHub Runner IP
+      run: |
+        echo "GITHUB_RUNNER_IP=$(curl -s ifconfig.me)" >> $GITHUB_ENV
+
+    - name: Azure CLI Login
+      uses: azure/login@v2.2.0
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: Log in to ACR
+      run: |
+        az acr login --name ${{ env.REGISTRY_NAME }}
+
+    - name: Pull and Tag Nginx
+      run: |
+        docker pull nginx:latest
+        docker tag nginx:latest ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}
+
+    - name: Push to ACR
+      run: |
+        docker push ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}
+
+    # - name: Enable Public Access for Runner IP
+    #   run: |        
+    #     # Stage 1: Allow GitHub Runner IP (including SCM)
+    #     az webapp config access-restriction add \
+    #       --name "app-$PROJECT_NAME-$INSTANCE" \
+    #       --resource-group "$PROJECT_CODE$INSTANCE-rg-$PROJECT_NAME-app" \
+    #       --rule-name "AllowGitHubRunner" \
+    #       --priority 100 \
+    #       --ip-address "${{ env.GITHUB_RUNNER_IP }}" \
+    #       --action Allow \
+    #       --scm-site true
+
+    #     # Stage 2: Deny all other public access (including SCM)
+    #     az webapp config access-restriction add \
+    #       --name "app-$PROJECT_NAME-$INSTANCE" \
+    #       --resource-group "$PROJECT_CODE$INSTANCE-rg-$PROJECT_NAME-app" \
+    #       --rule-name "DenyAll" \
+    #       --priority 200 \
+    #       --ip-address "0.0.0.0/0" \
+    #       --action Deny \
+    #       --scm-site true
+
+    # - name: Sleep for 30s
+    #   shell: bash
+    #   run: |
+    #     sleep 30
+    
+
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.APP_SERVICE_NAME }}
+        images: ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}
