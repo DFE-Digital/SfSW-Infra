@@ -1,8 +1,8 @@
 name: Destroy SfSW Infra
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 19 * * *'
+  # schedule:
+  #   - cron: '0 19 * * *'
 
 permissions:
   id-token: write
