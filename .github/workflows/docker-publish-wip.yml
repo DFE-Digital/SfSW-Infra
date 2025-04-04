@@ -3,9 +3,9 @@ on:
   workflow_dispatch:
 
 env:
-  REGISTRY_NAME: acrsfswxd01
-  IMAGE_NAME: custom-app  # Replace with your desired image name
-  APP_SERVICE_NAME: app-sfswx-d01
+  REGISTRY_NAME: acrsfswd01
+  IMAGE_NAME: sfsw-app
+  APP_SERVICE_NAME: app-sfsw-d01
 
 permissions:
     id-token: write
