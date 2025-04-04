@@ -1,0 +1,41 @@
+﻿@using Childrens_Social_Care_CPD.Contentful.Models;
+
+@model TextBlock
+
+
+@functions {
+
+    void RenderText(string text)
+    {
+        foreach (var paragraph in text.Split("\n"))
+        {
+            if (!string.IsNullOrEmpty(paragraph))
+            {
+                <p class="govuk-body-m">@paragraph</p>
+            }
+        }
+    }
+}
+
+@if (ViewBag.ContextModel.UseContainers ?? true)
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-three-quarters">
+            @if (Model.DisplayTitle)
+            {
+                <govuk-heading level="@Model.TitleLevel">@Model.Title</govuk-heading>
+            }
+            @{
+                RenderText(Model.Text);
+            }
+        </div>
+    </div>
+} 
+else
+{
+    @if (Model.DisplayTitle)
+    {
+        <govuk-heading level="@Model.TitleLevel">@Model.Title</govuk-heading>
+    }
+    RenderText(Model.Text);
+}

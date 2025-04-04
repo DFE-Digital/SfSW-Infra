@@ -1,0 +1,32 @@
+﻿@using Childrens_Social_Care_CPD.Contentful;
+@using Childrens_Social_Care_CPD.Contentful.Models;
+
+@model ColumnLayout
+
+@{
+    string gridClass = "";
+    switch (Model.ColumnCount)
+    {
+        case 2:
+            gridClass = "govuk-grid-column-one-half";
+            break;
+        case 3:
+            gridClass = "govuk-grid-column-one-third";
+            break;
+        case 4:
+            gridClass = "govuk-grid-column-one-quarter";
+            break;
+    }
+
+    @foreach (var group in Model.Items.Select((e, i) => new { ContentItem = e, Grouping = (i / Model.ColumnCount) }).GroupBy(e => e.Grouping))
+    {
+        <div class="govuk-grid-row columns-layout">
+            @foreach (var item in group)
+            {
+                <div class="@gridClass govuk-!-margin-bottom-4  columns-layout-col">
+                    @{ await Html.RenderContentfulPartialAsync(item.ContentItem); }
+                </div>
+            }
+        </div>
+    }
+}

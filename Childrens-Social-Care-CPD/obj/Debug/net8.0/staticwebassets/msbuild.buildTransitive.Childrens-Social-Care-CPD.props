@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\Childrens-Social-Care-CPD.props" />
+</Project>

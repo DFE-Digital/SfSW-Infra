@@ -1,0 +1,13 @@
+﻿//@use "sass:map";
+$govuk-global-styles: true;
+$govuk-new-link-styles: true;
+$fa-font-path: "/webfonts";
+
+@import "../../node_modules/govuk-frontend/dist/govuk/index";
+@import '../../node_modules/dfe-frontend/packages/dfefrontend';
+@import "overrides/dfe-overrides";
+@import "overrides/dfe-vertical-nav";
+@import "overrides/govuk-overrides";
+@import "overrides/search-mobile-filter-modal";
+@import "overrides/site";
+@import "fontawesome/fontawesome";
