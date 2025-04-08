@@ -34,12 +34,12 @@ resource "azurerm_subnet" "app_service_subnet" {
   virtual_network_name              = azurerm_virtual_network.webapp_vnet.name
   address_prefixes                  = ["${var.app_service_snet}"]
   private_endpoint_network_policies = "NetworkSecurityGroupEnabled"
-  delegation {
-    name = "delegation"
-    service_delegation {
-      name = "Microsoft.Web/serverFarms"
-    }
-  }
+  # delegation {
+  #   name = "delegation"
+  #   service_delegation {
+  #     name = "Microsoft.Web/serverFarms"
+  #   }
+  # }
 }
 
 resource "azurerm_subnet" "monitoring_subnet" {
