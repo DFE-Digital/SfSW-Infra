@@ -8,6 +8,11 @@ variable "app_service_snet" {
   type        = string
 }
 
+variable "app_service_delegated_snet" {
+  description = "Subnet address prefix"
+  type        = string  
+}
+
 variable "deploy_appgw" {
   description = "Controls whether the private Application Gateway is deployed. Set to 1 to include, 0 to exclude."
   type        = number
