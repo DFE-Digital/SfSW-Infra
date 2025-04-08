@@ -34,6 +34,12 @@ resource "azurerm_subnet" "app_service_subnet" {
   virtual_network_name              = azurerm_virtual_network.webapp_vnet.name
   address_prefixes                  = ["${var.app_service_snet}"]
   private_endpoint_network_policies = "NetworkSecurityGroupEnabled"
+  delegation {
+    name = "delegation"
+    service_delegation {
+      name = "Microsoft.Web/serverFarms"
+    }
+  }
 }
 
 resource "azurerm_subnet" "monitoring_subnet" {
@@ -45,9 +51,16 @@ resource "azurerm_subnet" "monitoring_subnet" {
 }
 
 #-----------------------------------------------------------------------------
+# VNet integration for App Service
+#-----------------------------------------------------------------------------
 
+resource "azurerm_app_service_virtual_network_swift_connection" "vnet_app_service" {
+  app_service_id = azurerm_linux_web_app.app_service.id
+  subnet_id      = azurerm_subnet.app_service_subnet.id
+}
+
+#-----------------------------------------------------------------------------
 # Private endpoints
-
 #-----------------------------------------------------------------------------
 
 # PE, DNS zone and link for App Service:
@@ -205,7 +218,7 @@ resource "azurerm_private_endpoint" "ampls_pe" {
   depends_on = [
     azurerm_subnet.monitoring_subnet,
     azurerm_monitor_private_link_scope.ampls
-    ]
+  ]
 }
 
 resource "azurerm_private_dns_zone" "monitor_dns" {

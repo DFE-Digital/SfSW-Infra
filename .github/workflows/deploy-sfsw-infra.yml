@@ -97,12 +97,12 @@ jobs:
           for file in ../error-pages/*.html; do
                 filename=$(basename "$file")
                 if [ "$(az storage blob exists \
-                        --account-name ${{ steps.tf_apply.outputs.storage_account_name }} \
-                        --container-name ${{ steps.tf_apply.outputs.container_name }} \
-                        --name "$filename" \
-                        --auth-mode login \
-                        --query "exists" \
-                        --output tsv)" = "false" ]; then
+                    --account-name ${{ steps.tf_apply.outputs.storage_account_name }} \
+                    --container-name ${{ steps.tf_apply.outputs.container_name }} \
+                    --name "$filename" \
+                    --auth-mode login \
+                    --query "exists" \
+                    --output tsv)" = "false" ]; then
                   az storage blob upload \
                     --account-name ${{ steps.tf_apply.outputs.storage_account_name }} \
                     --container-name ${{ steps.tf_apply.outputs.container_name }} \
