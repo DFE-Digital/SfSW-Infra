@@ -13,7 +13,7 @@ resource "azurerm_key_vault" "key_vault" {
   sku_name                      = "standard"
   soft_delete_retention_days    = 7
   enable_rbac_authorization     = false
-  public_network_access_enabled = true
+  public_network_access_enabled = false
   lifecycle {
     prevent_destroy = false
   }
