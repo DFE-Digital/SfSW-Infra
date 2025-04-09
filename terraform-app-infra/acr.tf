@@ -4,5 +4,11 @@ resource "azurerm_container_registry" "acr" {
   location            = azurerm_resource_group.webapp_rg.location
   sku                 = "Premium"
   admin_enabled       = true
-  public_network_access_enabled = true
+  public_network_access_enabled = false
+  lifecycle {
+    ignore_changes = [
+      network_rule_set[0].ip_rule,
+      public_network_access_enabled
+    ]
+  }
 }
