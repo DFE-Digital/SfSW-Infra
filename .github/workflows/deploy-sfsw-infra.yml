@@ -32,6 +32,17 @@ jobs:
       # - name: Set TF_LOG to DEBUG
       #   run: echo "TF_LOG=DEBUG" >> $GITHUB_ENV
 
+      - name: Read Config
+        id: read_config
+        run: |
+          PROJECT_CODE=$(yq eval '.project_code' .github/config.yml)
+          PROJECT_NAME=$(yq eval '.project_name' .github/config.yml)
+          INSTANCE=$(yq eval '.instance' .github/config.yml)
+          echo "PROJECT_CODE=$PROJECT_CODE" >> $GITHUB_ENV
+          echo "PROJECT_NAME=$PROJECT_NAME" >> $GITHUB_ENV
+          echo "INSTANCE=$INSTANCE" >> $GITHUB_ENV
+        shell: bash
+
       - name: HashiCorp - Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
@@ -64,11 +75,13 @@ jobs:
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: true
           
+      # replace hardcoded suffix when KV name is changed:
+      # will also fail for a new deployment for now (i.e. no KV present):        
       - name: Enable Network Access for Key Vault
         uses: ./.github/actions/manage-keyvault-network-access
         with:
-          keyvault-name: ${{ steps.tf_apply.outputs.keyvault_name }}
-          resource-group-name: ${{ steps.tf_apply.outputs.resource_group_name }}
+          keyvault-name: "kv-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}-kvyxy4"
+          resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-shared"
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: true
 
@@ -92,12 +105,11 @@ jobs:
           echo "resource_group_name=$(terraform output -raw resource_group_name)" >> $GITHUB_OUTPUT
           echo "container_name=$(terraform output -raw container_name)" >> $GITHUB_OUTPUT
           
-        # will fail for a new deployment (for now):
       - name: Disable Network Access for Key Vault
         uses: ./.github/actions/manage-keyvault-network-access
         with:
-          keyvault-name: ${{ steps.tf_apply.outputs.keyvault_name }}
-          resource-group-name: ${{ steps.tf_apply.outputs.resource_group_name }}
+          keyvault-name: "kv-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}-kvyxy4"
+          resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-shared"
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: false
 

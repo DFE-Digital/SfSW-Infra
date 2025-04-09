@@ -9,7 +9,3 @@ output "resource_group_name" {
 output "container_name" {
 value = azurerm_storage_container.error_page_container.name
 }
-
-output "keyvault_name" {
-  value = azurerm_key_vault.key_vault.name
-}
