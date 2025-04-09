@@ -64,6 +64,14 @@ jobs:
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: true
           
+      - name: Enable Network Access for Key Vault
+        uses: ./.github/actions/manage-keyvault-network-access
+        with:
+          keyvault-name: ${{ steps.tf_apply.outputs.keyvault_name }}
+          resource-group-name: ${{ steps.tf_apply.outputs.resource_group_name }}
+          github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
+          enable-network-access: true
+
       - name: Terraform init
         run: |
           terraform init \
@@ -83,6 +91,15 @@ jobs:
           echo "storage_account_name=$(terraform output -raw storage_account_name)" >> $GITHUB_OUTPUT
           echo "resource_group_name=$(terraform output -raw resource_group_name)" >> $GITHUB_OUTPUT
           echo "container_name=$(terraform output -raw container_name)" >> $GITHUB_OUTPUT
+          
+        # will fail for a new deployment (for now):
+      - name: Disable Network Access for Key Vault
+        uses: ./.github/actions/manage-keyvault-network-access
+        with:
+          keyvault-name: ${{ steps.tf_apply.outputs.keyvault_name }}
+          resource-group-name: ${{ steps.tf_apply.outputs.resource_group_name }}
+          github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
+          enable-network-access: false
 
       - name: Enable Network Access for Error Page Storage
         uses: ./.github/actions/manage-storage-network-access
