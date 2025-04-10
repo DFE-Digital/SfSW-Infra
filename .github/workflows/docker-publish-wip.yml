@@ -27,9 +27,19 @@ jobs:
           echo "PROJECT_CODE=$(yq eval '.project_code' .github/config.yml)" >> $GITHUB_ENV
           echo "PROJECT_NAME=$(yq eval '.project_name' .github/config.yml)" >> $GITHUB_ENV
           echo "INSTANCE=$(yq eval '.instance' .github/config.yml)" >> $GITHUB_ENV
-          echo "REGISTRY_NAME=acr${{ env.PROJECT_NAME }}${{ env.INSTANCE }}" >> $GITHUB_ENV
-          echo "IMAGE_NAME=${{ env.PROJECT_NAME }}-app-${{ env.INSTANCE }}" >> $GITHUB_ENV
-          echo "APP_SERVICE_NAME=app-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}" >> $GITHUB_ENV
+          echo "REGISTRY_NAME=acr$(yq eval '.project_name' .github/config.yml)$(yq eval '.instance' .github/config.yml)" >> $GITHUB_ENV
+          echo "IMAGE_NAME=$(yq eval '.project_name' .github/config.yml)-app-$(yq eval '.instance' .github/config.yml)" >> $GITHUB_ENV
+          echo "APP_SERVICE_NAME=app-$(yq eval '.project_name' .github/config.yml)-$(yq eval '.instance' .github/config.yml)" >> $GITHUB_ENV
+
+    - name: Debug Output
+      run: |
+        echo "PROJECT_CODE: ${{ env.PROJECT_CODE }}"
+        echo "PROJECT_NAME: ${{ env.PROJECT_NAME }}"
+        echo "INSTANCE: ${{ env.INSTANCE }}"
+        echo "REGISTRY_NAME: ${{ env.REGISTRY_NAME }}"
+        echo "IMAGE_NAME: ${{ env.IMAGE_NAME }}"
+        echo "APP_SERVICE_NAME: ${{ env.APP_SERVICE_NAME }}"
+        echo "IMAGE_TAGS: ${{ env.IMAGE_TAGS }}"
 
     - name: Set SHA and Release Tag
       run: |
