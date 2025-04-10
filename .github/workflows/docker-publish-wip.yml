@@ -2,11 +2,6 @@ name: Push and Deploy Image to App Service
 on:
   workflow_dispatch:
 
-env:
-  REGISTRY_NAME: acrsfswd01
-  IMAGE_NAME: sfsw-app
-  APP_SERVICE_NAME: app-sfsw-d01
-
 permissions:
     id-token: write
     contents: read
@@ -25,13 +20,16 @@ jobs:
       run: echo "GITHUB_RUNNER_IP=$(curl -s ifconfig.me)" >> $GITHUB_ENV
 
     - name: Read Config
-      run: |
-        PROJECT_CODE=$(yq eval '.project_code' .github/config.yml)
-        PROJECT_NAME=$(yq eval '.project_name' .github/config.yml)
-        INSTANCE=$(yq eval '.instance' .github/config.yml)
-        echo "PROJECT_CODE=$PROJECT_CODE" >> $GITHUB_ENV
-        echo "PROJECT_NAME=$PROJECT_NAME" >> $GITHUB_ENV
-        echo "INSTANCE=$INSTANCE" >> $GITHUB_ENV
+      id: read_config
+      uses: mikefarah/yq@master
+      with:
+        cmd: |
+          echo "PROJECT_CODE=$(yq eval '.project_code' .github/config.yml)" >> $GITHUB_ENV
+          echo "PROJECT_NAME=$(yq eval '.project_name' .github/config.yml)" >> $GITHUB_ENV
+          echo "INSTANCE=$(yq eval '.instance' .github/config.yml)" >> $GITHUB_ENV
+          echo "REGISTRY_NAME=acr${{ env.PROJECT_NAME }}${{ env.INSTANCE }}" >> $GITHUB_ENV
+          echo "IMAGE_NAME=${{ env.PROJECT_NAME }}-app-${{ env.INSTANCE }}" >> $GITHUB_ENV
+          echo "APP_SERVICE_NAME=app-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}" >> $GITHUB_ENV
 
     - name: Set SHA and Release Tag
       run: |
