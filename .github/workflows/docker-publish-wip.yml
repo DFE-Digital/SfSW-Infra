@@ -85,11 +85,14 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Sign Docker Image
+      - name: Install Cosign
         if: false
         uses: sigstore/cosign-installer@v3
         with:
           cosign-release: "latest"
+        
+      - name: Sign Docker Image
+        if: false
         run: cosign sign --yes ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.RELEASE_TAG }}
         env:
           COSIGN_EXPERIMENTAL: "true"
