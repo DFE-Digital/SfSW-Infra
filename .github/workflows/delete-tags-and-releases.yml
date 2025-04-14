@@ -1,0 +1,34 @@
+name: Delete Tags and Releases
+
+on:
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Delete All Git Tags
+        run: |
+          # List all tags and delete them
+          for tag in $(git tag --list); do
+            echo "Deleting tag $tag"
+            git push origin --delete $tag || echo "Tag $tag not found on remote"
+            git tag -d $tag || echo "Tag $tag not found locally"
+          done
+
+      - name: Delete All GitHub Releases
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Delete all releases
+          for release in $(gh release list --json tagName --jq '.[].tagName'); do
+            echo "Deleting release $release"
+            gh release delete $release --yes || echo "Release $release not found"
+          done

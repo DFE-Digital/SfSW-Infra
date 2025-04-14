@@ -1,99 +1,103 @@
-name: Push and Deploy Image to App Service
+name: Docker Publish
+
 on:
-  workflow_dispatch:
+  release:
+    types: [published]
 
 permissions:
-    id-token: write
-    contents: read
-    pull-requests: write
+  contents: read
+  packages: write
 
 jobs:
-  push-and-deploy:
+  publish:
     runs-on: ubuntu-latest
     environment: dev
+    env:
+      RELEASE_TAG: ${{ github.event.release.tag_name }}
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout Release Tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
 
-    - name: Set GitHub Runner IP
-      run: echo "GITHUB_RUNNER_IP=$(curl -s ifconfig.me)" >> $GITHUB_ENV
+      - name: Set GitHub Runner IP
+        run: echo "GITHUB_RUNNER_IP=$(curl -s ifconfig.me)" >> $GITHUB_ENV
 
-    - name: Read Config
-      id: read_config
-      uses: mikefarah/yq@master
-      with:
-        cmd: |
-          echo "PROJECT_CODE=$(yq eval '.project_code' .github/config.yml)" >> $GITHUB_ENV
-          echo "PROJECT_NAME=$(yq eval '.project_name' .github/config.yml)" >> $GITHUB_ENV
-          echo "INSTANCE=$(yq eval '.instance' .github/config.yml)" >> $GITHUB_ENV
-          echo "REGISTRY_NAME=acr$(yq eval '.project_name' .github/config.yml)$(yq eval '.instance' .github/config.yml)" >> $GITHUB_ENV
-          echo "IMAGE_NAME=$(yq eval '.project_name' .github/config.yml)-app-$(yq eval '.instance' .github/config.yml)" >> $GITHUB_ENV
-          echo "APP_SERVICE_NAME=app-$(yq eval '.project_name' .github/config.yml)-$(yq eval '.instance' .github/config.yml)" >> $GITHUB_ENV
+      - name: Read Config
+        id: read_config
+        uses: mikefarah/yq@4
+        with:
+          cmd: |
+            echo "PROJECT_CODE=$(yq eval '.project_code' .github/config.yml)" >> $GITHUB_ENV
+            echo "PROJECT_NAME=$(yq eval '.project_name' .github/config.yml)" >> $GITHUB_ENV
+            echo "INSTANCE=$(yq eval '.instance' .github/config.yml)" >> $GITHUB_ENV
+            echo "REGISTRY_NAME=acr$(yq eval '.project_name' .github/config.yml)$(yq eval '.instance' .github/config.yml)" >> $GITHUB_ENV
+            echo "IMAGE_NAME=$(yq eval '.project_name' .github/config.yml)-app-$(yq eval '.instance' .github/config.yml)" >> $GITHUB_ENV
+            echo "APP_SERVICE_NAME=app-$(yq eval '.project_name' .github/config.yml)-$(yq eval '.instance' .github/config.yml)" >> $GITHUB_ENV
 
-    - name: Debug Output
-      run: |
-        echo "PROJECT_CODE: ${{ env.PROJECT_CODE }}"
-        echo "PROJECT_NAME: ${{ env.PROJECT_NAME }}"
-        echo "INSTANCE: ${{ env.INSTANCE }}"
-        echo "REGISTRY_NAME: ${{ env.REGISTRY_NAME }}"
-        echo "IMAGE_NAME: ${{ env.IMAGE_NAME }}"
-        echo "APP_SERVICE_NAME: ${{ env.APP_SERVICE_NAME }}"
-        echo "IMAGE_TAGS: ${{ env.IMAGE_TAGS }}"
+      - name: Debug Output
+        run: |
+          echo "PROJECT_CODE: ${{ env.PROJECT_CODE }}"
+          echo "PROJECT_NAME: ${{ env.PROJECT_NAME }}"
+          echo "INSTANCE: ${{ env.INSTANCE }}"
+          echo "REGISTRY_NAME: ${{ env.REGISTRY_NAME }}"
+          echo "IMAGE_NAME: ${{ env.IMAGE_NAME }}"
+          echo "APP_SERVICE_NAME: ${{ env.APP_SERVICE_NAME }}"
 
-    - name: Set SHA and Release Tag
-      run: |
-        echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-        echo "RELEASE_TAG=$(git describe --tags --always)" >> $GITHUB_ENV
-        echo "IMAGE_TAGS=${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}" >> $GITHUB_ENV
+      - name: Set Registry
+        run: echo "REGISTRY=${{ env.REGISTRY_NAME }}.azurecr.io" >> $GITHUB_ENV          
 
-    - name: Azure CLI Login
-      uses: azure/login@v2.2.0
-      with:
-        client-id: ${{ secrets.AZURE_CLIENT_ID }}
-        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - name: Azure CLI Login
+        uses: azure/login@v2.2.0
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-    - name: Enable Network Access for ACR
-      uses: ./.github/actions/manage-acr-network-access
-      with:
-        acr-name: "acr${{ env.PROJECT_NAME }}${{ env.INSTANCE }}"
-        resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app"
-        github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
-        enable-network-access: true
+      - name: Enable Network Access for ACR
+        uses: ./.github/actions/manage-acr-network-access
+        with:
+          acr-name: "acr${{ env.PROJECT_NAME }}${{ env.INSTANCE }}"
+          resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app"
+          github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
+          enable-network-access: true
 
-    - name: Log in to ACR
-      run: |
-        az acr login --name ${{ env.REGISTRY_NAME }}
+      - name: Log in to ACR
+        run: |
+          az acr login --name ${{ env.REGISTRY_NAME }}
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-      with:
-        driver: docker-container
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+          version: latest
 
-    - name: Build and push Docker image
-      id: build-and-push
-      uses: docker/build-push-action@471d1dc4e07e5cdedd4c2171150001c434f0b7a4
-      with:
-        context: Childrens-Social-Care-CPD
-        push: ${{ github.event_name != 'pull_request' }}
-        tags: ${{ env.IMAGE_TAGS }}
-        build-args: |
-          VCSREF=${{ env.sha_short }}
-          VCSTAG=${{ env.RELEASE_TAG }}
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          context: Childrens-Social-Care-CPD
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.RELEASE_TAG }}
+          build-args: |
+            VCSREF=${{ github.sha }}
+            VCSTAG=${{ env.RELEASE_TAG }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-    - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: ${{ env.APP_SERVICE_NAME }}
-        images: ${{ env.IMAGE_TAGS }}
+      - name: Sign Docker Image
+        if: false # Enable by setting to true
+        uses: sigstore/cosign-installer@v3
+        with:
+          cosign-release: "latest"
+        run: cosign sign --yes ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.RELEASE_TAG }}
+        env:
+          COSIGN_EXPERIMENTAL: "true"
 
-    - name: Disable Network Access for ACR
-      uses: ./.github/actions/manage-acr-network-access
-      with:
-        acr-name: "acr${{ env.PROJECT_NAME }}${{ env.INSTANCE }}"
-        resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app"
-        github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
-        enable-network-access: false
+      - name: Disable Network Access for ACR
+        uses: ./.github/actions/manage-acr-network-access
+        with:
+          acr-name: "acr${{ env.PROJECT_NAME }}${{ env.INSTANCE }}"
+          resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app"
+          github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
+          enable-network-access: false
