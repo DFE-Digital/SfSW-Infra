@@ -86,7 +86,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Sign Docker Image
-        if: false # Enable by setting to true
+        if: false
         uses: sigstore/cosign-installer@v3
         with:
           cosign-release: "latest"
