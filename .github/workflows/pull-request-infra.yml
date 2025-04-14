@@ -28,6 +28,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Read Config
+        id: read_config
+        uses: mikefarah/yq@master
+        with:
+          cmd: |
+            echo "PROJECT_CODE=$(yq eval '.project_code' .github/config.yml)" >> $GITHUB_ENV
+            echo "PROJECT_NAME=$(yq eval '.project_name' .github/config.yml)" >> $GITHUB_ENV
+            echo "INSTANCE=$(yq eval '.instance' .github/config.yml)" >> $GITHUB_ENV
+
       - name: HashiCorp - Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
