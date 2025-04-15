@@ -28,4 +28,5 @@ jobs:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
+        echo "Token present: $GITHUB_TOKEN"
         run: npx semantic-release@21
