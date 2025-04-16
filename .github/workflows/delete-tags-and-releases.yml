@@ -22,16 +22,7 @@ jobs:
             git push origin :refs/tags/$tag || echo "Failed to delete remote tag $tag"
             echo "Deleting local tag: $tag"
             git tag -d $tag || echo "Failed to delete local tag $tag"
-          done
-      
-      # - name: Delete All Git Tags
-      #   run: |
-      #     # List all tags and delete them
-      #     for tag in $(git tag --list); do
-      #       echo "Deleting tag $tag"
-      #       git push origin --delete $tag || echo "Tag $tag not found on remote"
-      #       git tag -d $tag || echo "Tag $tag not found locally"
-      #     done
+          done    
 
       - name: Delete All GitHub Releases
         env:
