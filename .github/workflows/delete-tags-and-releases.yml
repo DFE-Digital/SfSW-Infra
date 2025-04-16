@@ -28,7 +28,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Delete all releases
           for release in $(gh release list --json tagName --jq '.[].tagName'); do
             echo "Deleting release $release"
             gh release delete $release --yes || echo "Release $release not found"
