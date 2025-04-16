@@ -5,6 +5,7 @@ on:
     types: [published]
 
 permissions:
+  id-token: write
   contents: read
   packages: write
 
@@ -26,7 +27,7 @@ jobs:
 
       - name: Read Config
         id: read_config
-        uses: mikefarah/yq@4
+        uses: mikefarah/yq@master
         with:
           cmd: |
             echo "PROJECT_CODE=$(yq eval '.project_code' .github/config.yml)" >> $GITHUB_ENV
@@ -85,11 +86,14 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Sign Docker Image
+      - name: Install Cosign
         if: false
         uses: sigstore/cosign-installer@v3
         with:
           cosign-release: "latest"
+
+      - name: Sign Docker Image
+        if: false
         run: cosign sign --yes ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.RELEASE_TAG }}
         env:
           COSIGN_EXPERIMENTAL: "true"

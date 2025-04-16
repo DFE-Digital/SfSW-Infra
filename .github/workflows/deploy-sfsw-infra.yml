@@ -111,6 +111,7 @@ jobs:
           echo "resource_group_name=$(terraform output -raw resource_group_name)" >> $GITHUB_OUTPUT
           echo "container_name=$(terraform output -raw container_name)" >> $GITHUB_OUTPUT
           
+        # replace hardcoded suffix when KV name is changed:          
       - name: Disable Network Access for Key Vault
         uses: ./.github/actions/manage-keyvault-network-access
         with:

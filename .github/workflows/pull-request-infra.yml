@@ -28,6 +28,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Read Config
+        id: read_config
+        uses: mikefarah/yq@master
+        with:
+          cmd: |
+            echo "PROJECT_CODE=$(yq eval '.project_code' .github/config.yml)" >> $GITHUB_ENV
+            echo "PROJECT_NAME=$(yq eval '.project_name' .github/config.yml)" >> $GITHUB_ENV
+            echo "INSTANCE=$(yq eval '.instance' .github/config.yml)" >> $GITHUB_ENV
+
       - name: HashiCorp - Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
@@ -96,7 +105,24 @@ jobs:
           resource-group-name: ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: true
-        
+
+        # replace hardcoded suffix when KV name is changed:
+      - name: Enable Network Access for Key Vault
+        uses: ./.github/actions/manage-keyvault-network-access
+        with:
+          keyvault-name: "kv-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}-kvyxy4"
+          resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-shared"
+          github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
+          enable-network-access: true
+
+      - name: Enable Network Access for ACR
+        uses: ./.github/actions/manage-acr-network-access
+        with:
+          acr-name: "acr${{ env.PROJECT_NAME }}${{ env.INSTANCE }}"
+          resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app"
+          github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
+          enable-network-access: true
+
       - name: Terraform init
         run: |
           terraform init \
@@ -113,7 +139,7 @@ jobs:
         id: plan
         run: terraform plan -input=false -var "resource_group_name=${{secrets.AZURE_RESOURCE_GROUP_NAME}}"
 
-      - name: Disable Network Access for tfstate 
+      - name: Disable Network Access for tfstate
         uses: ./.github/actions/manage-storage-network-access
         if: ${{ always() }}
         with:
@@ -122,14 +148,31 @@ jobs:
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: false
 
-      - name: Check Network Rules for tfstate 
-        uses: ./.github/actions/check-storage-network-rules      
+        # replace hardcoded suffix when KV name is changed:        
+      - name: Disable Network Access for Key Vault
+        uses: ./.github/actions/manage-keyvault-network-access
+        with:
+          keyvault-name: "kv-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}-kvyxy4"
+          resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-shared"
+          github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
+          enable-network-access: false
+
+      - name: Disable Network Access for ACR
+        uses: ./.github/actions/manage-acr-network-access
+        with:
+          acr-name: "acr${{ env.PROJECT_NAME }}${{ env.INSTANCE }}"
+          resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app"
+          github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
+          enable-network-access: false
+
+      - name: Check Network Rules for tfstate
+        uses: ./.github/actions/check-storage-network-rules
         if: ${{ always() }}
-        id: network-rules        
+        id: network-rules
         with:
           storage-account-name: ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}
           resource-group-name: ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}
-  
+
       - name: Update Pull Request with Checkov and Terraform Plan
         uses: actions/github-script@v7
         env:
