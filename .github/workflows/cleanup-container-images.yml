@@ -73,7 +73,7 @@ jobs:
             az acr repository delete \
                 --name "$REGISTRY_NAME" \
                 --repository "$IMAGE_NAME" \
-                --manifest "$digest" \
+                --image "$IMAGE_NAME@$digest" \
                 --yes
         done
 
