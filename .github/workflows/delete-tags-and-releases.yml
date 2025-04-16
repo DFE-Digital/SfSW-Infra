@@ -16,18 +16,18 @@ jobs:
 
       - name: Delete All Git Tags
         run: |
-          # List all tags and delete them
-          for tag in $(git tag --list); do
-            echo "Deleting tag $tag"
-            git push origin --delete $tag || echo "Tag $tag not found on remote"
-            git tag -d $tag || echo "Tag $tag not found locally"
-          done
+          git fetch --prune --tags
+          git tag --list | while read tag; do
+            echo "Deleting remote tag: $tag"
+            git push origin :refs/tags/$tag || echo "Failed to delete remote tag $tag"
+            echo "Deleting local tag: $tag"
+            git tag -d $tag || echo "Failed to delete local tag $tag"
+          done    
 
       - name: Delete All GitHub Releases
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Delete all releases
           for release in $(gh release list --json tagName --jq '.[].tagName'); do
             echo "Deleting release $release"
             gh release delete $release --yes || echo "Release $release not found"
