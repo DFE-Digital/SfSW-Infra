@@ -3,9 +3,9 @@ on:
   workflow_dispatch:
   # schedule:
   #   - cron: '0 8 * * 1-5'     
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
 
 permissions:
   id-token: write
@@ -83,14 +83,6 @@ jobs:
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: true
 
-      - name: Enable Network Access for ACR
-        uses: ./.github/actions/manage-acr-network-access
-        with:
-          acr-name: "acr${{ env.PROJECT_NAME }}${{ env.INSTANCE }}"
-          resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app"
-          github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
-          enable-network-access: true
-  
       - name: Terraform init
         run: |
           terraform init \
@@ -117,14 +109,6 @@ jobs:
         with:
           keyvault-name: "kv-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}-kvyxy4"
           resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-shared"
-          github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
-          enable-network-access: false
-
-      - name: Disable Network Access for ACR
-        uses: ./.github/actions/manage-acr-network-access
-        with:
-          acr-name: "acr${{ env.PROJECT_NAME }}${{ env.INSTANCE }}"
-          resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app"
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: false
 
