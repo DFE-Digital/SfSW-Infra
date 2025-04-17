@@ -33,7 +33,7 @@ resource "azurerm_key_vault_access_policy" "access_policy_app_kv" {
 resource "azurerm_key_vault_access_policy" "appgw" {
   key_vault_id = azurerm_key_vault.key_vault.id
   tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = azurerm_application_gateway.appgw.identity[0].principal_id
+  object_id    = azurerm_application_gateway.appgw[0].identity[0].principal_id
   secret_permissions      = ["Get"]
   certificate_permissions = ["Get"]
 }
