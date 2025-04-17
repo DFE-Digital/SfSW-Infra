@@ -1,5 +1,5 @@
 resource "azurerm_application_gateway" "private_appgw" {
-  count               = 0
+  count               = 1
   name                = "private-appgw"
   resource_group_name = azurerm_resource_group.webapp_rg.name
   location            = azurerm_resource_group.webapp_rg.location
