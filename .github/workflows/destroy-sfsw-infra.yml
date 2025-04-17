@@ -72,14 +72,6 @@ jobs:
         github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
         enable-network-access: true
 
-    - name: Enable Network Access for ACR
-      uses: ./.github/actions/manage-acr-network-access
-      with:
-        acr-name: "acr${{ env.PROJECT_NAME }}${{ env.INSTANCE }}"
-        resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app"
-        github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
-        enable-network-access: true  
-
     - name: Terraform init
       run: |
         terraform init \
