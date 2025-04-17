@@ -1,9 +1,10 @@
-# resource "azurerm_public_ip" "app_ip" {
-#   name                = "pip-${var.project_name}-${var.instance}"
-#   location            = azurerm_resource_group.webapp_rg.location
-#   resource_group_name = azurerm_resource_group.webapp_rg.name
-#   allocation_method   = "Static"
-# }
+resource "azurerm_public_ip" "appgw_ip" {
+  name                = "pip-${var.project_name}-${var.instance}"
+  location            = azurerm_resource_group.webapp_rg.location
+  resource_group_name = azurerm_resource_group.webapp_rg.name
+  allocation_method   = "Static"
+  sku                 = "Standard"
+}
 
 resource "azurerm_virtual_network" "webapp_vnet" {
   name                = "vnet-${var.project_name}-${var.instance}"
