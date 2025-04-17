@@ -61,7 +61,7 @@ resource "azurerm_application_gateway" "appgw" {
     frontend_ip_configuration_name = "appgw-ip"
     frontend_port_name             = "https"
     protocol                       = "Https"
-    ssl_certificate_name           = "ssl-cert"
+    #ssl_certificate_name           = "ssl-cert"
   }
 
   request_routing_rule {
