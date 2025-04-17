@@ -1,4 +1,5 @@
 resource "azurerm_application_gateway" "appgw" {
+  count               = var.deploy_appgw
   name                = "appgw-${var.project_name}-${var.instance}"
   location            = azurerm_service_plan.app_service_plan.location
   resource_group_name = azurerm_resource_group.webapp_rg.name
@@ -29,10 +30,10 @@ resource "azurerm_application_gateway" "appgw" {
     public_ip_address_id = azurerm_public_ip.appgw_ip.id
   }
 
-# ssl_certificate {
-#   name = "ssl-cert"
-#   key_vault_secret_id = azurerm_key_vault_certificate. app_cert.secret_id
-# }
+  # ssl_certificate {
+  #   name = "ssl-cert"
+  #   key_vault_secret_id = azurerm_key_vault_certificate. app_cert.secret_id
+  # }
 
   backend_address_pool {
     name  = "backendpool"
@@ -40,12 +41,12 @@ resource "azurerm_application_gateway" "appgw" {
   }
 
   backend_http_settings {
-    name        = "https-settings"
-    port        = 443
-    protocol    = "Https"
-    host_name   = "app-sfsw-d01.azurewebsites.net"
-    cookie_based_affinity   = "Disabled"
-    request_timeout = 20
+    name                  = "https-settings"
+    port                  = 443
+    protocol              = "Https"
+    host_name             = "app-sfsw-d01.azurewebsites.net"
+    cookie_based_affinity = "Disabled"
+    request_timeout       = 20
   }
 
   http_listener {
@@ -72,18 +73,18 @@ resource "azurerm_application_gateway" "appgw" {
   }
 
   request_routing_rule {
-    name                         = "http-redirect-rule"
-    rule_type                    = "Basic"
-    http_listener_name           = "http-listener"
+    name                        = "http-redirect-rule"
+    rule_type                   = "Basic"
+    http_listener_name          = "http-listener"
     redirect_configuration_name = "redirect-to-https"
   }
 
   redirect_configuration {
-    name                    = "redirect-to-https"
-    redirect_type           = "Permanent"
-    target_listener_name    = "https-listener"
-    include_path            = true
-    include_query_string    = true
+    name                 = "redirect-to-https"
+    redirect_type        = "Permanent"
+    target_listener_name = "https-listener"
+    include_path         = true
+    include_query_string = true
   }
 
   identity {

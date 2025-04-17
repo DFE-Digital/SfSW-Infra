@@ -7,12 +7,12 @@ resource "azurerm_log_analytics_workspace" "log_analytics_ws" {
   internet_query_enabled     = false
 }
 
-resource "azurerm_application_insights" "app_insights_web" {
-  name                = "ai-${var.project_name}-${var.instance}"
-  location            = azurerm_resource_group.webapp_rg.location
-  resource_group_name = azurerm_resource_group.webapp_rg.name
-  application_type    = "web"
-}
+# resource "azurerm_application_insights" "app_insights_web" {
+#   name                = "ai-${var.project_name}-${var.instance}"
+#   location            = azurerm_resource_group.webapp_rg.location
+#   resource_group_name = azurerm_resource_group.webapp_rg.name
+#   application_type    = "web"
+# }
 
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_setting_law" {
   name                       = "diag-${var.project_name}-${var.instance}"
