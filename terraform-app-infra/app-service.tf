@@ -19,7 +19,7 @@ resource "azurerm_linux_web_app" "app_service" {
       docker_registry_url      = "https://${azurerm_container_registry.acr.login_server}"
       docker_registry_username = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.key_vault.name};SecretName=acr-username)"
       docker_registry_password = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.key_vault.name};SecretName=acr-password)"
-      docker_image_name        = "sfsw-app-d01"
+      docker_image_name        = "sfsw-app-d01:latest"
     }
     vnet_route_all_enabled = true
   }
