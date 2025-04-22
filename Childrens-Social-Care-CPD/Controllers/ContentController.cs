@@ -4,6 +4,8 @@ using Childrens_Social_Care_CPD.Contentful.Navigation;
 using Childrens_Social_Care_CPD.Models;
 using Contentful.Core.Search;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace Childrens_Social_Care_CPD.Controllers;
 
@@ -28,7 +30,7 @@ public class ContentController(ICpdContentfulClient cpdClient) : Controller
         CancellationToken ct)
     {
         var trailItem = new KeyValuePair<string, string>(
-            String.IsNullOrEmpty(page.BreadcrumbText) ?
+            page.BreadcrumbText.IsNullOrEmpty() ? 
                 page.Title : 
                 page.BreadcrumbText,
             page.Id);
