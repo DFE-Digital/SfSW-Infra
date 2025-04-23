@@ -19,13 +19,13 @@ resource "azurerm_linux_web_app" "app_service" {
       docker_registry_url      = "https://${azurerm_container_registry.acr.login_server}"
       docker_registry_username = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.key_vault.name};SecretName=acr-username)"
       docker_registry_password = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.key_vault.name};SecretName=acr-password)"
-      docker_image_name        = "sfsw-app"
+      docker_image_name        = "sfsw-app-d01:latest"
     }
     vnet_route_all_enabled = true
   }
 
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.app_insights_web.instrumentation_key
+    #APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.app_insights_web.instrumentation_key
     ASPNETCORE_HTTP_PORTS                       = 80
     CPD_GOOGLEANALYTICSTAG                      = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.key_vault.name};SecretName=google-analytics-tag)"
     CPD_SPACE_ID                                = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.key_vault.name};SecretName=cpd-space-id)"
@@ -34,7 +34,7 @@ resource "azurerm_linux_web_app" "app_service" {
     CPD_TENANTID                                = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.key_vault.name};SecretName=tenant-id)"
     CPD_AZURE_ENVIRONMENT                       = "dev"
     CPD_CONTENTFUL_ENVIRONMENT                  = "dev"
-    CPD_INSTRUMENTATION_CONNECTIONSTRING        = azurerm_application_insights.app_insights_web.connection_string
+    #CPD_INSTRUMENTATION_CONNECTIONSTRING        = azurerm_application_insights.app_insights_web.connection_string
     CPD_CLARITY                                 = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.key_vault.name};SecretName=cpd-clarity)"
     CPD_FEATURE_POLLING_INTERVAL                = "300"
     CPD_SEARCH_CLIENT_API_KEY                   = ""

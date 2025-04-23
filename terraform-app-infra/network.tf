@@ -1,9 +1,10 @@
-# resource "azurerm_public_ip" "app_ip" {
-#   name                = "pip-${var.project_name}-${var.instance}"
-#   location            = azurerm_resource_group.webapp_rg.location
-#   resource_group_name = azurerm_resource_group.webapp_rg.name
-#   allocation_method   = "Static"
-# }
+resource "azurerm_public_ip" "appgw_ip" {
+  name                = "pip-${var.project_name}-${var.instance}"
+  location            = azurerm_resource_group.webapp_rg.location
+  resource_group_name = azurerm_resource_group.webapp_rg.name
+  allocation_method   = "Static"
+  sku                 = "Standard"
+}
 
 resource "azurerm_virtual_network" "webapp_vnet" {
   name                = "vnet-${var.project_name}-${var.instance}"
@@ -259,9 +260,9 @@ resource "azurerm_monitor_private_link_scoped_service" "log_analytics_link" {
 }
 
 # Link Application Insights to AMPLS
-resource "azurerm_monitor_private_link_scoped_service" "app_insights_link" {
-  name                = "ai-link-${var.project_name}-${var.instance}"
-  resource_group_name = azurerm_resource_group.webapp_rg.name
-  scope_name          = azurerm_monitor_private_link_scope.ampls.name
-  linked_resource_id  = azurerm_application_insights.app_insights_web.id
-}
+# resource "azurerm_monitor_private_link_scoped_service" "app_insights_link" {
+#   name                = "ai-link-${var.project_name}-${var.instance}"
+#   resource_group_name = azurerm_resource_group.webapp_rg.name
+#   scope_name          = azurerm_monitor_private_link_scope.ampls.name
+#   linked_resource_id  = azurerm_application_insights.app_insights_web.id
+# }
