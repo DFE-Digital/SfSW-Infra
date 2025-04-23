@@ -39,7 +39,6 @@ resource "azurerm_linux_web_app" "app_service" {
     CPD_SEARCH_CLIENT_API_KEY                   = ""
     CPD_SEARCH_ENDPOINT                         = ""
     CPD_SEARCH_INDEX_NAME                       = ""
-    CPD_AZURE_STORAGE_ACCOUNT                   = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.key_vault.name};SecretName=cpd-azure-storage-account)"
     DOCKER_ENABLE_CI                            = "true"
   }
   identity {
