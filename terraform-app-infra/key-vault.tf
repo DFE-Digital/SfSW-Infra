@@ -89,32 +89,38 @@ resource "azurerm_key_vault_secret" "google_analytics_tag" {
   key_vault_id = azurerm_key_vault.key_vault.id
 }
 
-resource "azurerm_key_vault_secret" "tenant_id" {
-  name         = "tenant-id"
-  value        = "placeholder"
-  key_vault_id = azurerm_key_vault.key_vault.id
-}
-
 resource "azurerm_key_vault_secret" "cpd_clarity" {
   name         = "cpd-clarity"
   value        = "placeholder"
   key_vault_id = azurerm_key_vault.key_vault.id
 }
 
-resource "azurerm_key_vault_secret" "cpd_azure_data_protection_container_name" {
-  name         = "cpd-azure-data-protection-container-name"
-  value        = "placeholder"
-  key_vault_id = azurerm_key_vault.key_vault.id
-}
 
-resource "azurerm_key_vault_secret" "cpd_azure_storage_account" {
-  name         = "cpd-azure-storage-account"
-  value        = "placeholder"
-  key_vault_id = azurerm_key_vault.key_vault.id
-}
 
-resource "azurerm_key_vault_secret" "cpd_azure_storage_account_uri_format_string" {
-  name         = "cpd-azure-storage-account-uri-format-string"
-  value        = "placeholder"
-  key_vault_id = azurerm_key_vault.key_vault.id
-}
+
+
+
+
+# resource "azurerm_key_vault_secret" "tenant_id" {
+#   name         = "tenant-id"
+#   value        = "placeholder"
+#   key_vault_id = azurerm_key_vault.key_vault.id
+# }
+
+# resource "azurerm_key_vault_secret" "cpd_azure_data_protection_container_name" {
+#   name         = "cpd-azure-data-protection-container-name"
+#   value        = "placeholder"
+#   key_vault_id = azurerm_key_vault.key_vault.id
+# }
+
+# resource "azurerm_key_vault_secret" "cpd_azure_storage_account" {
+#   name         = "cpd-azure-storage-account"
+#   value        = "placeholder"
+#   key_vault_id = azurerm_key_vault.key_vault.id
+# }
+
+# resource "azurerm_key_vault_secret" "cpd_azure_storage_account_uri_format_string" {
+#   name         = "cpd-azure-storage-account-uri-format-string"
+#   value        = "placeholder"
+#   key_vault_id = azurerm_key_vault.key_vault.id
+# }
