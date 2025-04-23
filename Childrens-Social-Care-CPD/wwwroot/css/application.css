@@ -10167,8 +10167,11 @@ a.dfe-header__link--service:focus {
 }
 
 @media (max-width: 63.99em) {
-  .body-header-font {
+  h1.body-header-font {
     margin-bottom: 20px;
+  }
+  p.body-header-font {
+    margin-bottom: 15px;
   }
 }
 /* DFE HEADER - CODE FROM DFE DESIGN GUIDE AND WITH EDITS --------------------------------------------------------- */
@@ -10181,6 +10184,12 @@ h1,
   margin-bottom: 30px;
 }
 
+@media (max-width: 63.99em) {
+  h1,
+  .dfe-heading-xl, .govuk-heading-xl {
+    margin-bottom: 20px;
+  }
+}
 .govuk-header__container {
   position: relative;
   margin-bottom: -10px;
@@ -10326,6 +10335,11 @@ p#content-banner-subtitle.govuk-body-l {
   margin-bottom: 20px;
 }
 
+@media (max-width: 63.99em) {
+  p#content-banner-subtitle.govuk-body-l {
+    margin-bottom: 15px;
+  }
+}
 /* Document list */
 .dfeuk-document-list {
   padding: 0;
@@ -10986,6 +11000,11 @@ p#content-banner-subtitle.govuk-body-l {
   margin-bottom: 30px;
 }
 
+@media (max-width: 32.375em) {
+  .beta-banner .govuk-tag {
+    margin-top: 5px;
+  }
+}
 /*
 * Page Banner
 */
@@ -11871,6 +11890,26 @@ a.section-nav-link {
   padding-top: 8px;
   text-decoration: underline;
   vertical-align: middle;
+}
+
+/*
+* Promo banner
+*/
+.promo-banner {
+  padding-top: 40px;
+  padding-bottom: 0px;
+}
+
+.promo-banner-header {
+  margin-bottom: 10px;
+}
+
+.promo-banner-subheading {
+  margin-bottom: 30px;
+}
+
+.promo-banner {
+  margin-top: -50px;
 }
 
 /*!
