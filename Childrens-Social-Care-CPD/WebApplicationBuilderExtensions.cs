@@ -53,7 +53,7 @@ public static class WebApplicationBuilderExtensions
         builder.Services.AddScoped<IContentLinkContext, ContentLinkContext>();
 
         AddContentRenderers(builder.Services);
-        AddSearch(builder.Services);
+        // AddSearch(builder.Services);
     }
 
     private static void AddContentRenderers(IServiceCollection services)
@@ -80,22 +80,22 @@ public static class WebApplicationBuilderExtensions
             });
     }
 
-    private static void AddSearch(IServiceCollection services)
-    {
-        services.AddScoped<ISearchResultsVMFactory, SearchResultsVMFactory>();
+    // private static void AddSearch(IServiceCollection services)
+    // {
+    //     services.AddScoped<ISearchResultsVMFactory, SearchResultsVMFactory>();
 
-        services.AddScoped(services =>
-        {
-            var config = services.GetRequiredService<IApplicationConfiguration>();
+    //     services.AddScoped(services =>
+    //     {
+    //         var config = services.GetRequiredService<IApplicationConfiguration>();
 
-            var searchEndpointUri = new Uri(config.SearchEndpoint);
-            return new SearchClient(searchEndpointUri,
-                config.SearchIndexName,
-                new AzureKeyCredential(config.SearchApiKey));
-        });
+    //         var searchEndpointUri = new Uri(config.SearchEndpoint);
+    //         return new SearchClient(searchEndpointUri,
+    //             config.SearchIndexName,
+    //             new AzureKeyCredential(config.SearchApiKey));
+    //     });
 
-        services.AddScoped<ISearchService, SearchService>();
-    }
+    //     services.AddScoped<ISearchService, SearchService>();
+    // }
 
     public static void AddFeatures(this WebApplicationBuilder builder, Stopwatch sw)
     {
@@ -125,8 +125,8 @@ public static class WebApplicationBuilderExtensions
         AddHealthChecks(builder.Services);
         Console.WriteLine($"After AddHealthChecks: {sw.ElapsedMilliseconds}ms");
 
-        AddDataProtection(builder.Services, applicationConfiguration, sw);
-        Console.WriteLine($"After AddDataProtection: {sw.ElapsedMilliseconds}ms");
+        // AddDataProtection(builder.Services, applicationConfiguration, sw);
+        // Console.WriteLine($"After AddDataProtection: {sw.ElapsedMilliseconds}ms");
     }
 
     private static void AddLogging(WebApplicationBuilder builder, ApplicationConfiguration applicationConfiguration)
@@ -178,22 +178,22 @@ public static class WebApplicationBuilderExtensions
 #pragma warning restore CA1861 // Avoid constant arrays as arguments
     }
 
-    private static void AddDataProtection(IServiceCollection services, ApplicationConfiguration applicationConfiguration, Stopwatch sw)
-    {
-        if (!string.IsNullOrEmpty(applicationConfiguration.AzureDataProtectionContainerName))
-        {
-            var url = string.Format(applicationConfiguration.AzureStorageAccountUriFormatString,
-                applicationConfiguration.AzureStorageAccount,
-                applicationConfiguration.AzureDataProtectionContainerName);
+    // private static void AddDataProtection(IServiceCollection services, ApplicationConfiguration applicationConfiguration, Stopwatch sw)
+    // {
+    //     if (!string.IsNullOrEmpty(applicationConfiguration.AzureDataProtectionContainerName))
+    //     {
+    //         var url = string.Format(applicationConfiguration.AzureStorageAccountUriFormatString,
+    //             applicationConfiguration.AzureStorageAccount,
+    //             applicationConfiguration.AzureDataProtectionContainerName);
 
-            var managedIdentityCredential = new ManagedIdentityCredential(clientId: applicationConfiguration.AzureManagedIdentityId);
-            Console.WriteLine($"After AddDataProtection:new ManagedIdentityCredential: {sw.ElapsedMilliseconds}ms");
+    //         var managedIdentityCredential = new ManagedIdentityCredential(clientId: applicationConfiguration.AzureManagedIdentityId);
+    //         Console.WriteLine($"After AddDataProtection:new ManagedIdentityCredential: {sw.ElapsedMilliseconds}ms");
 
-            var blobUri = new Uri($"{url}/data-protection");
-            services
-                .AddDataProtection()
-                .SetApplicationName($"Childrens-Social-Care-CPD-{applicationConfiguration.AzureEnvironment}")
-                .PersistKeysToAzureBlobStorage(blobUri, managedIdentityCredential);
-        }
-    }
+    //         var blobUri = new Uri($"{url}/data-protection");
+    //         services
+    //             .AddDataProtection()
+    //             .SetApplicationName($"Childrens-Social-Care-CPD-{applicationConfiguration.AzureEnvironment}")
+    //             .PersistKeysToAzureBlobStorage(blobUri, managedIdentityCredential);
+    //     }
+    // }
 }

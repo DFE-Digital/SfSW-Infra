@@ -1,0 +1,553 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\fonts\\bold-affa96571d-v2.woff",
+      "PackagePath": "staticwebassets\\assets\\fonts\\bold-affa96571d-v2.woff"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\fonts\\bold-b542beb274-v2.woff2",
+      "PackagePath": "staticwebassets\\assets\\fonts\\bold-b542beb274-v2.woff2"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\fonts\\light-94a07e06a1-v2.woff2",
+      "PackagePath": "staticwebassets\\assets\\fonts\\light-94a07e06a1-v2.woff2"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\fonts\\light-f591b13f7d-v2.woff",
+      "PackagePath": "staticwebassets\\assets\\fonts\\light-f591b13f7d-v2.woff"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\Title-card-png8.png",
+      "PackagePath": "staticwebassets\\assets\\images\\Title-card-png8.png"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\crest.png",
+      "PackagePath": "staticwebassets\\assets\\images\\crest.png"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\dfe-logo-alt.png",
+      "PackagePath": "staticwebassets\\assets\\images\\dfe-logo-alt.png"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\dfe-logo.png",
+      "PackagePath": "staticwebassets\\assets\\images\\dfe-logo.png"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\favicon.ico",
+      "PackagePath": "staticwebassets\\assets\\images\\favicon.ico"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\favicon.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\favicon.svg"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\govuk-crest-2x.png",
+      "PackagePath": "staticwebassets\\assets\\images\\govuk-crest-2x.png"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\govuk-crest.png",
+      "PackagePath": "staticwebassets\\assets\\images\\govuk-crest.png"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\govuk-crest.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\govuk-crest.svg"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\govuk-icon-180.png",
+      "PackagePath": "staticwebassets\\assets\\images\\govuk-icon-180.png"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\govuk-icon-192.png",
+      "PackagePath": "staticwebassets\\assets\\images\\govuk-icon-192.png"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\govuk-icon-512.png",
+      "PackagePath": "staticwebassets\\assets\\images\\govuk-icon-512.png"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\govuk-icon-mask.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\govuk-icon-mask.svg"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\govuk-logotype-crown.png",
+      "PackagePath": "staticwebassets\\assets\\images\\govuk-logotype-crown.png"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\govuk-mask-icon.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\govuk-mask-icon.svg"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\govuk-opengraph-image.png",
+      "PackagePath": "staticwebassets\\assets\\images\\govuk-opengraph-image.png"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\icon-print.png",
+      "PackagePath": "staticwebassets\\assets\\images\\icon-print.png"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\media-element\\mejs-controls.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\media-element\\mejs-controls.svg"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\govuk-logotype-crown.png",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\govuk-logotype-crown.png"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\icon-alert-information.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\icon-alert-information.svg"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\icon-alert-success.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\icon-alert-success.svg"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\icon-alert-warning.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\icon-alert-warning.svg"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\icon-arrow-black-down.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\icon-arrow-black-down.svg"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\icon-arrow-black-up.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\icon-arrow-black-up.svg"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\icon-arrow-white-down.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\icon-arrow-white-down.svg"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\icon-arrow-white-up.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\icon-arrow-white-up.svg"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\icon-close-cross-black.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\icon-close-cross-black.svg"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\icon-document.png",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\icon-document.png"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\icon-document.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\icon-document.svg"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\icon-progress-tick.png",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\icon-progress-tick.png"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\icon-progress-tick.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\icon-progress-tick.svg"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\icon-search-black.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\icon-search-black.svg"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\icon-search-blue.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\icon-search-blue.svg"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\icon-search-white.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\icon-search-white.svg"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\icon-tag-remove-cross-white.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\icon-tag-remove-cross-white.svg"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\icon-tag-remove-cross.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\icon-tag-remove-cross.svg"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\icon-toggle-plus-minus.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\icon-toggle-plus-minus.svg"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\icon-wysiwyg-bold.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\icon-wysiwyg-bold.svg"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\icon-wysiwyg-italic.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\icon-wysiwyg-italic.svg"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\icon-wysiwyg-ordered-list.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\icon-wysiwyg-ordered-list.svg"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\icon-wysiwyg-underline.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\icon-wysiwyg-underline.svg"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\icon-wysiwyg-unordered-list.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\icon-wysiwyg-unordered-list.svg"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\moj-apple-touch-icon-152x152.png",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\moj-apple-touch-icon-152x152.png"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\moj-apple-touch-icon-167x167.png",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\moj-apple-touch-icon-167x167.png"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\moj-apple-touch-icon-180x180.png",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\moj-apple-touch-icon-180x180.png"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\moj-apple-touch-icon.png",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\moj-apple-touch-icon.png"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\moj-logotype-crest.png",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\moj-logotype-crest.png"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\moj-logotype-crest.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\moj-logotype-crest.svg"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\assets\\images\\moj\\moj-opengraph-image.png",
+      "PackagePath": "staticwebassets\\assets\\images\\moj\\moj-opengraph-image.png"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\css\\application.css",
+      "PackagePath": "staticwebassets\\css\\application.css"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\css\\application.css.map",
+      "PackagePath": "staticwebassets\\css\\application.css.map"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\css\\application.min.css",
+      "PackagePath": "staticwebassets\\css\\application.min.css"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\css\\application.min.css.map",
+      "PackagePath": "staticwebassets\\css\\application.min.css.map"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\css\\mediaelement-player.min.css",
+      "PackagePath": "staticwebassets\\css\\mediaelement-player.min.css"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\google308335d112360551.html",
+      "PackagePath": "staticwebassets\\google308335d112360551.html"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\javascript\\components\\feedback.js",
+      "PackagePath": "staticwebassets\\javascript\\components\\feedback.js"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\javascript\\dfefrontend-2.0.0.min.js",
+      "PackagePath": "staticwebassets\\javascript\\dfefrontend-2.0.0.min.js"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\javascript\\govuk-frontend.min.js",
+      "PackagePath": "staticwebassets\\javascript\\govuk-frontend.min.js"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\javascript\\govuk-frontend.min.js.map",
+      "PackagePath": "staticwebassets\\javascript\\govuk-frontend.min.js.map"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\javascript\\mediaelement-and-player.min.js",
+      "PackagePath": "staticwebassets\\javascript\\mediaelement-and-player.min.js"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\javascript\\mediaelement-configuration.js",
+      "PackagePath": "staticwebassets\\javascript\\mediaelement-configuration.js"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\javascript\\pages\\search.js",
+      "PackagePath": "staticwebassets\\javascript\\pages\\search.js"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\LICENSE",
+      "PackagePath": "staticwebassets\\lib\\bootstrap"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.css"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.css.map"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.js"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.js.map"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.min.js"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\jquery-validation\\LICENSE.md",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\LICENSE.md"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.js"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.min.js"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.js"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.min.js"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\jquery\\LICENSE.txt",
+      "PackagePath": "staticwebassets\\lib\\jquery\\LICENSE.txt"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\jquery\\dist\\jquery.js",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.js"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\jquery\\dist\\jquery.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.js"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\sitemap.xml",
+      "PackagePath": "staticwebassets\\sitemap.xml"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\stylesheets\\custom.css",
+      "PackagePath": "staticwebassets\\stylesheets\\custom.css"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\webfonts\\fa-brands-400.ttf",
+      "PackagePath": "staticwebassets\\webfonts\\fa-brands-400.ttf"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\webfonts\\fa-brands-400.woff2",
+      "PackagePath": "staticwebassets\\webfonts\\fa-brands-400.woff2"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\webfonts\\fa-regular-400.ttf",
+      "PackagePath": "staticwebassets\\webfonts\\fa-regular-400.ttf"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\webfonts\\fa-regular-400.woff2",
+      "PackagePath": "staticwebassets\\webfonts\\fa-regular-400.woff2"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\webfonts\\fa-solid-900.ttf",
+      "PackagePath": "staticwebassets\\webfonts\\fa-solid-900.ttf"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\webfonts\\fa-solid-900.woff2",
+      "PackagePath": "staticwebassets\\webfonts\\fa-solid-900.woff2"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\webfonts\\fa-v4compatibility.ttf",
+      "PackagePath": "staticwebassets\\webfonts\\fa-v4compatibility.ttf"
+    },
+    {
+      "Id": "C:\\DfE-AD\\app-files-for-infra-deploy\\childrens-social-care-cpd\\Childrens-Social-Care-CPD\\wwwroot\\webfonts\\fa-v4compatibility.woff2",
+      "PackagePath": "staticwebassets\\webfonts\\fa-v4compatibility.woff2"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.Childrens-Social-Care-CPD.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.Childrens-Social-Care-CPD.props",
+      "PackagePath": "build\\Childrens-Social-Care-CPD.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.Childrens-Social-Care-CPD.props",
+      "PackagePath": "buildMultiTargeting\\Childrens-Social-Care-CPD.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.Childrens-Social-Care-CPD.props",
+      "PackagePath": "buildTransitive\\Childrens-Social-Care-CPD.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
