@@ -40,6 +40,7 @@ resource "azurerm_linux_web_app" "app_service" {
     CPD_SEARCH_ENDPOINT                         = ""
     CPD_SEARCH_INDEX_NAME                       = ""
     DOCKER_ENABLE_CI                            = "true"
+    WEBSITE_PULL_IMAGE_OVER_VNET                = "true"
   }
   identity {
     type = "SystemAssigned"
