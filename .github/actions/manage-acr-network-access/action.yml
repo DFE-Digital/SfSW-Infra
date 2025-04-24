@@ -62,4 +62,4 @@ runs:
     - name: Sleep for 30s
       shell: bash
       run: |
-        sleep 30
+        sleep 40
