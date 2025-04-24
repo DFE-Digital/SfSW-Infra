@@ -25,24 +25,37 @@ resource "azurerm_linux_web_app" "app_service" {
   }
 
   app_settings = {
-    #APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.app_insights_web.instrumentation_key
-    ASPNETCORE_HTTP_PORTS                       = 80
-    CPD_GOOGLEANALYTICSTAG                      = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.key_vault.name};SecretName=google-analytics-tag)"
-    CPD_SPACE_ID                                = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.key_vault.name};SecretName=cpd-space-id)"
-    CPD_PREVIEW_KEY                             = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.key_vault.name};SecretName=cpd-preview-key)"
-    CPD_DELIVERY_KEY                            = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.key_vault.name};SecretName=cpd-delivery-key)"
-    CPD_AZURE_ENVIRONMENT                       = "dev"
-    CPD_CONTENTFUL_ENVIRONMENT                  = "dev"
-    #CPD_INSTRUMENTATION_CONNECTIONSTRING        = azurerm_application_insights.app_insights_web.connection_string
-    CPD_CLARITY                                 = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.key_vault.name};SecretName=cpd-clarity)"
-    CPD_FEATURE_POLLING_INTERVAL                = "300"
-    CPD_SEARCH_CLIENT_API_KEY                   = ""
-    CPD_SEARCH_ENDPOINT                         = ""
-    CPD_SEARCH_INDEX_NAME                       = ""
-    DOCKER_ENABLE_CI                            = "true"
-    WEBSITE_PULL_IMAGE_OVER_VNET                = "true"
+    #APPINSIGHTS_INSTRUMENTATIONKEY = azurerm_application_insights.app_insights_web.instrumentation_key
+    ASPNETCORE_HTTP_PORTS      = 80
+    CPD_GOOGLEANALYTICSTAG     = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.key_vault.name};SecretName=google-analytics-tag)"
+    CPD_SPACE_ID               = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.key_vault.name};SecretName=cpd-space-id)"
+    CPD_PREVIEW_KEY            = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.key_vault.name};SecretName=cpd-preview-key)"
+    CPD_DELIVERY_KEY           = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.key_vault.name};SecretName=cpd-delivery-key)"
+    CPD_AZURE_ENVIRONMENT      = "dev"
+    CPD_CONTENTFUL_ENVIRONMENT = "dev"
+    #CPD_INSTRUMENTATION_CONNECTIONSTRING = azurerm_application_insights.app_insights_web.connection_string
+    CPD_CLARITY                  = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.key_vault.name};SecretName=cpd-clarity)"
+    CPD_FEATURE_POLLING_INTERVAL = "300"
+    CPD_SEARCH_CLIENT_API_KEY    = ""
+    CPD_SEARCH_ENDPOINT          = ""
+    CPD_SEARCH_INDEX_NAME        = ""
+    DOCKER_ENABLE_CI             = "true"
+    WEBSITE_PULL_IMAGE_OVER_VNET = "true"
   }
   identity {
     type = "SystemAssigned"
+  }
+
+  logs {
+    application_logs {
+      file_system_level = "Verbose"
+    }
+
+    http_logs {
+      file_system {
+        retention_in_days = 7
+        retention_in_mb   = 100
+      }
+    }
   }
 }
