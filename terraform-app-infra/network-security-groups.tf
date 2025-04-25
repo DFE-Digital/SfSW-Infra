@@ -44,7 +44,7 @@ resource "azurerm_network_security_group" "app_service_nsg" {
   location            = azurerm_resource_group.webapp_rg.location
   resource_group_name = azurerm_resource_group.webapp_rg.name
 
-  # enable this rule to allow inbound to App Service direct
+  # enable this rule to allow direct inbound access to App Service
   # security_rule {
   #   name                       = "HTTP-HTTPS"
   #   priority                   = 100

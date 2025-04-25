@@ -30,6 +30,7 @@ jobs:
           echo "REGISTRY_NAME=acr$(yq eval '.project_name' .github/config.yml)$(yq eval '.instance' .github/config.yml)" >> $GITHUB_ENV
           echo "IMAGE_NAME=$(yq eval '.project_name' .github/config.yml)-app-$(yq eval '.instance' .github/config.yml)" >> $GITHUB_ENV
           echo "APP_SERVICE_NAME=app-$(yq eval '.project_name' .github/config.yml)-$(yq eval '.instance' .github/config.yml)" >> $GITHUB_ENV
+          echo "APP_SERVICE_SNET=$(yq eval '.app_service_snet' .github/config.yml)" >> $GITHUB_ENV
 
     - name: Debug Output
       run: |
@@ -84,6 +85,40 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
+    - name: Enable Network Access for App Service
+      uses: ./.github/actions/manage-app-service-network-access
+      with:
+        app-service-name: "${{ env.APP_SERVICE_NAME }}"
+        resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app"
+        github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
+        enable-network-access: true
+
+    - name: Sleep for 40s
+      shell: bash
+      run: |
+        sleep 40
+        
+    - name: Add Inbound NSG Rule for App Service
+      shell: bash
+      run: |
+        az network nsg rule create \
+          --nsg-name "nsg-app-service-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}" \
+          --resource-group "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app" \
+          --name "Allow-GitHub-Runner-IP" \
+          --priority 100 \
+          --direction Inbound \
+          --access Allow \
+          --protocol Tcp \
+          --source-port-range "*" \
+          --destination-port-ranges 80 443 \
+          --source-address-prefix "${{ env.GITHUB_RUNNER_IP }}" \
+          --destination-address-prefix "${{ env.APP_SERVICE_SNET }}"
+      
+    - name: Sleep for 40s
+      shell: bash
+      run: |
+        sleep 40
+
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
@@ -97,3 +132,12 @@ jobs:
         resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app"
         github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
         enable-network-access: false
+
+    - name: Disable Network Access for App Service
+      uses: ./.github/actions/manage-app-service-network-access
+      with:
+        app-service-name: "${{ env.APP_SERVICE_NAME }}"
+        resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app"
+        github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
+        enable-network-access: false
+  
