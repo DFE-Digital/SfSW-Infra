@@ -44,17 +44,24 @@ resource "azurerm_network_security_group" "app_service_nsg" {
   location            = azurerm_resource_group.webapp_rg.location
   resource_group_name = azurerm_resource_group.webapp_rg.name
 
-  security_rule {
-    name                       = "HTTP-HTTPS"
-    priority                   = 100
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_ranges    = ["80", "443"]
-    source_address_prefix      = "Internet"
-    destination_address_prefix = var.app_service_snet
-  }
+  # enable this rule to allow inbound to App Service direct
+  # security_rule {
+  #   name                       = "HTTP-HTTPS"
+  #   priority                   = 100
+  #   direction                  = "Inbound"
+  #   access                     = "Allow"
+  #   protocol                   = "Tcp"
+  #   source_port_range          = "*"
+  #   destination_port_ranges    = ["80", "443"]
+  #   source_address_prefix      = "Internet"
+  #   destination_address_prefix = var.app_service_snet
+  # }
+
+
+
+
+
+
 
   # security_rule {
   #   name                       = "Github-Runners"

@@ -12,7 +12,7 @@ resource "azurerm_linux_web_app" "app_service" {
   location            = azurerm_service_plan.app_service_plan.location
   service_plan_id     = azurerm_service_plan.app_service_plan.id
 
-  public_network_access_enabled = true
+  public_network_access_enabled = false
 
   site_config {
     application_stack {
@@ -40,7 +40,7 @@ resource "azurerm_linux_web_app" "app_service" {
     CPD_SEARCH_ENDPOINT                         = ""
     CPD_SEARCH_INDEX_NAME                       = ""
     DOCKER_ENABLE_CI                            = "true"
-    WEBSITE_PULL_IMAGE_OVER_VNET                = "true"
+    # WEBSITE_PULL_IMAGE_OVER_VNET                = "true"
   }
   identity {
     type = "SystemAssigned"
