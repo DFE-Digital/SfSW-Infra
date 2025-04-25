@@ -16,6 +16,15 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Enable Public Network Access
+      if: ${{ inputs.enable-network-access == 'true' }}
+      shell: bash
+      run: |
+        az webapp update \
+          --resource-group ${{ inputs.resource-group-name }} \
+          --name ${{ inputs.app-service-name }} \
+          --set publicNetworkAccess=Enabled > /dev/null
+
     - name: Add Access Restriction Rule
       if: ${{ inputs.enable-network-access == 'true' }}
       shell: bash
@@ -26,7 +35,7 @@ runs:
           --rule-name github-runner-ip \
           --action Allow \
           --ip-address ${{ inputs.github-runner-ip }} \
-          --priority 100
+          --priority 100 > /dev/null
 
     - name: Remove Access Restriction Rule
       if: ${{ inputs.enable-network-access == 'false' }}
@@ -35,5 +44,19 @@ runs:
         az webapp config access-restriction remove \
           --resource-group ${{ inputs.resource-group-name }} \
           --name ${{ inputs.app-service-name }} \
-          --rule-name github-runner-ip
+          --rule-name github-runner-ip \
+          --action Allow > /dev/null
 
+    - name: Disable Public Network Access
+      if: ${{ inputs.enable-network-access == 'false' }}
+      shell: bash
+      run: |
+        az webapp update \
+          --resource-group ${{ inputs.resource-group-name }} \
+          --name ${{ inputs.app-service-name }} \
+          --set publicNetworkAccess=Disabled > /dev/null
+
+    - name: Sleep for 40s
+      shell: bash
+      run: |
+        sleep 40
