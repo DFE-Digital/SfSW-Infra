@@ -133,6 +133,14 @@ jobs:
         github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
         enable-network-access: false
 
+    - name: Remove Inbound NSG Rule for App Service
+      shell: bash
+      run: |
+        az network nsg rule delete \
+          --nsg-name "nsg-app-service-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}" \
+          --resource-group "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app" \
+          --name "Allow-GitHub-Runner-IP"
+      
     - name: Disable Network Access for App Service
       uses: ./.github/actions/manage-app-service-network-access
       with:
