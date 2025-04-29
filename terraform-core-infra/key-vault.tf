@@ -13,14 +13,8 @@ resource "azurerm_key_vault" "key_vault" {
   sku_name                      = "standard"
   soft_delete_retention_days    = 7
   enable_rbac_authorization     = false
-  public_network_access_enabled = false
+  public_network_access_enabled = true
 
-  lifecycle {
-    ignore_changes = [
-      network_acls[0].ip_rules,
-      public_network_access_enabled
-    ]
-  }
 }
 
 # resource "azurerm_key_vault_access_policy" "access_policy_app_kv" {

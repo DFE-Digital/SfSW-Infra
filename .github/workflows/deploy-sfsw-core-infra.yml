@@ -88,6 +88,15 @@ jobs:
           echo "resource_group_name=$(terraform output -raw resource_group_name)" >> $GITHUB_OUTPUT
           echo "container_name=$(terraform output -raw container_name)" >> $GITHUB_OUTPUT          
 
+      # replace hardcoded suffix when KV name is changed:          
+      - name: Disable Network Access for Key Vault
+        uses: ./.github/actions/manage-keyvault-network-access
+        with:
+          keyvault-name: "kv-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}-fzm4dj"
+          resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-core-infra"
+          github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
+          enable-network-access: false
+
       - name: Disable Network Access for tfstate 
         uses: ./.github/actions/manage-storage-network-access
         if: ${{ always() }}
