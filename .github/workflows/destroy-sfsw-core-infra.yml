@@ -1,9 +1,8 @@
-name: Deploy SfSW Core Infra
+name: Destroy Core Infra
 on:
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - main
+  # schedule:
+  #   - cron: '0 19 * * *'
 
 permissions:
   id-token: write
@@ -11,8 +10,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  deploy-to-dev:
-    if: github.event_name != 'pull_request'
+  destroy-core-infra:
     defaults:
       run:
         working-directory: terraform-core-infra
