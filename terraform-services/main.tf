@@ -1,0 +1,13 @@
+data "azurerm_client_config" "current" {}
+
+resource "azurerm_resource_group" "webapp_rg" {
+  name     = "${var.project_code}${var.instance}-rg-${var.project_name}-app"
+  location = var.location
+  tags = local.tags
+}
+
+resource "azurerm_resource_group" "shared_rg" {
+  name     = "${var.project_code}${var.instance}-rg-${var.project_name}-shared"
+  location = var.location
+  tags = local.tags
+}
