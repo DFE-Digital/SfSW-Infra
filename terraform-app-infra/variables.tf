@@ -1,18 +1,3 @@
-variable "app_gateway_snet" {
-  description = "Subnet address prefix"
-  type        = string
-}
-
-variable "app_service_snet" {
-  description = "Subnet address prefix"
-  type        = string
-}
-
-variable "app_service_delegated_snet" {
-  description = "Subnet address prefix"
-  type        = string  
-}
-
 variable "deploy_appgw" {
   description = "Controls whether the private Application Gateway is deployed. Set to 1 to include, 0 to exclude."
   type        = number
@@ -33,16 +18,6 @@ variable "location" {
   type        = string
 }
 
-variable "monitoring_snet" {
-  description = "Subnet address prefix"
-  type        = string
-}
-
-variable "private_endpoints_snet" {
-  description = "Subnet address prefix"
-  type        = string
-}
-
 variable "project_code" {
   description = "Project code"
   type        = string
@@ -55,10 +30,5 @@ variable "project_name" {
 
 variable "resource_group_name" {
   description = "The name of the Azure resource group"
-  type        = string
-}
-
-variable "webapp_vnet" {
-  description = "VNet address range"
   type        = string
 }

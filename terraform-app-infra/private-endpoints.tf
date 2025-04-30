@@ -1,14 +1,5 @@
 
 #-----------------------------------------------------------------------------
-# VNet integration for App Service
-#-----------------------------------------------------------------------------
-
-resource "azurerm_app_service_virtual_network_swift_connection" "app_service_vnet_integration" {
-  app_service_id = azurerm_linux_web_app.app_service.id
-  subnet_id      = azurerm_subnet.app_service_delegated_subnet.id
-}
-
-#-----------------------------------------------------------------------------
 # Private endpoints
 #-----------------------------------------------------------------------------
 
@@ -17,9 +8,8 @@ resource "azurerm_private_endpoint" "app_service_private_endpoint" {
   name                = "pe-app-service-${var.project_name}-${var.instance}"
   resource_group_name = azurerm_resource_group.webapp_rg.name
   location            = azurerm_resource_group.webapp_rg.location
-  subnet_id           = azurerm_subnet.app_service_subnet.id
+  subnet_id           = data.azurerm_subnet.app_service_subnet.id
 
-  # REF TO RESOURCE
   private_service_connection {
     name                           = "privatelink-app-service-${var.project_name}-${var.instance}"
     private_connection_resource_id = azurerm_linux_web_app.app_service.id
@@ -41,7 +31,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "app_service_dns_link" 
   name                  = "app-service-dns-link-${var.project_name}-${var.instance}"
   resource_group_name   = azurerm_resource_group.webapp_rg.name
   private_dns_zone_name = azurerm_private_dns_zone.app_service_private_dns_zone.name
-  virtual_network_id    = azurerm_virtual_network.webapp_vnet.id
+  virtual_network_id    = data.azurerm_virtual_network.webapp_vnet.id
 }
 
 
@@ -52,7 +42,7 @@ resource "azurerm_private_endpoint" "acr_private_endpoint" {
   name                = "pe-acr-${var.project_name}-${var.instance}"
   resource_group_name = azurerm_resource_group.webapp_rg.name
   location            = azurerm_resource_group.webapp_rg.location
-  subnet_id           = azurerm_subnet.private_endpoints_subnet.id
+  subnet_id           = data.azurerm_subnet.private_endpoints_subnet.id
 
   private_service_connection {
     name                           = "acr-connection"
@@ -75,7 +65,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "acr_dns_link" {
   name                  = "acr-dns-link"
   resource_group_name   = azurerm_resource_group.webapp_rg.name
   private_dns_zone_name = azurerm_private_dns_zone.acr_private_dns_zone.name
-  virtual_network_id    = azurerm_virtual_network.webapp_vnet.id
+  virtual_network_id    = data.azurerm_virtual_network.webapp_vnet.id
 }
 
 
@@ -89,7 +79,7 @@ resource "azurerm_private_endpoint" "app_sa_private_endpoint" {
   name                = "pe-app-storage-${var.project_name}-${var.instance}"
   resource_group_name = azurerm_resource_group.webapp_rg.name
   location            = azurerm_resource_group.webapp_rg.location
-  subnet_id           = azurerm_subnet.private_endpoints_subnet.id
+  subnet_id           = data.azurerm_subnet.private_endpoints_subnet.id
 
   private_service_connection {
     name                           = "privatelink-storage-${var.project_name}-${var.instance}"
@@ -112,7 +102,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "app_sa_dns_link" {
   name                  = "app-sa-dns-link-${var.project_name}-${var.instance}"
   resource_group_name   = azurerm_resource_group.webapp_rg.name
   private_dns_zone_name = azurerm_private_dns_zone.app_sa_private_dns_zone.name
-  virtual_network_id    = azurerm_virtual_network.webapp_vnet.id
+  virtual_network_id    = data.azurerm_virtual_network.webapp_vnet.id
 }
 
 
@@ -122,7 +112,7 @@ resource "azurerm_private_endpoint" "ampls_pe" {
   name                = "pe-ampls-${var.project_name}-${var.instance}"
   location            = azurerm_resource_group.webapp_rg.location
   resource_group_name = azurerm_resource_group.webapp_rg.name
-  subnet_id           = azurerm_subnet.monitoring_subnet.id
+  subnet_id           = data.azurerm_subnet.monitoring_subnet.id
 
   private_service_connection {
     name                           = "ampls-connection"
@@ -135,7 +125,7 @@ resource "azurerm_private_endpoint" "ampls_pe" {
     private_dns_zone_ids = [azurerm_private_dns_zone.monitor_dns.id]
   }
   depends_on = [
-    azurerm_subnet.monitoring_subnet,
+    data.azurerm_subnet.monitoring_subnet,
     azurerm_monitor_private_link_scope.ampls
   ]
 }
@@ -149,7 +139,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "monitor_vnet_link" {
   name                  = "monitor-dns-link-${var.project_name}-${var.instance}"
   resource_group_name   = azurerm_resource_group.webapp_rg.name
   private_dns_zone_name = azurerm_private_dns_zone.monitor_dns.name
-  virtual_network_id    = azurerm_virtual_network.webapp_vnet.id
+  virtual_network_id    = data.azurerm_virtual_network.webapp_vnet.id
 }
 
 # Azure Monitor Private Link Scope (AMPLS) for both Log Analytics and Application Insights

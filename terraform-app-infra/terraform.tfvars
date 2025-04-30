@@ -1,12 +1,6 @@
-app_gateway_snet           = "10.0.1.0/24"
-app_service_snet           = "10.0.2.0/24"
-app_service_delegated_snet = "10.0.4.0/24"
 deploy_appgw               = 1
 environment                = "Dev"
 instance                   = "d01"
 location                   = "westeurope"
-monitoring_snet            = "10.0.3.0/24"
-private_endpoints_snet     = "10.0.0.0/24"
 project_code               = "s212"
 project_name               = "sfsw"
-webapp_vnet                = "10.0.0.0/21"

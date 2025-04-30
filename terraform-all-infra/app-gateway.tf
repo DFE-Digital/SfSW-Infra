@@ -1,7 +1,7 @@
 resource "azurerm_application_gateway" "appgw" {
   count               = var.deploy_appgw
   name                = "appgw-${var.project_name}-${var.instance}"
-  location            = azurerm_resource_group.webapp_rg.location
+  location            = azurerm_service_plan.app_service_plan.location
   resource_group_name = azurerm_resource_group.webapp_rg.name
 
   sku {
@@ -12,7 +12,7 @@ resource "azurerm_application_gateway" "appgw" {
 
   gateway_ip_configuration {
     name      = "appgw-ipconfig"
-    subnet_id = data.azurerm_subnet.app_gateway_subnet.id
+    subnet_id = azurerm_subnet.app_gateway_subnet.id
   }
 
   frontend_port {
@@ -22,7 +22,7 @@ resource "azurerm_application_gateway" "appgw" {
 
   frontend_ip_configuration {
     name                 = "appgw-ip"
-    public_ip_address_id = data.azurerm_public_ip.appgw_ip.id
+    public_ip_address_id = azurerm_public_ip.appgw_ip.id
   }
 
   backend_address_pool {

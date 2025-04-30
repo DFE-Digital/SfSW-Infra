@@ -13,7 +13,7 @@ jobs:
   infra-destroy:
     defaults:
       run:
-        working-directory: terraform-app-infra
+        working-directory: terraform-all-infra
     environment: dev    
     runs-on: ubuntu-latest
     env:

@@ -6,8 +6,11 @@ resource "azurerm_resource_group" "webapp_rg" {
   tags = local.tags
 }
 
-resource "azurerm_resource_group" "shared_rg" {
-  name     = "${var.project_code}${var.instance}-rg-${var.project_name}-shared"
-  location = var.location
-  tags = local.tags
+data "azurerm_resource_group" "core_infra_rg" {
+  name = "${var.project_code}${var.instance}-rg-${var.project_name}-core-infra"
+}
+
+data "azurerm_key_vault" "key_vault" {
+  name                = "kv-${var.project_name}-${var.instance}-temp"
+  resource_group_name = data.azurerm_resource_group.core_infra_rg.name
 }
