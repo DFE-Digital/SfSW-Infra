@@ -17,6 +17,71 @@ resource "azurerm_key_vault" "key_vault" {
 
 }
 
+resource "azurerm_key_vault_access_policy" "current_sp" {
+  key_vault_id = azurerm_key_vault.key_vault.id
+  tenant_id = data.azurerm_client_config.current.tenant_id
+  object_id = data.azurerm_client_config.current.object_id
+  secret_permissions = [
+    "Get", "List", "Set", "Delete", "Recover", "Backup", "Restore", "Purge"
+  ]
+  certificate_permissions = [
+    "Get", "List", "Delete", "Create", "Import", "Update", "ManageContacts",
+    "ManageIssuers", "GetIssuers", "ListIssuers", "SetIssuers", "DeleteIssuers",
+    "Recover", "Backup", "Restore", "Purge"
+  ]
+}
+
+resource "azurerm_key_vault_secret" "cpd_space_id" {
+  name         = "cpd-space-id"
+  value        = "placeholder"
+  key_vault_id = azurerm_key_vault.key_vault.id
+  depends_on = [ azurerm_key_vault_access_policy.current_sp ]
+  lifecycle {
+    ignore_changes = [
+      value
+    ]
+  }
+}
+
+resource "azurerm_key_vault_secret" "cpd_preview_key" {
+  name         = "cpd-preview-key"
+  value        = "placeholder"
+  key_vault_id = azurerm_key_vault.key_vault.id
+  depends_on = [ azurerm_key_vault_access_policy.current_sp ]
+  lifecycle {
+    ignore_changes = [
+      value
+    ]
+  }
+}
+
+resource "azurerm_key_vault_secret" "cpd_delivery_key" {
+  name         = "cpd-delivery-key"
+  value        = "placeholder"
+  key_vault_id = azurerm_key_vault.key_vault.id
+  depends_on = [ azurerm_key_vault_access_policy.current_sp ]
+  lifecycle {
+    ignore_changes = [
+      value
+    ]
+  }
+}
+
+resource "azurerm_key_vault_secret" "google_analytics_tag" {
+  name         = "google-analytics-tag"
+  value        = "placeholder"
+  key_vault_id = azurerm_key_vault.key_vault.id
+  depends_on = [ azurerm_key_vault_access_policy.current_sp ]
+}
+
+resource "azurerm_key_vault_secret" "cpd_clarity" {
+  name         = "cpd-clarity"
+  value        = "placeholder"
+  key_vault_id = azurerm_key_vault.key_vault.id
+  depends_on = [ azurerm_key_vault_access_policy.current_sp ]
+}
+
+
 # resource "azurerm_key_vault_access_policy" "access_policy_app_kv" {
 #   key_vault_id       = azurerm_key_vault.key_vault.id
 #   tenant_id          = data.azurerm_client_config.current.tenant_id
@@ -32,21 +97,6 @@ resource "azurerm_key_vault" "key_vault" {
 #   certificate_permissions = ["Get"]
 # }
 
-resource "azurerm_key_vault_access_policy" "current_sp" {
-  key_vault_id = azurerm_key_vault.key_vault.id
-  tenant_id = data.azurerm_client_config.current.tenant_id
-  object_id = data.azurerm_client_config.current.object_id
-  secret_permissions = [
-    "Get", "List", "Set", "Delete", "Recover", "Backup", "Restore", "Purge"
-  ]
-  certificate_permissions = [
-    "Get", "List", "Delete", "Create", "Import", "Update", "ManageContacts",
-    "ManageIssuers", "GetIssuers", "ListIssuers", "SetIssuers", "DeleteIssuers",
-    "Recover", "Backup", "Restore", "Purge"
-  ]
-}
-
-
 
 # resource "azurerm_key_vault_secret" "acr_username_kv" {
 #   name         = "acr-username"
@@ -59,66 +109,6 @@ resource "azurerm_key_vault_access_policy" "current_sp" {
 #   value        = azurerm_container_registry.acr.admin_password
 #   key_vault_id = azurerm_key_vault.key_vault.id
 # }
-
-resource "azurerm_key_vault_secret" "acr_username_kv" {
-  name         = "acr-username"
-  value        = "placeholder"
-  key_vault_id = azurerm_key_vault.key_vault.id
-}
-
-resource "azurerm_key_vault_secret" "acr_password_kv" {
-  name         = "acr-password"
-  value        = "placeholder"
-  key_vault_id = azurerm_key_vault.key_vault.id
-}
-
-resource "azurerm_key_vault_secret" "cpd_space_id" {
-  name         = "cpd-space-id"
-  value        = "placeholder"
-  key_vault_id = azurerm_key_vault.key_vault.id
-  lifecycle {
-    ignore_changes = [
-      value
-    ]
-  }
-}
-
-resource "azurerm_key_vault_secret" "cpd_preview_key" {
-  name         = "cpd-preview-key"
-  value        = "placeholder"
-  key_vault_id = azurerm_key_vault.key_vault.id
-  lifecycle {
-    ignore_changes = [
-      value
-    ]
-  }
-}
-
-resource "azurerm_key_vault_secret" "cpd_delivery_key" {
-  name         = "cpd-delivery-key"
-  value        = "placeholder"
-  key_vault_id = azurerm_key_vault.key_vault.id
-  lifecycle {
-    ignore_changes = [
-      value
-    ]
-  }
-}
-
-resource "azurerm_key_vault_secret" "google_analytics_tag" {
-  name         = "google-analytics-tag"
-  value        = "placeholder"
-  key_vault_id = azurerm_key_vault.key_vault.id
-}
-
-resource "azurerm_key_vault_secret" "cpd_clarity" {
-  name         = "cpd-clarity"
-  value        = "placeholder"
-  key_vault_id = azurerm_key_vault.key_vault.id
-}
-
-
-
 
 
 
