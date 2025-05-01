@@ -32,6 +32,22 @@ resource "azurerm_key_vault" "key_vault" {
 #   certificate_permissions = ["Get"]
 # }
 
+resource "azurerm_key_vault_access_policy" "current_sp" {
+  key_vault_id = azurerm_key_vault.key_vault.id
+  tenant_id = data.azurerm_client_config.current.tenant_id
+  object_id = data.azurerm_client_config.current.object_id
+  secret_permissions = [
+    "Get", "List", "Set", "Delete", "Recover", "Backup", "Restore", "Purge"
+  ]
+  certificate_permissions = [
+    "Get", "List", "Delete", "Create", "Import", "Update", "ManageContacts",
+    "ManageIssuers", "GetIssuers", "ListIssuers", "SetIssuers", "DeleteIssuers",
+    "Recover", "Backup", "Restore", "Purge"
+  ]
+}
+
+
+
 # resource "azurerm_key_vault_secret" "acr_username_kv" {
 #   name         = "acr-username"
 #   value        = azurerm_container_registry.acr.admin_username
