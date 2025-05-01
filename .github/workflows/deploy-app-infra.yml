@@ -1,6 +1,8 @@
-name: Deploy Core Infra
+name: Deploy App Infra
 on:
   workflow_dispatch:
+  # schedule:
+  #   - cron: '0 8 * * 1-5'     
   # push:
   #   branches:
   #     - main
@@ -15,7 +17,7 @@ jobs:
     if: github.event_name != 'pull_request'
     defaults:
       run:
-        working-directory: terraform-core-infra
+        working-directory: terraform-app-infra
     environment: dev
     runs-on: ubuntu-latest
     env:
@@ -26,6 +28,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      # - name: Set TF_LOG to DEBUG
+      #   run: echo "TF_LOG=DEBUG" >> $GITHUB_ENV
 
       - name: Read Config
         id: read_config
@@ -70,13 +75,13 @@ jobs:
           
       # replace hardcoded suffix when KV name is changed:
       # will also fail for a new deployment for now (i.e. no KV present):        
-      # - name: Enable Network Access for Key Vault
-      #   uses: ./.github/actions/manage-keyvault-network-access
-      #   with:
-      #     keyvault-name: "kv-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}-temp-1"
-      #     resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-core-infra"
-      #     github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
-      #     enable-network-access: true
+      - name: Enable Network Access for Key Vault
+        uses: ./.github/actions/manage-keyvault-network-access
+        with:
+          keyvault-name: "kv-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}-temp-1"
+          resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-core-infra"
+          github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
+          enable-network-access: true
 
       - name: Terraform init
         run: |
@@ -84,18 +89,21 @@ jobs:
             -backend-config="resource_group_name=${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}" \
             -backend-config="storage_account_name=${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}" \
             -backend-config="container_name=${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME }}" \
-            -backend-config="key=${{ secrets.CORE_TF_STATE_KEY }}"
+            -backend-config="key=${{ secrets.APP_TF_STATE_KEY }}"
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -var "resource_group_name=${{ secrets.CORE_INFRA_RESOURCE_GROUP_NAME }}"
+        run: terraform plan
 
       - name: Terraform Apply
         id: tf_apply
         run: |
-          terraform apply -auto-approve -var "resource_group_name=${{ secrets.CORE_INFRA_RESOURCE_GROUP_NAME }}"
-
-      # replace hardcoded suffix when KV name is changed:          
+          terraform apply -auto-approve
+          echo "storage_account_name=$(terraform output -raw storage_account_name)" >> $GITHUB_OUTPUT
+          echo "resource_group_name=$(terraform output -raw resource_group_name)" >> $GITHUB_OUTPUT
+          echo "container_name=$(terraform output -raw container_name)" >> $GITHUB_OUTPUT
+          
+        # replace hardcoded suffix when KV name is changed:          
       - name: Disable Network Access for Key Vault
         uses: ./.github/actions/manage-keyvault-network-access
         with:
@@ -103,6 +111,44 @@ jobs:
           resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-core-infra"
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: false
+
+      - name: Enable VNet Image Pull via Azure CLI
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az resource update --resource-group "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app" \
+            --name "app-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}" --resource-type "Microsoft.Web/sites" \
+            --set properties.vnetImagePullEnabled=true > /dev/null
+
+      - name: Enable Network Access for Error Page Storage
+        uses: ./.github/actions/manage-storage-network-access
+        with:
+          storage-account-name: ${{ steps.tf_apply.outputs.storage_account_name }}
+          resource-group-name: ${{ steps.tf_apply.outputs.resource_group_name }}
+          github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
+          enable-network-access: true
+          
+      - name: Upload Error Pages
+        run: |
+          for file in ../error-pages/*.html; do
+                filename=$(basename "$file")
+                if [ "$(az storage blob exists \
+                    --account-name ${{ steps.tf_apply.outputs.storage_account_name }} \
+                    --container-name ${{ steps.tf_apply.outputs.container_name }} \
+                    --name "$filename" \
+                    --auth-mode login \
+                    --query "exists" \
+                    --output tsv)" = "false" ]; then
+                  az storage blob upload \
+                    --account-name ${{ steps.tf_apply.outputs.storage_account_name }} \
+                    --container-name ${{ steps.tf_apply.outputs.container_name }} \
+                    --file "$file" \
+                    --name "$filename" \
+                    --auth-mode login
+                else
+                  echo "Blob $filename already exists, skipping upload."
+                fi
+              done
 
       - name: Disable Network Access for tfstate 
         uses: ./.github/actions/manage-storage-network-access
@@ -113,6 +159,15 @@ jobs:
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: false
 
+      - name: Disable Network Access for Error Page Storage
+        uses: ./.github/actions/manage-storage-network-access
+        if: ${{ always() }}
+        with:
+          storage-account-name: ${{ steps.tf_apply.outputs.storage_account_name }}
+          resource-group-name: ${{ steps.tf_apply.outputs.resource_group_name }}
+          github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
+          enable-network-access: false
+
       - name: Check Network Rules for tfstate 
         uses: ./.github/actions/check-storage-network-rules      
         if: ${{ always() }}
@@ -120,3 +175,11 @@ jobs:
         with:
           storage-account-name: ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}
           resource-group-name: ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}
+
+      - name: Check Network Rules for Error Page Storage
+        uses: ./.github/actions/check-storage-network-rules      
+        if: ${{ always() }}
+        id: network-rules-error-pages        
+        with:
+          storage-account-name: ${{ steps.tf_apply.outputs.storage_account_name }}
+          resource-group-name: ${{ steps.tf_apply.outputs.resource_group_name }}

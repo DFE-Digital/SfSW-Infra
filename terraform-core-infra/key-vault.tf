@@ -13,7 +13,7 @@ resource "azurerm_key_vault" "key_vault" {
   sku_name                      = "standard"
   soft_delete_retention_days    = 7
   enable_rbac_authorization     = false
-  public_network_access_enabled = true
+  public_network_access_enabled = false
 
 }
 
@@ -80,36 +80,5 @@ resource "azurerm_key_vault_secret" "cpd_clarity" {
   key_vault_id = azurerm_key_vault.key_vault.id
   depends_on = [ azurerm_key_vault_access_policy.current_sp ]
 }
-
-
-# resource "azurerm_key_vault_access_policy" "access_policy_app_kv" {
-#   key_vault_id       = azurerm_key_vault.key_vault.id
-#   tenant_id          = data.azurerm_client_config.current.tenant_id
-#   object_id          = azurerm_linux_web_app.app_service.identity[0].principal_id
-#   secret_permissions = ["Get"]
-# }
-
-# resource "azurerm_key_vault_access_policy" "access_policy_appgw_kv" {
-#   key_vault_id = azurerm_key_vault.key_vault.id
-#   tenant_id    = data.azurerm_client_config.current.tenant_id
-#   object_id    = azurerm_user_assigned_identity.mi_appgw.principal_id
-#   secret_permissions      = ["Get"]
-#   certificate_permissions = ["Get"]
-# }
-
-
-# resource "azurerm_key_vault_secret" "acr_username_kv" {
-#   name         = "acr-username"
-#   value        = azurerm_container_registry.acr.admin_username
-#   key_vault_id = azurerm_key_vault.key_vault.id
-# }
-
-# resource "azurerm_key_vault_secret" "acr_password_kv" {
-#   name         = "acr-password"
-#   value        = azurerm_container_registry.acr.admin_password
-#   key_vault_id = azurerm_key_vault.key_vault.id
-# }
-
-
 
 
