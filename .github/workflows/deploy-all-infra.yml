@@ -1,4 +1,4 @@
-name: Deploy SfSW Infra
+name: Deploy All Infra
 on:
   workflow_dispatch:
   # schedule:
