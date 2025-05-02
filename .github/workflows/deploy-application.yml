@@ -16,8 +16,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set GitHub Runner IP
-      run: echo "GITHUB_RUNNER_IP=$(curl -s ifconfig.me)" >> $GITHUB_ENV
+    - name: Echo GitHub Runner IP
+      run: |
+        GITHUB_RUNNER_IP=$(curl -s https://ifconfig.me)
+        echo "GITHUB_RUNNER_IP=$GITHUB_RUNNER_IP" >> $GITHUB_ENV
+        echo "GitHub Runner IP: $GITHUB_RUNNER_IP"
 
     - name: Read Config
       id: read_config
