@@ -70,13 +70,13 @@ jobs:
           
       # replace hardcoded suffix when KV name is changed:
       # will also fail for a new deployment for now (i.e. no KV present):        
-      # - name: Enable Network Access for Key Vault
-      #   uses: ./.github/actions/manage-keyvault-network-access
-      #   with:
-      #     keyvault-name: "kv-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}-temp-1"
-      #     resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-core-infra"
-      #     github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
-      #     enable-network-access: true
+      - name: Enable Network Access for Key Vault
+        uses: ./.github/actions/manage-keyvault-network-access
+        with:
+          keyvault-name: "kv-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}-temp-1"
+          resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-core-infra"
+          github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
+          enable-network-access: true
 
       - name: Terraform init
         run: |
