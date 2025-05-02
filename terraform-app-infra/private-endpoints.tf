@@ -25,6 +25,7 @@ resource "azurerm_private_endpoint" "app_service_private_endpoint" {
 resource "azurerm_private_dns_zone" "app_service_private_dns_zone" {
   name                = "privatelink.azurewebsites.net"
   resource_group_name = azurerm_resource_group.webapp_rg.name
+  depends_on = [ azurerm_linux_web_app.app_service ]
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "app_service_dns_link" {
@@ -59,6 +60,7 @@ resource "azurerm_private_endpoint" "acr_private_endpoint" {
 resource "azurerm_private_dns_zone" "acr_private_dns_zone" {
   name                = "privatelink.azurecr.io"
   resource_group_name = azurerm_resource_group.webapp_rg.name
+  depends_on = [ azurerm_container_registry.acr ]
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "acr_dns_link" {
@@ -96,6 +98,7 @@ resource "azurerm_private_endpoint" "app_sa_private_endpoint" {
 resource "azurerm_private_dns_zone" "app_sa_private_dns_zone" {
   name                = "privatelink.blob.core.windows.net"
   resource_group_name = azurerm_resource_group.webapp_rg.name
+  depends_on = [ azurerm_storage_account.error_page_sa ]
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "app_sa_dns_link" {
@@ -124,15 +127,12 @@ resource "azurerm_private_endpoint" "ampls_pe" {
     name                 = "monitor-dns-group"
     private_dns_zone_ids = [azurerm_private_dns_zone.monitor_dns.id]
   }
-  depends_on = [
-    data.azurerm_subnet.monitoring_subnet,
-    azurerm_monitor_private_link_scope.ampls
-  ]
 }
 
 resource "azurerm_private_dns_zone" "monitor_dns" {
   name                = "privatelink.monitor.azure.com"
   resource_group_name = azurerm_resource_group.webapp_rg.name
+  depends_on = [ azurerm_monitor_private_link_scope.ampls ]
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "monitor_vnet_link" {

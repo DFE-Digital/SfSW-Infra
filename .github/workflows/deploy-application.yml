@@ -93,11 +93,6 @@ jobs:
         github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
         enable-network-access: true
 
-    - name: Sleep for 40s
-      shell: bash
-      run: |
-        sleep 40
-        
     - name: Add Inbound NSG Rule for App Service
       shell: bash
       run: |
