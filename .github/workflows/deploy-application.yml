@@ -1,4 +1,4 @@
-name: Push and Deploy Image to App Service
+name: Deploy Application
 on:
   workflow_dispatch:
 
@@ -8,7 +8,7 @@ permissions:
     pull-requests: write
 
 jobs:
-  push-and-deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     environment: dev
 
