@@ -59,7 +59,7 @@ jobs:
       uses: ./.github/actions/manage-acr-network-access
       with:
         acr-name: "acr${{ env.PROJECT_NAME }}${{ env.INSTANCE }}"
-        resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app"
+        resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-core-infra"
         github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
         enable-network-access: true
 
@@ -103,7 +103,7 @@ jobs:
       run: |
         az network nsg rule create \
           --nsg-name "nsg-app-service-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}" \
-          --resource-group "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app" \
+          --resource-group "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-core-infra" \
           --name "Allow-GitHub-Runner-IP" \
           --priority 100 \
           --direction Inbound \
@@ -138,7 +138,7 @@ jobs:
       run: |
         az network nsg rule delete \
           --nsg-name "nsg-app-service-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}" \
-          --resource-group "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app" \
+          --resource-group "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-core-infra" \
           --name "Allow-GitHub-Runner-IP"
       
     - name: Disable Network Access for App Service
