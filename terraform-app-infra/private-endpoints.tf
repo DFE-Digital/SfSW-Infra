@@ -147,8 +147,8 @@ resource "azurerm_private_dns_zone_virtual_network_link" "app_sa_dns_link" {
 # Private Endpoint for AMPLS (shared for both services)
 resource "azurerm_private_endpoint" "ampls_pe" {
   name                = "pe-ampls-${var.project_name}-${var.instance}"
+  resource_group_name = azurerm_resource_group.private_endpoints_rg.name
   location            = azurerm_resource_group.private_endpoints_rg.location
-  resource_group_name = azurerm_resource_group.webapp_rg.name
   subnet_id           = data.azurerm_subnet.monitoring_subnet.id
 
   private_service_connection {
