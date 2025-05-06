@@ -6,7 +6,7 @@ resource "random_string" "suffix" {
 
 resource "azurerm_key_vault" "key_vault" {
   # name = "kv-${var.project_name}-${var.instance}-${random_string.suffix.result}"
-  name                       = "kv-${var.project_name}-${var.instance}-temp-1"  
+  name                       = "kv-${var.project_name}-${var.instance}-temp-2"  
   location                      = azurerm_resource_group.core_infra_rg.location
   resource_group_name           = azurerm_resource_group.core_infra_rg.name
   tenant_id                     = data.azurerm_client_config.current.tenant_id
