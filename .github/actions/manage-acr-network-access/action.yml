@@ -24,16 +24,16 @@ runs:
           --resource-group ${{ inputs.resource-group-name }} \
           --name ${{ inputs.acr-name }} \
           --public-network-enabled true \
-          --default-action Deny > /dev/null
+          --default-action Allow > /dev/null
 
-    - name: Add Network Rule
-      if: ${{ inputs.enable-network-access == 'true' }}
-      shell: bash
-      run: |
-        az acr network-rule add \
-          --resource-group ${{ inputs.resource-group-name }} \
-          --name ${{ inputs.acr-name }} \
-          --ip-address ${{ inputs.github-runner-ip }} > /dev/null
+    # - name: Add Network Rule
+    #   if: ${{ inputs.enable-network-access == 'true' }}
+    #   shell: bash
+    #   run: |
+    #     az acr network-rule add \
+    #       --resource-group ${{ inputs.resource-group-name }} \
+    #       --name ${{ inputs.acr-name }} \
+    #       --ip-address ${{ inputs.github-runner-ip }} > /dev/null
 
     - name: Disable Public Network Access
       if: ${{ inputs.enable-network-access == 'false' }}
@@ -47,17 +47,17 @@ runs:
           --name ${{ inputs.acr-name }} \
           --public-network-enabled false > /dev/null
 
-    - name: Remove Network Rule
-      if: ${{ inputs.enable-network-access == 'false' }}
-      shell: bash
-      run: |
-        if [ $? -ne 0 ]; then
-          echo "Removing network rule due to workflow failure or cancellation."
-        fi
-        az acr network-rule remove \
-          --resource-group ${{ inputs.resource-group-name }} \
-          --name ${{ inputs.acr-name }} \
-          --ip-address ${{ inputs.github-runner-ip }} > /dev/null
+    # - name: Remove Network Rule
+    #   if: ${{ inputs.enable-network-access == 'false' }}
+    #   shell: bash
+    #   run: |
+    #     if [ $? -ne 0 ]; then
+    #       echo "Removing network rule due to workflow failure or cancellation."
+    #     fi
+    #     az acr network-rule remove \
+    #       --resource-group ${{ inputs.resource-group-name }} \
+    #       --name ${{ inputs.acr-name }} \
+    #       --ip-address ${{ inputs.github-runner-ip }} > /dev/null
 
     - name: Sleep for 40s
       shell: bash

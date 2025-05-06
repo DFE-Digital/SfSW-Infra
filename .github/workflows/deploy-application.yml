@@ -112,6 +112,14 @@ jobs:
           --source-address-prefix "${{ env.GITHUB_RUNNER_IP }}" \
           --destination-address-prefix "${{ env.APP_SERVICE_SNET }}"
       
+    - name: Set vnetImagePullEnabled for App Service
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+          az resource update --resource-group "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app" \
+          --name "app-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}" --resource-type "Microsoft.Web/sites" \
+          --set properties.vnetImagePullEnabled=false > /dev/null
+
     - name: Sleep for 40s
       shell: bash
       run: |
@@ -130,6 +138,14 @@ jobs:
         resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app"
         github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
         enable-network-access: false
+
+    # - name: Set vnetImagePullEnabled for App Service
+    #   uses: azure/CLI@v1
+    #   with:
+    #     inlineScript: |
+    #       az resource update --resource-group "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app" \
+    #       --name "app-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}" --resource-type "Microsoft.Web/sites" \
+    #       --set properties.vnetImagePullEnabled=true > /dev/null
 
     - name: Remove Inbound NSG Rule for App Service
       shell: bash
