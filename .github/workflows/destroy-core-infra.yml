@@ -67,6 +67,7 @@ jobs:
           enable-network-access: true
 
       # replace hardcoded suffix when KV name is changed:
+      # enable when modifying core infra and disable for a new deployment
       - name: Enable Network Access for Key Vault
         uses: ./.github/actions/manage-keyvault-network-access
         with:

@@ -12,23 +12,16 @@ resource "azurerm_key_vault" "key_vault" {
   tenant_id                     = data.azurerm_client_config.current.tenant_id
   sku_name                      = "standard"
   soft_delete_retention_days    = 7
-  enable_rbac_authorization     = false
+  enable_rbac_authorization     = true
   public_network_access_enabled = true
 
 }
 
-resource "azurerm_key_vault_access_policy" "current_sp" {
-  key_vault_id = azurerm_key_vault.key_vault.id
-  tenant_id = data.azurerm_client_config.current.tenant_id
-  object_id = data.azurerm_client_config.current.object_id
-  secret_permissions = [
-    "Get", "List", "Set", "Delete", "Recover", "Backup", "Restore", "Purge"
-  ]
-  certificate_permissions = [
-    "Get", "List", "Delete", "Create", "Import", "Update", "ManageContacts",
-    "ManageIssuers", "GetIssuers", "ListIssuers", "SetIssuers", "DeleteIssuers",
-    "Recover", "Backup", "Restore", "Purge"
-  ]
+#  Key Vault Administrator
+resource "azurerm_role_assignment" "current_sp_kv_admin" {
+  scope                = azurerm_key_vault.key_vault.id
+  role_definition_name = "00482a5a-887f-4fb3-b363-3b7fe8e74483"
+  principal_id         = data.azurerm_client_config.current.object_id
 }
 
 resource "azurerm_key_vault_secret" "cpd_space_id" {
