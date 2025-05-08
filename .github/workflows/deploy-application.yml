@@ -121,7 +121,7 @@ jobs:
     #       --name "app-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}" --resource-type "Microsoft.Web/sites" \
     #       --set properties.vnetImagePullEnabled=false > /dev/null
 
-    - name: Sleep for 40s
+    - name: Sleep 40s
       shell: bash
       run: |
         sleep 40
@@ -132,6 +132,11 @@ jobs:
         app-name: ${{ env.APP_SERVICE_NAME }}
         images: ${{ env.IMAGE_TAGS }}
 
+    - name: Sleep 60s
+      shell: bash
+      run: |
+        sleep 60
+  
     - name: Disable Network Access for ACR
       uses: ./.github/actions/manage-acr-network-access
       with:
