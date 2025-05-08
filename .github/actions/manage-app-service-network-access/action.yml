@@ -56,7 +56,7 @@ runs:
           --name ${{ inputs.app-service-name }} \
           --set publicNetworkAccess=Disabled > /dev/null
 
-    - name: Sleep for 40s
+    - name: Sleep 40s
       shell: bash
       run: |
         sleep 40

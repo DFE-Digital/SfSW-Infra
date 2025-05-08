@@ -6,16 +6,23 @@ resource "random_string" "suffix" {
 
 resource "azurerm_key_vault" "key_vault" {
   # name = "kv-${var.project_name}-${var.instance}-${random_string.suffix.result}"
-  name                       = "kv-${var.project_name}-${var.instance}-temp-1"  
+  name                       = "kv-${var.project_name}-${var.instance}-temp-2"  
   location                      = azurerm_resource_group.core_infra_rg.location
   resource_group_name           = azurerm_resource_group.core_infra_rg.name
   tenant_id                     = data.azurerm_client_config.current.tenant_id
   sku_name                      = "standard"
   soft_delete_retention_days    = 7
-  enable_rbac_authorization     = false
-  public_network_access_enabled = false
+  enable_rbac_authorization     = false # change for managed identity
+  public_network_access_enabled = true
 
 }
+
+
+
+
+          # ------------------------------------------
+            # remove for managed identity
+          # ------------------------------------------
 
 resource "azurerm_key_vault_access_policy" "current_sp" {
   key_vault_id = azurerm_key_vault.key_vault.id
@@ -30,6 +37,17 @@ resource "azurerm_key_vault_access_policy" "current_sp" {
     "Recover", "Backup", "Restore", "Purge"
   ]
 }
+
+          # ------------------------------------------
+            # use for managed identity
+          # ------------------------------------------
+
+#  Key Vault Administrator
+# resource "azurerm_role_assignment" "current_sp_kv_admin" {
+#   scope                = azurerm_key_vault.key_vault.id
+#   role_definition_name = "00482a5a-887f-4fb3-b363-3b7fe8e74483"
+#   principal_id         = data.azurerm_client_config.current.object_id
+# }
 
 resource "azurerm_key_vault_secret" "cpd_space_id" {
   name         = "cpd-space-id"

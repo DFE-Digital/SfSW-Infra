@@ -17,9 +17,9 @@ resource "azurerm_linux_web_app" "app_service" {
   site_config {
     application_stack {
       docker_registry_url      = "https://${azurerm_container_registry.acr.login_server}"
+      docker_image_name        = "${var.project_name}-app-${var.instance}:latest"
       docker_registry_username = "@Microsoft.KeyVault(VaultName=${data.azurerm_key_vault.key_vault.name};SecretName=acr-username)"
-      docker_registry_password = "@Microsoft.KeyVault(VaultName=${data.azurerm_key_vault.key_vault.name};SecretName=acr-password)"
-      docker_image_name        = "sfsw-app-d01:latest"
+      docker_registry_password = "@Microsoft.KeyVault(VaultName=${data.azurerm_key_vault.key_vault.name};SecretName=acr-password)"      
     }
     vnet_route_all_enabled = true
   }
@@ -41,7 +41,28 @@ resource "azurerm_linux_web_app" "app_service" {
     CPD_SEARCH_INDEX_NAME                       = ""
     DOCKER_ENABLE_CI                            = "true"
   }
+
+
   identity {
     type = "SystemAssigned"
   }
+  # identity {
+  #     type         = "UserAssigned"
+  #     identity_ids = [azurerm_user_assigned_identity.mi_app_service.id]
+  #   }
+
+  logs {
+    application_logs {
+      file_system_level = "Verbose"
+    }
+    http_logs {
+      file_system {
+        retention_in_days = 7
+        retention_in_mb   = 35
+      }
+    }
+    failed_request_tracing = true
+    detailed_error_messages = true
+  }
+
 }
