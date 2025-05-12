@@ -41,7 +41,7 @@ resource "azurerm_key_vault" "key_vault" {
 #  Key Vault Administrator
 resource "azurerm_role_assignment" "current_sp_kv_admin" {
   scope                = azurerm_key_vault.key_vault.id
-  role_definition_name = "00482a5a-887f-4fb3-b363-3b7fe8e74483"
+  role_definition_name = "Key Vault Administrator"
   principal_id         = data.azurerm_client_config.current.object_id
 }
 
