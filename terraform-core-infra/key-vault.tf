@@ -16,41 +16,34 @@ resource "azurerm_key_vault" "key_vault" {
   public_network_access_enabled = true
 
 }
-          # ------------------------------------------
-            # remove for managed identity
-          # ------------------------------------------
 
-# resource "azurerm_key_vault_access_policy" "current_sp" {
-#   key_vault_id = azurerm_key_vault.key_vault.id
-#   tenant_id = data.azurerm_client_config.current.tenant_id
-#   object_id = data.azurerm_client_config.current.object_id
-#   secret_permissions = [
-#     "Get", "List", "Set", "Delete", "Recover", "Backup", "Restore", "Purge"
-#   ]
-#   certificate_permissions = [
-#     "Get", "List", "Delete", "Create", "Import", "Update", "ManageContacts",
-#     "ManageIssuers", "GetIssuers", "ListIssuers", "SetIssuers", "DeleteIssuers",
-#     "Recover", "Backup", "Restore", "Purge"
-#   ]
-# }
-
-          # ------------------------------------------
-            # use for managed identity
-          # ------------------------------------------
+resource "azurerm_key_vault_access_policy" "current_sp" {
+  key_vault_id = azurerm_key_vault.key_vault.id
+  tenant_id = data.azurerm_client_config.current.tenant_id
+  object_id = data.azurerm_client_config.current.object_id
+  secret_permissions = [
+    "Get", "List", "Set", "Delete", "Recover", "Backup", "Restore", "Purge"
+  ]
+  certificate_permissions = [
+    "Get", "List", "Delete", "Create", "Import", "Update", "ManageContacts",
+    "ManageIssuers", "GetIssuers", "ListIssuers", "SetIssuers", "DeleteIssuers",
+    "Recover", "Backup", "Restore", "Purge"
+  ]
+}
 
 #  Key Vault Administrator
-resource "azurerm_role_assignment" "current_sp_kv_admin" {
-  scope                = azurerm_key_vault.key_vault.id
-  role_definition_name = "Key Vault Administrator"
-  principal_id         = data.azurerm_client_config.current.object_id
-  principal_type       = "ServicePrincipal"
-}
+# resource "azurerm_role_assignment" "current_sp_kv_admin" {
+#   scope                = azurerm_key_vault.key_vault.id
+#   role_definition_name = "Key Vault Administrator"
+#   principal_id         = data.azurerm_client_config.current.object_id
+#   principal_type       = "ServicePrincipal"
+# }
 
 resource "azurerm_key_vault_secret" "cpd_space_id" {
   name         = "cpd-space-id"
   value        = "placeholder"
   key_vault_id = azurerm_key_vault.key_vault.id
-  depends_on = [ azurerm_role_assignment.current_sp_kv_admin ]
+  depends_on = [ azurerm_key_vault_access_policy.current_sp ]
   lifecycle {
     ignore_changes = [
       value
@@ -62,7 +55,7 @@ resource "azurerm_key_vault_secret" "cpd_preview_key" {
   name         = "cpd-preview-key"
   value        = "placeholder"
   key_vault_id = azurerm_key_vault.key_vault.id
-  depends_on = [ azurerm_role_assignment.current_sp_kv_admin ]
+  depends_on = [ azurerm_key_vault_access_policy.current_sp ]
   lifecycle {
     ignore_changes = [
       value
@@ -74,7 +67,7 @@ resource "azurerm_key_vault_secret" "cpd_delivery_key" {
   name         = "cpd-delivery-key"
   value        = "placeholder"
   key_vault_id = azurerm_key_vault.key_vault.id
-  depends_on = [ azurerm_role_assignment.current_sp_kv_admin ]
+  depends_on = [ azurerm_key_vault_access_policy.current_sp ]
   lifecycle {
     ignore_changes = [
       value
@@ -86,14 +79,14 @@ resource "azurerm_key_vault_secret" "google_analytics_tag" {
   name         = "google-analytics-tag"
   value        = "placeholder"
   key_vault_id = azurerm_key_vault.key_vault.id
-  depends_on = [ azurerm_role_assignment.current_sp_kv_admin ]
+  depends_on = [ azurerm_key_vault_access_policy.current_sp ]
 }
 
 resource "azurerm_key_vault_secret" "cpd_clarity" {
   name         = "cpd-clarity"
   value        = "placeholder"
   key_vault_id = azurerm_key_vault.key_vault.id
-  depends_on = [ azurerm_role_assignment.current_sp_kv_admin ]
+  depends_on = [ azurerm_key_vault_access_policy.current_sp ]
 }
 
 
