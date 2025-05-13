@@ -11,12 +11,14 @@ resource "azurerm_role_assignment" "mi_kv_access" {
   scope                = data.azurerm_key_vault.key_vault.id
   role_definition_name = "Key Vault Secrets User"
   principal_id         = azurerm_user_assigned_identity.mi_app_service.principal_id
+  principal_type       = "ServicePrincipal"
 }
 # Key Vault Certificates Officer
 resource "azurerm_role_assignment" "appgw_kv_access" {
   scope                = data.azurerm_key_vault.key_vault.id
   role_definition_name = "Key Vault Certificates Officer"
   principal_id         = azurerm_user_assigned_identity.mi_appgw.principal_id
+  principal_type       = "ServicePrincipal"
 }
 
 # resource "azurerm_key_vault_access_policy" "access_policy_app_kv" {
