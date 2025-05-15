@@ -12,12 +12,12 @@ resource "azurerm_application_gateway" "appgw" {
 
   gateway_ip_configuration {
     name      = "appgw-ipconfig"
-    subnet_id = azurerm_subnet.app_gateway_subnet.id
+    subnet_id = data.azurerm_subnet.app_gateway_subnet.id
   }
 
   frontend_ip_configuration {
     name                 = "appgw-ip"
-    public_ip_address_id = azurerm_public_ip.appgw_ip.id
+    public_ip_address_id = data.azurerm_subnet.app_gateway_subnet.id
   }
 
   frontend_port {
@@ -32,19 +32,19 @@ resource "azurerm_application_gateway" "appgw" {
 
   ssl_certificate {
     name                = "appgw-ssl-cert"
-    key_vault_secret_id = azurerm_key_vault_certificate.ssl_cert.secret_id
+    key_vault_secret_id = data.azurerm_key_vault.key_vault.ssl_cert.secret_id
   }
 
   backend_address_pool {
     name  = "backendpool"
-    fqdns = ["host-name.azurewebsites.net"]
+    fqdns = ["app-sfsw-d01.azurewebsites.net"]
   }
 
   backend_http_settings {
     name                  = "https-settings"
     port                  = 443
     protocol              = "Https"
-    host_name             = "host-name.azurewebsites.net"
+    host_name             = "app-sfsw-d01.azurewebsites.net"
     cookie_based_affinity = "Disabled"
     request_timeout       = 20
   }

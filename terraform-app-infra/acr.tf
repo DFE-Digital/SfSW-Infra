@@ -16,9 +16,9 @@ resource "azurerm_container_registry" "acr" {
           # ------------------------------------------
             # use for managed identity with RBAC
           # ------------------------------------------
-resource "azurerm_role_assignment" "mi_acr_pull" {
-  scope                = azurerm_container_registry.acr.id
-  role_definition_name = "AcrPull"
-  principal_id         = azurerm_user_assigned_identity.mi_app_service.principal_id
-  principal_type       = "ServicePrincipal"
-}
+# resource "azurerm_role_assignment" "mi_acr_pull" {
+#   scope                = azurerm_container_registry.acr.id
+#   role_definition_name = "AcrPull"
+#   principal_id         = azurerm_user_assigned_identity.mi_app_service.principal_id
+#   principal_type       = "ServicePrincipal"
+# }
