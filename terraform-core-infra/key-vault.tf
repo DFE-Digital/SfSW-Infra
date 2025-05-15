@@ -14,7 +14,6 @@ resource "azurerm_key_vault" "key_vault" {
   soft_delete_retention_days    = 7
   enable_rbac_authorization     = false
   public_network_access_enabled = true
-
 }
 
 resource "azurerm_key_vault_access_policy" "current_sp" {
