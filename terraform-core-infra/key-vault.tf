@@ -42,7 +42,6 @@ resource "azurerm_key_vault_secret" "cpd_space_id" {
   name         = "cpd-space-id"
   value        = "placeholder"
   key_vault_id = azurerm_key_vault.key_vault.id
-  depends_on = [ azurerm_key_vault_access_policy.current_sp ]
   lifecycle {
     ignore_changes = [
       value
@@ -54,7 +53,6 @@ resource "azurerm_key_vault_secret" "cpd_preview_key" {
   name         = "cpd-preview-key"
   value        = "placeholder"
   key_vault_id = azurerm_key_vault.key_vault.id
-  depends_on = [ azurerm_key_vault_access_policy.current_sp ]
   lifecycle {
     ignore_changes = [
       value
@@ -66,7 +64,6 @@ resource "azurerm_key_vault_secret" "cpd_delivery_key" {
   name         = "cpd-delivery-key"
   value        = "placeholder"
   key_vault_id = azurerm_key_vault.key_vault.id
-  depends_on = [ azurerm_key_vault_access_policy.current_sp ]
   lifecycle {
     ignore_changes = [
       value
@@ -78,14 +75,12 @@ resource "azurerm_key_vault_secret" "google_analytics_tag" {
   name         = "google-analytics-tag"
   value        = "placeholder"
   key_vault_id = azurerm_key_vault.key_vault.id
-  depends_on = [ azurerm_key_vault_access_policy.current_sp ]
 }
 
 resource "azurerm_key_vault_secret" "cpd_clarity" {
   name         = "cpd-clarity"
   value        = "placeholder"
   key_vault_id = azurerm_key_vault.key_vault.id
-  depends_on = [ azurerm_key_vault_access_policy.current_sp ]
 }
 
 
