@@ -87,7 +87,6 @@ jobs:
       - name: Terraform Destroy
         id: destroy
         run: terraform destroy -auto-approve -lock=false -var "resource_group_name=${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-core-infra"
-        continue-on-error: true
 
       - name: Disable Network Access for tfstate 
         uses: ./.github/actions/manage-storage-network-access
