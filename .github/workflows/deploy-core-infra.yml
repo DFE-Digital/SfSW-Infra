@@ -70,13 +70,13 @@ jobs:
           
       # replace hardcoded suffix when KV name is changed:
       # use when modifying core-infra (will fail for a new deployment (i.e. no KV present)):        
-      - name: Enable Network Access for Key Vault
-        uses: ./.github/actions/manage-keyvault-network-access
-        with:
-          keyvault-name: "kv-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}-temp-8"
-          resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-core-infra"
-          github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
-          enable-network-access: true
+      # - name: Enable Network Access for Key Vault
+      #   uses: ./.github/actions/manage-keyvault-network-access
+      #   with:
+      #     keyvault-name: "kv-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}-temp-9"
+      #     resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-core-infra"
+      #     github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
+      #     enable-network-access: true
 
       - name: Terraform init
         run: |
@@ -99,7 +99,7 @@ jobs:
       - name: Disable Network Access for Key Vault
         uses: ./.github/actions/manage-keyvault-network-access
         with:
-          keyvault-name: "kv-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}-temp-8"
+          keyvault-name: "kv-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}-temp-9"
           resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-core-infra"
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: false

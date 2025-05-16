@@ -1,5 +1,5 @@
 data "azurerm_key_vault" "key_vault" {
-  name                = "kv-${var.project_name}-${var.instance}-temp-8"
+  name                = "kv-${var.project_name}-${var.instance}-temp-9"
   resource_group_name = data.azurerm_resource_group.core_infra_rg.name
 }
           # ------------------------------------------
@@ -26,21 +26,6 @@ data "azurerm_key_vault" "key_vault" {
 
 
 
-
-# resource "azurerm_key_vault_access_policy" "access_policy_app_kv" {
-#   key_vault_id       = data.azurerm_key_vault.key_vault.id
-#   tenant_id          = data.azurerm_client_config.current.tenant_id
-#   object_id          = azurerm_user_assigned_identity.mi_app_service.principal_id
-#   secret_permissions = ["Get"]
-# }
-
-# resource "azurerm_key_vault_access_policy" "access_policy_appgw_kv" {
-#   key_vault_id = data.azurerm_key_vault.key_vault.id
-#   tenant_id    = data.azurerm_client_config.current.tenant_id
-#   object_id    = azurerm_user_assigned_identity.mi_appgw.principal_id
-#   secret_permissions      = ["Get"]
-#   certificate_permissions = ["Get"]
-# }
 
 
 

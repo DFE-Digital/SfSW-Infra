@@ -6,13 +6,13 @@ resource "random_string" "suffix" {
 
 resource "azurerm_key_vault" "key_vault" {
   # name = "kv-${var.project_name}-${var.instance}-${random_string.suffix.result}"
-  name                       = "kv-${var.project_name}-${var.instance}-temp-8"  
+  name                       = "kv-${var.project_name}-${var.instance}-temp-9"  
   location                      = azurerm_resource_group.core_infra_rg.location
   resource_group_name           = azurerm_resource_group.core_infra_rg.name
   tenant_id                     = data.azurerm_client_config.current.tenant_id
   sku_name                      = "standard"
   soft_delete_retention_days    = 7
-  enable_rbac_authorization     = true
+  enable_rbac_authorization     = false
   public_network_access_enabled = true
 }
 
@@ -29,6 +29,29 @@ resource "azurerm_key_vault" "key_vault" {
 #     "Recover", "Backup", "Restore", "Purge"
 #   ]
 # }
+
+resource "azurerm_key_vault_access_policy" "access_policy_app_kv" {
+  key_vault_id       = azurerm_key_vault.key_vault.id
+  tenant_id          = data.azurerm_client_config.current.tenant_id
+  object_id          = azurerm_user_assigned_identity.mi_app_service.principal_id
+  secret_permissions = [
+    "get",
+    "list"
+  ]
+}
+
+resource "azurerm_key_vault_access_policy" "access_policy_appgw_kv" {
+  key_vault_id = data.azurerm_key_vault.key_vault.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = azurerm_user_assigned_identity.mi_appgw.principal_id
+  certificate_permissions = [
+    "get",
+    "list"
+  ]
+}
+
+
+
 
 #  Key Vault Administrator
 # resource "azurerm_role_assignment" "current_sp_kv_admin" {
