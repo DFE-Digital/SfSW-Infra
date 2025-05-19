@@ -30,37 +30,6 @@ resource "azurerm_key_vault_access_policy" "current_sp" {
   ]
 }
 
-# resource "azurerm_key_vault_access_policy" "access_policy_app_kv" {
-#   key_vault_id       = azurerm_key_vault.key_vault.id
-#   tenant_id          = data.azurerm_client_config.current.tenant_id
-#   object_id          = azurerm_user_assigned_identity.mi_app_service.principal_id
-#   secret_permissions = [
-#     "Get",
-#     "List"
-#   ]
-# }
-
-resource "azurerm_key_vault_access_policy" "access_policy_appgw_kv" {
-  key_vault_id = azurerm_key_vault.key_vault.id
-  tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = azurerm_user_assigned_identity.mi_appgw.principal_id
-  certificate_permissions = [
-    "Get",
-    "List"
-  ]
-}
-
-
-
-
-#  Key Vault Administrator
-# resource "azurerm_role_assignment" "current_sp_kv_admin" {
-#   scope                = azurerm_key_vault.key_vault.id
-#   role_definition_name = "Key Vault Administrator"
-#   principal_id         = data.azurerm_client_config.current.object_id
-#   principal_type       = "ServicePrincipal"
-# }
-
 resource "azurerm_key_vault_secret" "cpd_space_id" {
   name         = "cpd-space-id"
   value        = "placeholder"

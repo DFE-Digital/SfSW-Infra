@@ -47,7 +47,7 @@ resource "azurerm_linux_web_app" "app_service" {
   #   type = "SystemAssigned"
   # }
   identity {
-      type         = "SystemAssigned, UserAssigned"
+      type         = "UserAssigned"
       identity_ids = [data.azurerm_user_assigned_identity.mi_app_service.id]
     }
 
@@ -64,4 +64,5 @@ resource "azurerm_linux_web_app" "app_service" {
     failed_request_tracing = true
     detailed_error_messages = true
   }
+  depends_on = [ azurerm_key_vault_access_policy.access_policy_app_kv ]
 }
