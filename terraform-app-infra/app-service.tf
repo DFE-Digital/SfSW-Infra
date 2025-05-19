@@ -18,8 +18,6 @@ resource "azurerm_linux_web_app" "app_service" {
     application_stack {
       docker_registry_url      = "https://${azurerm_container_registry.acr.login_server}"
       docker_image_name        = "${var.project_name}-app-${var.instance}:latest"
-      docker_registry_username = "@Microsoft.KeyVault(VaultName=${data.azurerm_key_vault.key_vault.name};SecretName=acr-username)"
-      docker_registry_password = "@Microsoft.KeyVault(VaultName=${data.azurerm_key_vault.key_vault.name};SecretName=acr-password)"      
     }
     vnet_route_all_enabled = true
   }
@@ -42,6 +40,7 @@ resource "azurerm_linux_web_app" "app_service" {
     DOCKER_ENABLE_CI                            = "true"
   }
 
+  key_vault_reference_identity_id = data.azurerm_user_assigned_identity.mi_app_service.id
 
   # identity {
   #   type = "SystemAssigned"
