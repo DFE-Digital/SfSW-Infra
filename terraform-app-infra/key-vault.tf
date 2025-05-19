@@ -9,25 +9,25 @@ data "azurerm_key_vault_certificate" "sfsw_cert" {
 }
 
 
-# resource "azurerm_key_vault_access_policy" "access_policy_app_kv" {
-#   key_vault_id       = data.azurerm_key_vault.key_vault.id
-#   tenant_id          = data.azurerm_client_config.current.tenant_id
-#   object_id          = data.azurerm_user_assigned_identity.mi_app_service.principal_id
-#   secret_permissions = [
-#     "Get",
-#     "List"
-#   ]
-# }
+resource "azurerm_key_vault_access_policy" "access_policy_app_kv" {
+  key_vault_id       = data.azurerm_key_vault.key_vault.id
+  tenant_id          = data.azurerm_client_config.current.tenant_id
+  object_id          = data.azurerm_user_assigned_identity.mi_app_service.principal_id
+  secret_permissions = [
+    "Get",
+    "List"
+  ]
+}
 
-# resource "azurerm_key_vault_access_policy" "access_policy_appgw_kv" {
-#   key_vault_id = data.azurerm_key_vault.key_vault.id
-#   tenant_id    = data.azurerm_client_config.current.tenant_id
-#   object_id    = data.azurerm_user_assigned_identity.mi_appgw.principal_id
-#   certificate_permissions = [
-#     "Get",
-#     "List"
-#   ]
-# }
+resource "azurerm_key_vault_access_policy" "access_policy_appgw_kv" {
+  key_vault_id = data.azurerm_key_vault.key_vault.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = data.azurerm_user_assigned_identity.mi_appgw.principal_id
+  certificate_permissions = [
+    "Get",
+    "List"
+  ]
+}
 
 
 
