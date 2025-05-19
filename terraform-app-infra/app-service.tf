@@ -43,13 +43,13 @@ resource "azurerm_linux_web_app" "app_service" {
   }
 
 
-  # identity {
-  #   type = "SystemAssigned"
-  # }
   identity {
-      type         = "UserAssigned"
-      identity_ids = [data.azurerm_user_assigned_identity.mi_app_service.id]
-    }
+    type = "SystemAssigned"
+  }
+  # identity {
+  #     type         = "UserAssigned"
+  #     identity_ids = [data.azurerm_user_assigned_identity.mi_app_service.id]
+  #   }
 
   logs {
     application_logs {
