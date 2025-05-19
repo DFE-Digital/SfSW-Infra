@@ -64,5 +64,5 @@ resource "azurerm_linux_web_app" "app_service" {
     failed_request_tracing = true
     detailed_error_messages = true
   }
-  depends_on = [ data.azurerm_key_vault_access_policy.access_policy_app_kv ]
+  depends_on = [ azurerm_key_vault_access_policy.access_policy_app_kv ]
 }
