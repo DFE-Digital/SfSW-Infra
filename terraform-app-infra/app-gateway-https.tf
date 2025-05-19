@@ -91,6 +91,6 @@ resource "azurerm_application_gateway" "appgw" {
 
   identity {
     type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.mi_appgw.id]
+    identity_ids = [data.azurerm_user_assigned_identity.mi_appgw.id]
   }
 }
