@@ -1,7 +1,7 @@
 resource "azurerm_application_gateway" "appgw" {
   count               = var.deploy_appgw
   name                = "appgw-${var.project_name}-${var.instance}"
-  location            = azurerm_service_plan.app_service_plan.location
+  location            = azurerm_resource_group.webapp_rg.location
   resource_group_name = azurerm_resource_group.webapp_rg.name
 
   sku {
@@ -32,7 +32,7 @@ resource "azurerm_application_gateway" "appgw" {
 
   ssl_certificate {
     name                = "appgw-ssl-cert"
-    key_vault_secret_id = data.azurerm_key_vault.key_vault.ssl_cert.secret_id
+    key_vault_secret_id = data.azurerm_key_vault_certificate.sfsw_cert.secret_id
   }
 
   backend_address_pool {
