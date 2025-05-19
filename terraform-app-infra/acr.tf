@@ -11,7 +11,6 @@ resource "azurerm_container_registry" "acr" {
       public_network_access_enabled
     ]
   }
-  depends_on = [ azurerm_user_assigned_identity.mi_app_service ]
 }
           # ------------------------------------------
             # use for managed identity with RBAC
