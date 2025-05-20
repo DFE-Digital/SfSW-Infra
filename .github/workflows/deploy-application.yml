@@ -1,8 +1,8 @@
 name: Deploy Application
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '30 7 * * 1-5'
+  # schedule:
+  #   - cron: '30 7 * * 1-5'
 permissions:
     id-token: write
     contents: read
@@ -121,10 +121,10 @@ jobs:
     #       --name "app-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}" --resource-type "Microsoft.Web/sites" \
     #       --set properties.vnetImagePullEnabled=false > /dev/null
 
-    - name: Sleep 40s
+    - name: Sleep 60s
       shell: bash
       run: |
-        sleep 40
+        sleep 60
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
@@ -132,10 +132,10 @@ jobs:
         app-name: ${{ env.APP_SERVICE_NAME }}
         images: ${{ env.IMAGE_TAGS }}
 
-    - name: Sleep 60s
+    - name: Sleep 120s
       shell: bash
       run: |
-        sleep 60
+        sleep 120
   
     - name: Disable Network Access for ACR
       uses: ./.github/actions/manage-acr-network-access

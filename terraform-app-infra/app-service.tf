@@ -3,7 +3,7 @@ resource "azurerm_service_plan" "app_service_plan" {
   resource_group_name = azurerm_resource_group.webapp_rg.name
   location            = azurerm_resource_group.webapp_rg.location
   os_type             = "Linux"
-  sku_name            = "S1"
+  sku_name            = "B1"
 }
 
 resource "azurerm_linux_web_app" "app_service" {
@@ -18,8 +18,6 @@ resource "azurerm_linux_web_app" "app_service" {
     application_stack {
       docker_registry_url      = "https://${azurerm_container_registry.acr.login_server}"
       docker_image_name        = "${var.project_name}-app-${var.instance}:latest"
-      docker_registry_username = "@Microsoft.KeyVault(VaultName=${data.azurerm_key_vault.key_vault.name};SecretName=acr-username)"
-      docker_registry_password = "@Microsoft.KeyVault(VaultName=${data.azurerm_key_vault.key_vault.name};SecretName=acr-password)"      
     }
     vnet_route_all_enabled = true
   }
@@ -39,16 +37,17 @@ resource "azurerm_linux_web_app" "app_service" {
     CPD_SEARCH_CLIENT_API_KEY                   = ""
     CPD_SEARCH_ENDPOINT                         = ""
     CPD_SEARCH_INDEX_NAME                       = ""
-    DOCKER_ENABLE_CI                            = "true"
+    DOCKER_ENABLE_CI                            = "false"
   }
 
+  key_vault_reference_identity_id = data.azurerm_user_assigned_identity.mi_app_service.id
 
   # identity {
   #   type = "SystemAssigned"
   # }
   identity {
       type         = "UserAssigned"
-      identity_ids = [azurerm_user_assigned_identity.mi_app_service.id]
+      identity_ids = [data.azurerm_user_assigned_identity.mi_app_service.id]
     }
 
   logs {
@@ -64,5 +63,5 @@ resource "azurerm_linux_web_app" "app_service" {
     failed_request_tracing = true
     detailed_error_messages = true
   }
-  depends_on = [ azurerm_user_assigned_identity.mi_app_service ]
+  depends_on = [ azurerm_key_vault_access_policy.access_policy_app_kv ]
 }

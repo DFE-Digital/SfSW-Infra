@@ -6,7 +6,7 @@ resource "random_string" "suffix" {
 
 resource "azurerm_key_vault" "key_vault" {
   # name = "kv-${var.project_name}-${var.instance}-${random_string.suffix.result}"
-  name                       = "kv-${var.project_name}-${var.instance}-temp-6"  
+  name                       = "kv-${var.project_name}-${var.instance}-temp-9"  
   location                      = azurerm_resource_group.core_infra_rg.location
   resource_group_name           = azurerm_resource_group.core_infra_rg.name
   tenant_id                     = data.azurerm_client_config.current.tenant_id
@@ -14,7 +14,6 @@ resource "azurerm_key_vault" "key_vault" {
   soft_delete_retention_days    = 7
   enable_rbac_authorization     = false
   public_network_access_enabled = true
-
 }
 
 resource "azurerm_key_vault_access_policy" "current_sp" {
@@ -31,19 +30,10 @@ resource "azurerm_key_vault_access_policy" "current_sp" {
   ]
 }
 
-#  Key Vault Administrator
-# resource "azurerm_role_assignment" "current_sp_kv_admin" {
-#   scope                = azurerm_key_vault.key_vault.id
-#   role_definition_name = "Key Vault Administrator"
-#   principal_id         = data.azurerm_client_config.current.object_id
-#   principal_type       = "ServicePrincipal"
-# }
-
 resource "azurerm_key_vault_secret" "cpd_space_id" {
   name         = "cpd-space-id"
   value        = "placeholder"
   key_vault_id = azurerm_key_vault.key_vault.id
-  depends_on = [ azurerm_key_vault_access_policy.current_sp ]
   lifecycle {
     ignore_changes = [
       value
@@ -55,7 +45,6 @@ resource "azurerm_key_vault_secret" "cpd_preview_key" {
   name         = "cpd-preview-key"
   value        = "placeholder"
   key_vault_id = azurerm_key_vault.key_vault.id
-  depends_on = [ azurerm_key_vault_access_policy.current_sp ]
   lifecycle {
     ignore_changes = [
       value
@@ -67,7 +56,6 @@ resource "azurerm_key_vault_secret" "cpd_delivery_key" {
   name         = "cpd-delivery-key"
   value        = "placeholder"
   key_vault_id = azurerm_key_vault.key_vault.id
-  depends_on = [ azurerm_key_vault_access_policy.current_sp ]
   lifecycle {
     ignore_changes = [
       value
@@ -79,14 +67,10 @@ resource "azurerm_key_vault_secret" "google_analytics_tag" {
   name         = "google-analytics-tag"
   value        = "placeholder"
   key_vault_id = azurerm_key_vault.key_vault.id
-  depends_on = [ azurerm_key_vault_access_policy.current_sp ]
 }
 
 resource "azurerm_key_vault_secret" "cpd_clarity" {
   name         = "cpd-clarity"
   value        = "placeholder"
   key_vault_id = azurerm_key_vault.key_vault.id
-  depends_on = [ azurerm_key_vault_access_policy.current_sp ]
 }
-
-

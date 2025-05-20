@@ -1,8 +1,8 @@
 name: Deploy App Infra
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 7 * * 1-5'
+  # schedule:
+  #   - cron: '0 7 * * 1-5'
   # push:
   #   branches:
   #     - main
@@ -74,11 +74,10 @@ jobs:
           enable-network-access: true
           
       # replace hardcoded suffix when KV name is changed:
-      # will also fail for a new deployment for now (i.e. no KV present):        
       - name: Enable Network Access for Key Vault
         uses: ./.github/actions/manage-keyvault-network-access
         with:
-          keyvault-name: "kv-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}-temp-6"
+          keyvault-name: "kv-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}-temp-9"
           resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-core-infra"
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: true
@@ -107,15 +106,11 @@ jobs:
       - name: Disable Network Access for Key Vault
         uses: ./.github/actions/manage-keyvault-network-access
         with:
-          keyvault-name: "kv-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}-temp-6"
+          keyvault-name: "kv-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}-temp-9"
           resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-core-infra"
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: false
 
-
-          # ------------------------------------------
-            # use for managed identity
-          # ------------------------------------------
       - name: Set Authentication and vnetImagePullEnabled for App Service
         uses: azure/CLI@v1
         with: 
@@ -123,9 +118,9 @@ jobs:
             az webapp config set --resource-group "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app" \
             --name "app-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}" --generic-configurations '{"acrUseManagedIdentityCreds": true}' > /dev/null
           
-      #       az resource update --resource-group "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app" \
-      #       --name "app-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}" --resource-type "Microsoft.Web/sites" \
-      #       --set properties.vnetImagePullEnabled=true > /dev/null
+            az resource update --resource-group "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app" \
+            --name "app-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}" --resource-type "Microsoft.Web/sites" \
+            --set properties.vnetImagePullEnabled=false > /dev/null
             
       - name: Enable Network Access for Error Page Storage
         uses: ./.github/actions/manage-storage-network-access
