@@ -22,7 +22,7 @@ resource "azurerm_linux_web_app" "app_service" {
     }
     vnet_route_all_enabled = true
     container_registry_use_managed_identity  = true
-    container_registry_managed_identity_client_id = data.azurerm_user_assigned_identity.mi_app_service.id    
+    container_registry_managed_identity_client_id = data.azurerm_user_assigned_identity.mi_app_service.client_id
   }
 
   app_settings = {

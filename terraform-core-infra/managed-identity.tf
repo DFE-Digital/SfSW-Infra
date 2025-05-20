@@ -9,3 +9,5 @@ resource "azurerm_user_assigned_identity" "mi_appgw" {
   location            = azurerm_resource_group.core_infra_rg.location
   resource_group_name = azurerm_resource_group.core_infra_rg.name
 }
+
+
