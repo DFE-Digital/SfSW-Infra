@@ -1,7 +1,7 @@
 resource "azapi_resource" "acr_identity_config" {
   type      = "Microsoft.Web/sites/config@2022-03-01"
-  name      = "${azurerm_app_service.app.name}/web"
-  parent_id = azurerm_app_service.app.id
+  name      = "${azurerm_linux_web_app.app_service.name}/web"
+  parent_id = azurerm_linux_web_app.app_service.id
   body = {
     properties = {
       acrUseManagedIdentityCreds = true
