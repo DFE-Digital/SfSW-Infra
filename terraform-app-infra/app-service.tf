@@ -20,6 +20,8 @@ resource "azurerm_linux_web_app" "app_service" {
       docker_image_name        = "${var.project_name}-app-${var.instance}:latest"
     }
     vnet_route_all_enabled = true
+    container_registry_use_managed_identity  = true
+    container_registry_managed_identity_client_id = data.azurerm_user_assigned_identity.mi_app_service.id    
   }
 
   app_settings = {
@@ -41,8 +43,6 @@ resource "azurerm_linux_web_app" "app_service" {
   }
 
   key_vault_reference_identity_id = data.azurerm_user_assigned_identity.mi_app_service.id
-  container_registry_use_managed_identity  = true
-  container_registry_managed_identity_client_id = data.azurerm_user_assigned_identity.mi_app_service.id
 
   # identity {
   #   type = "SystemAssigned"
