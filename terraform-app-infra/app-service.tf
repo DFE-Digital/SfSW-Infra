@@ -37,7 +37,7 @@ resource "azurerm_linux_web_app" "app_service" {
     CPD_SEARCH_CLIENT_API_KEY                   = ""
     CPD_SEARCH_ENDPOINT                         = ""
     CPD_SEARCH_INDEX_NAME                       = ""
-    DOCKER_ENABLE_CI                            = "true"
+    DOCKER_ENABLE_CI                            = "false"
   }
 
   key_vault_reference_identity_id = data.azurerm_user_assigned_identity.mi_app_service.id
