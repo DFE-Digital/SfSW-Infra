@@ -111,16 +111,18 @@ jobs:
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: false
 
-      # - name: Set Authentication and vnetImagePullEnabled for App Service
-      #   uses: azure/CLI@v1
-      #   with: 
-      #     inlineScript: |          
-      #       az webapp config set --resource-group "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app" \
-      #       --name "app-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}" --generic-configurations '{"acrUseManagedIdentityCreds": true}' > /dev/null
+      - name: Set Authentication and vnetImagePullEnabled for App Service
+        uses: azure/CLI@v1
+        with: 
+          inlineScript: |          
+            az resource update --resource-group "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app" \
+            --name "app-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}" --resource-type "Microsoft.Web/sites" \
+            --set properties.vnetImagePullEnabled=false > /dev/null
+
+          # az webapp config set --resource-group "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app" \
+          # --name "app-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}" --generic-configurations '{"acrUseManagedIdentityCreds": true}' > /dev/null
           
-      #       az resource update --resource-group "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app" \
-      #       --name "app-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}" --resource-type "Microsoft.Web/sites" \
-      #       --set properties.vnetImagePullEnabled=false > /dev/null
+
             
       - name: Enable Network Access for Error Page Storage
         uses: ./.github/actions/manage-storage-network-access
