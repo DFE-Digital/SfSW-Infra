@@ -74,5 +74,3 @@ resource "azurerm_key_vault_secret" "cpd_clarity" {
   value        = "placeholder"
   key_vault_id = azurerm_key_vault.key_vault.id
 }
-
-

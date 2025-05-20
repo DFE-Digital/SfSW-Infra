@@ -111,10 +111,6 @@ jobs:
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: false
 
-
-          # ------------------------------------------
-            # use for managed identity
-          # ------------------------------------------
       - name: Set Authentication and vnetImagePullEnabled for App Service
         uses: azure/CLI@v1
         with: 
