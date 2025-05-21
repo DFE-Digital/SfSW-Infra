@@ -20,7 +20,7 @@ resource "azurerm_linux_web_app" "app_service" {
       docker_registry_url      = "https://${azurerm_container_registry.acr.login_server}"
       docker_image_name        = "${var.project_name}-app-${var.instance}:latest"
     }
-    vnet_route_all_enabled = true
+    vnet_route_all_enabled = false
     container_registry_use_managed_identity  = true
     container_registry_managed_identity_client_id = data.azurerm_user_assigned_identity.mi_app_service.client_id
   }
