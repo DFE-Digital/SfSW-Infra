@@ -20,7 +20,7 @@ resource "azurerm_linux_web_app" "app_service" {
       docker_registry_url      = "https://${azurerm_container_registry.acr.login_server}"
       docker_image_name        = "${var.project_name}-app-${var.instance}:latest"
     }
-    vnet_route_all_enabled = false
+    vnet_route_all_enabled = true
     container_registry_use_managed_identity  = true
     container_registry_managed_identity_client_id = data.azurerm_user_assigned_identity.mi_app_service.client_id
   }
@@ -40,7 +40,7 @@ resource "azurerm_linux_web_app" "app_service" {
     CPD_SEARCH_CLIENT_API_KEY                   = ""
     CPD_SEARCH_ENDPOINT                         = ""
     CPD_SEARCH_INDEX_NAME                       = ""
-    DOCKER_ENABLE_CI                            = "false"
+    DOCKER_ENABLE_CI                            = "true"
     WEBSITES_ENABLE_APP_SERVICE_STORAGE         = "false"
   }
 
@@ -65,5 +65,8 @@ resource "azurerm_linux_web_app" "app_service" {
     failed_request_tracing = true
     detailed_error_messages = true
   }
-  depends_on = [ azurerm_key_vault_access_policy.access_policy_app_kv ]
+  depends_on = [
+    azurerm_key_vault_access_policy.access_policy_app_kv,
+    azurerm_container_registry.acr
+    ]
 }
