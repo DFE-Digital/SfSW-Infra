@@ -17,8 +17,8 @@ resource "azurerm_linux_web_app" "app_service" {
 
   site_config {
     application_stack {
-      docker_registry_url      = "https://${azurerm_container_registry.acr.login_server}"
-      docker_image_name        = "${var.project_name}-app-${var.instance}:latest"
+      docker_registry_url      = "https://ghcr.io/dfe-digital/support-for-social-workers"
+      docker_image_name        = "latest"
     }
     vnet_route_all_enabled = true
     container_registry_use_managed_identity  = true
@@ -65,8 +65,4 @@ resource "azurerm_linux_web_app" "app_service" {
     failed_request_tracing = true
     detailed_error_messages = true
   }
-  depends_on = [
-    azurerm_key_vault_access_policy.access_policy_app_kv,
-    azurerm_container_registry.acr
-    ]
 }
