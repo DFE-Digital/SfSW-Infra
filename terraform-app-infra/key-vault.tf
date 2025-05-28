@@ -27,6 +27,10 @@ resource "azurerm_key_vault_access_policy" "access_policy_appgw_kv" {
     "Get",
     "List"
   ]
+  secret_permissions = [
+    "Get",
+    "List"
+  ]  
 }
 
 
