@@ -45,7 +45,7 @@ resource "azurerm_application_gateway" "appgw" {
     port                                = 443
     protocol                            = "Https"
     pick_host_name_from_backend_address = true
-    probe_name                          = "http-health-probe"
+    probe_name                          = "https-health-probe"
     cookie_based_affinity               = "Disabled"
     request_timeout                     = 20
   }
@@ -55,7 +55,7 @@ resource "azurerm_application_gateway" "appgw" {
     port                                = 80
     protocol                            = "Http"
     pick_host_name_from_backend_address = true
-    probe_name                          = "https-health-probe"
+    probe_name                          = "http-health-probe"
     cookie_based_affinity               = "Disabled"
     request_timeout                     = 20
   }
