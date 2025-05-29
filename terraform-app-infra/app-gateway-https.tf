@@ -45,9 +45,9 @@ resource "azurerm_application_gateway" "appgw" {
     port                                = 443
     protocol                            = "Https"
     pick_host_name_from_backend_address = true
-    # host_name             = "app-sfsw-d01.azurewebsites.net"
-    cookie_based_affinity = "Disabled"
-    request_timeout       = 20
+    probe_name                          = "http-health-probe"
+    cookie_based_affinity               = "Disabled"
+    request_timeout                     = 20
   }
 
   backend_http_settings {
@@ -55,6 +55,7 @@ resource "azurerm_application_gateway" "appgw" {
     port                                = 80
     protocol                            = "Http"
     pick_host_name_from_backend_address = true
+    probe_name                          = "https-health-probe"
     cookie_based_affinity               = "Disabled"
     request_timeout                     = 20
   }
@@ -117,6 +118,70 @@ resource "azurerm_application_gateway" "appgw" {
     timeout                                   = 30
     unhealthy_threshold                       = 3
     protocol                                  = "Https"
+  }
+
+  # custom_error_configuration {
+  #   status_code           = "HttpStatus403"
+  #   custom_error_page_url = "< custom_error_page_url >"
+  # }
+
+  # custom_error_configuration {
+  #   status_code           = "HttpStatus502"
+  #   custom_error_page_url = "< custom_error_page_url >"
+  # }
+
+  rewrite_rule_set {
+    name = "rewrite-set"
+
+    rewrite_rule {
+      name          = "rewrite-rule"
+      rule_sequence = 1
+
+      response_header_configuration {
+        header_name  = "X-Frame-Options"
+        header_value = "SAMEORIGIN"
+      }
+
+      response_header_configuration {
+        header_name  = "X-Xss-Protection"
+        header_value = "0"
+      }
+
+      response_header_configuration {
+        header_name  = "X-Content-Type-Options"
+        header_value = "nosniff"
+      }
+
+      response_header_configuration {
+        header_name  = "Content-Security-Policy"
+        header_value = "upgrade-insecure-requests; base-uri 'self'; frame-ancestors 'self'; form-action 'self'; object-src 'none';"
+      }
+
+      response_header_configuration {
+        header_name  = "Referrer-Policy"
+        header_value = "strict-origin-when-cross-origin"
+      }
+
+      response_header_configuration {
+        header_name  = "Strict-Transport-Security"
+        header_value = "max-age=31536000; includeSubDomains; preload"
+      }
+
+      response_header_configuration {
+        header_name  = "Permissions-Policy"
+        header_value = "accelerometer=(), ambient-light-sensor=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), speaker=(), sync-xhr=self, usb=(), vr=()"
+      }
+
+      response_header_configuration {
+        header_name  = "Server"
+        header_value = ""
+      }
+
+      response_header_configuration {
+        header_name  = "X-Powered-By"
+        header_value = ""
+      }
+    }
   }
 
   identity {
