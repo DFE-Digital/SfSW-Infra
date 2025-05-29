@@ -31,7 +31,7 @@ resource "azurerm_application_gateway" "appgw" {
   }
 
   ssl_certificate {
-    name                = "appgw-ssl-cert"
+    name                = "support-for-social-workers"
     key_vault_secret_id = data.azurerm_key_vault_certificate.sfsw_cert.secret_id
   }
 
@@ -61,7 +61,7 @@ resource "azurerm_application_gateway" "appgw" {
     frontend_ip_configuration_name = "appgw-ip"
     frontend_port_name             = "https"
     protocol                       = "Https"
-    ssl_certificate_name           = "appgw-ssl-cert"
+    ssl_certificate_name           = "support-for-social-workers"
   }
 
   redirect_configuration {
