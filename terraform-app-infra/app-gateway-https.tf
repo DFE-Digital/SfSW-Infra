@@ -37,16 +37,26 @@ resource "azurerm_application_gateway" "appgw" {
 
   backend_address_pool {
     name  = "backendpool"
-    fqdns = ["app-sfsw-d01.azurewebsites.net"]
+    fqdns = [azurerm_linux_web_app.app_service.default_hostname]
   }
 
   backend_http_settings {
-    name                  = "https-settings"
-    port                  = 443
-    protocol              = "Https"
-    host_name             = "app-sfsw-d01.azurewebsites.net"
+    name                                = "https-settings"
+    port                                = 443
+    protocol                            = "Https"
+    pick_host_name_from_backend_address = true
+    # host_name             = "app-sfsw-d01.azurewebsites.net"
     cookie_based_affinity = "Disabled"
     request_timeout       = 20
+  }
+
+  backend_http_settings {
+    name                                = "http-settings"
+    port                                = 80
+    protocol                            = "Http"
+    pick_host_name_from_backend_address = true
+    cookie_based_affinity               = "Disabled"
+    request_timeout                     = 20
   }
 
   http_listener {
@@ -65,11 +75,11 @@ resource "azurerm_application_gateway" "appgw" {
   }
 
   redirect_configuration {
-    name                    = "http-to-https-redirect"
-    redirect_type           = "Permanent"
-    target_listener_name    = "https-listener"
-    include_path            = true
-    include_query_string    = true
+    name                 = "http-to-https-redirect"
+    redirect_type        = "Permanent"
+    target_listener_name = "https-listener"
+    include_path         = true
+    include_query_string = true
   }
 
   request_routing_rule {
@@ -87,6 +97,26 @@ resource "azurerm_application_gateway" "appgw" {
     backend_address_pool_name  = "backendpool"
     backend_http_settings_name = "https-settings"
     priority                   = 2
+  }
+
+  probe {
+    name                                      = "http-health-probe"
+    pick_host_name_from_backend_http_settings = true
+    path                                      = "/application/status"
+    interval                                  = 30
+    timeout                                   = 30
+    unhealthy_threshold                       = 3
+    protocol                                  = "Http"
+  }
+
+  probe {
+    name                                      = "https-health-probe"
+    pick_host_name_from_backend_http_settings = true
+    path                                      = "/application/status"
+    interval                                  = 30
+    timeout                                   = 30
+    unhealthy_threshold                       = 3
+    protocol                                  = "Https"
   }
 
   identity {
