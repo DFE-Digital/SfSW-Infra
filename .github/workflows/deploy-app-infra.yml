@@ -108,7 +108,7 @@ jobs:
         run: |
           az storage blob lease break \
             --container-name ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME }} \
-            --blob-name ${{ SECRETS.APP_INFRA_BLOB_NAME }}
+            --blob-name ${{ SECRETS.APP_INFRA_BLOB_NAME }} \
             --account-name ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }} \
             --break-period 0
 
