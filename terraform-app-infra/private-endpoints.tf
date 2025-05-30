@@ -154,6 +154,7 @@ resource "azurerm_monitor_private_link_scoped_service" "app_insights_link" {
   resource_group_name = azurerm_resource_group.private_endpoints_rg.name
   scope_name          = azurerm_monitor_private_link_scope.ampls.name
   linked_resource_id  = azurerm_application_insights.app_insights_web.id
+  depends_on = [ azurerm_application_insights.app_insights_web ]  
 }
 
 
