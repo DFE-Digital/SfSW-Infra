@@ -1,4 +1,4 @@
-deploy_appgw               = 1
+# deploy_appgw               = 1
 environment                = "Dev"
 instance                   = "d01"
 location                   = "westeurope"

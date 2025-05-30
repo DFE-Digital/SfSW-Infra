@@ -1,7 +1,7 @@
-variable "deploy_appgw" {
-  description = "Controls whether the private Application Gateway is deployed. Set to 1 to include, 0 to exclude."
-  type        = number
-}
+# variable "deploy_appgw" {
+#   description = "Controls whether the private Application Gateway is deployed. Set to 1 to include, 0 to exclude."
+#   type        = number
+# }
 
 variable "environment" {
   description = "The environment (e.g., dev, prod)"
