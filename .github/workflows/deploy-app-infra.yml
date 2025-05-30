@@ -102,6 +102,16 @@ jobs:
           echo "resource_group_name=$(terraform output -raw resource_group_name)" >> $GITHUB_OUTPUT
           echo "container_name=$(terraform output -raw container_name)" >> $GITHUB_OUTPUT
           
+      - name: Break lease on tfstate blob
+        shell: bash
+        if: ${{ failure() }} | ${{ cancelled() }}
+        run: |
+          az storage blob lease break \
+            --container-name ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME }} \
+            --blob-name ${{ SECRETS.APP_INFRA_BLOB_NAME }}
+            --account-name ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }} \
+            --break-period 0
+
         # replace hardcoded suffix when KV name is changed:          
       - name: Disable Network Access for Key Vault
         uses: ./.github/actions/manage-keyvault-network-access
