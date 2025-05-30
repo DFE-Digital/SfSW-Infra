@@ -62,4 +62,5 @@ resource "azurerm_linux_web_app" "app_service" {
     failed_request_tracing = true
     detailed_error_messages = true
   }
+  depends_on = [ azurerm_application_insights.app_insights_web ]
 }

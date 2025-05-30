@@ -13,6 +13,9 @@ resource "azurerm_application_insights" "app_insights_web" {
   location            = azurerm_resource_group.webapp_rg.location
   resource_group_name = azurerm_resource_group.webapp_rg.name
   application_type    = "web"
+  disable_ip_masking = true
+  internet_ingestion_enabled = false
+  internet_query_enabled = true
 }
 
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_setting_law" {
