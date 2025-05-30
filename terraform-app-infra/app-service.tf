@@ -26,7 +26,7 @@ resource "azurerm_linux_web_app" "app_service" {
   }
 
   app_settings = {
-    #APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.app_insights_web.instrumentation_key
+    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.app_insights_web.instrumentation_key
     ASPNETCORE_HTTP_PORTS                       = 80
     CPD_GOOGLEANALYTICSTAG                      = "@Microsoft.KeyVault(VaultName=${data.azurerm_key_vault.key_vault.name};SecretName=google-analytics-tag)"
     CPD_SPACE_ID                                = "@Microsoft.KeyVault(VaultName=${data.azurerm_key_vault.key_vault.name};SecretName=cpd-space-id)"
@@ -34,7 +34,7 @@ resource "azurerm_linux_web_app" "app_service" {
     CPD_DELIVERY_KEY                            = "@Microsoft.KeyVault(VaultName=${data.azurerm_key_vault.key_vault.name};SecretName=cpd-delivery-key)"
     CPD_AZURE_ENVIRONMENT                       = "dev"
     CPD_CONTENTFUL_ENVIRONMENT                  = "dev"
-    #CPD_INSTRUMENTATION_CONNECTIONSTRING        = azurerm_application_insights.app_insights_web.connection_string
+    CPD_INSTRUMENTATION_CONNECTIONSTRING        = azurerm_application_insights.app_insights_web.connection_string
     CPD_CLARITY                                 = "@Microsoft.KeyVault(VaultName=${data.azurerm_key_vault.key_vault.name};SecretName=cpd-clarity)"
     CPD_FEATURE_POLLING_INTERVAL                = "300"
     CPD_SEARCH_CLIENT_API_KEY                   = ""
@@ -44,9 +44,6 @@ resource "azurerm_linux_web_app" "app_service" {
     WEBSITES_ENABLE_APP_SERVICE_STORAGE         = "false"
   }
 
-  # identity {
-  #   type = "SystemAssigned"
-  # }
   identity {
       type         = "UserAssigned"
       identity_ids = [data.azurerm_user_assigned_identity.mi_app_service.id]
