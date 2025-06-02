@@ -119,12 +119,16 @@ resource "azurerm_private_endpoint" "ampls_pe" {
     name                 = "monitor-dns-group"
     private_dns_zone_ids = [azurerm_private_dns_zone.monitor_dns.id]
   }
+  depends_on = [
+    azurerm_monitor_private_link_scoped_service.log_analytics_link,
+    azurerm_monitor_private_link_scoped_service.app_insights_link
+  ]
 }
 
 resource "azurerm_private_dns_zone" "monitor_dns" {
   name                = "privatelink.monitor.azure.com"
   resource_group_name = azurerm_resource_group.private_endpoints_rg.name
-  depends_on = [ azurerm_monitor_private_link_scope.ampls ]
+  # depends_on = [ azurerm_monitor_private_link_scope.ampls ]
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "monitor_vnet_link" {
@@ -146,6 +150,7 @@ resource "azurerm_monitor_private_link_scoped_service" "log_analytics_link" {
   resource_group_name = azurerm_resource_group.private_endpoints_rg.name
   scope_name          = azurerm_monitor_private_link_scope.ampls.name
   linked_resource_id  = azurerm_log_analytics_workspace.log_analytics_ws.id
+  #depends_on = [ azurerm_monitor_private_link_scope.ampls ]
 }
 
 # Link Application Insights to AMPLS
@@ -154,44 +159,4 @@ resource "azurerm_monitor_private_link_scoped_service" "app_insights_link" {
   resource_group_name = azurerm_resource_group.private_endpoints_rg.name
   scope_name          = azurerm_monitor_private_link_scope.ampls.name
   linked_resource_id  = azurerm_application_insights.app_insights_web.id
-  depends_on = [ azurerm_application_insights.app_insights_web ]  
 }
-
-
-
-
-
-
-
-
-# PE, DNS zone and link for ACR:
-# resource "azurerm_private_endpoint" "acr_private_endpoint" {
-#   name                = "pe-acr-${var.project_name}-${var.instance}"
-#   resource_group_name = azurerm_resource_group.private_endpoints_rg.name
-#   location            = azurerm_resource_group.webapp_rg.location
-#   subnet_id           = data.azurerm_subnet.private_endpoints_subnet.id
-
-#   private_service_connection {
-#     name                           = "acr-connection"
-#     private_connection_resource_id = azurerm_container_registry.acr.id
-#     subresource_names              = ["registry"]
-#     is_manual_connection           = false
-#   }
-#   private_dns_zone_group {
-#     name                 = "acr-dns-group"
-#     private_dns_zone_ids = [azurerm_private_dns_zone.acr_private_dns_zone.id]
-#   }
-# }
-
-# resource "azurerm_private_dns_zone" "acr_private_dns_zone" {
-#   name                = "privatelink.azurecr.io"
-#   resource_group_name = azurerm_resource_group.private_endpoints_rg.name
-#   depends_on = [ azurerm_container_registry.acr ]
-# }
-
-# resource "azurerm_private_dns_zone_virtual_network_link" "acr_dns_link" {
-#   name                  = "acr-dns-link"
-#   resource_group_name   = azurerm_resource_group.private_endpoints_rg.name
-#   private_dns_zone_name = azurerm_private_dns_zone.acr_private_dns_zone.name
-#   virtual_network_id    = data.azurerm_virtual_network.webapp_vnet.id
-# }
