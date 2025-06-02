@@ -42,8 +42,7 @@ resource "azurerm_monitor_diagnostic_setting" "app_diag_setting" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "appgw_diag_setting" {
-  # name               = "diag-${azurerm_application_gateway.appgw.name}"
-  name               = "appgw-diag"
+  name               = "diag-${azurerm_application_gateway.appgw.name}"
   target_resource_id = azurerm_application_gateway.appgw.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics_ws.id
   
