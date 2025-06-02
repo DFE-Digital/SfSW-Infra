@@ -48,8 +48,8 @@ runs:
           --public-network-access Disabled > /dev/null
 
     - name: Remove Network Rule
+      if: ${{ inputs.enable-network-access == 'false' }}    
       shell: bash
-      if: ${{ inputs.enable-network-access == 'false' }}
       run: |
         if [ $? -ne 0 ]; then
           echo "Removing network rule due to workflow failure or cancellation."
