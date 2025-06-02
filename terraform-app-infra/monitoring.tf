@@ -19,8 +19,8 @@ resource "azurerm_application_insights" "app_insights_web" {
   internet_query_enabled = true
 }
 
-resource "azurerm_monitor_diagnostic_setting" "diagnostic_setting_law" {
-  name                       = "diag-${var.project_name}-${var.instance}"
+resource "azurerm_monitor_diagnostic_setting" "app_diag_setting" {
+  name                       = "diag-${azurerm_linux_web_app.app_service.name}"
   target_resource_id         = azurerm_linux_web_app.app_service.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics_ws.id
 
@@ -41,8 +41,8 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_setting_law" {
   }
 }
 
-resource "azurerm_monitor_diagnostic_setting" "appgw_diagnostics" {
-  name               = "appgw-diag"
+resource "azurerm_monitor_diagnostic_setting" "appgw_diag_setting" {
+  name               = "diag-${azurerm_application_gateway.appgw.name}"
   target_resource_id = azurerm_application_gateway.appgw.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics_ws.id
   
