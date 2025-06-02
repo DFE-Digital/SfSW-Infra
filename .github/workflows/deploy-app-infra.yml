@@ -29,9 +29,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # - name: Set TF_LOG to DEBUG
-      #   run: echo "TF_LOG=DEBUG" >> $GITHUB_ENV
-
       - name: Read Config
         id: read_config
         uses: mikefarah/yq@master
@@ -102,16 +99,6 @@ jobs:
           echo "resource_group_name=$(terraform output -raw resource_group_name)" >> $GITHUB_OUTPUT
           echo "container_name=$(terraform output -raw container_name)" >> $GITHUB_OUTPUT
           
-      - name: Break lease on tfstate blob
-        shell: bash
-        if: ${{ failure() }} | ${{ cancelled() }}
-        run: |
-          az storage blob lease break \
-            --container-name ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME }} \
-            --blob-name ${{ SECRETS.APP_INFRA_BLOB_NAME }} \
-            --account-name ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }} \
-            --lease-break-period 0
-
         # replace hardcoded suffix when KV name is changed:          
       - name: Disable Network Access for Key Vault
         uses: ./.github/actions/manage-keyvault-network-access
@@ -120,14 +107,6 @@ jobs:
           resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-core-infra"
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: false
-
-      # - name: Set vnetImagePullEnabled for App Service
-      #   uses: azure/CLI@v1
-      #   with: 
-      #     inlineScript: |          
-      #       az resource update --resource-group "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-app" \
-      #       --name "app-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}" --resource-type "Microsoft.Web/sites" \
-      #       --set properties.vnetImagePullEnabled=true > /dev/null
             
       - name: Enable Network Access for Error Page Storage
         uses: ./.github/actions/manage-storage-network-access
