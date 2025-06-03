@@ -6,7 +6,7 @@ resource "random_string" "suffix" {
 
 resource "azurerm_key_vault" "key_vault" {
   # name = "kv-${var.project_name}-${var.instance}-${random_string.suffix.result}"
-  name                       = "kv-${var.project_name}-${var.instance}-temp-10"  
+  name                       = "kv-${var.project_name}-${var.instance}-temp-11"  
   location                      = azurerm_resource_group.core_infra_rg.location
   resource_group_name           = azurerm_resource_group.core_infra_rg.name
   tenant_id                     = data.azurerm_client_config.current.tenant_id
@@ -39,6 +39,7 @@ resource "azurerm_key_vault_secret" "cpd_space_id" {
       value
     ]
   }
+  depends_on = [ azurerm_key_vault_access_policy.current_sp ]
 }
 
 resource "azurerm_key_vault_secret" "cpd_preview_key" {
@@ -50,6 +51,7 @@ resource "azurerm_key_vault_secret" "cpd_preview_key" {
       value
     ]
   }
+  depends_on = [ azurerm_key_vault_access_policy.current_sp ]  
 }
 
 resource "azurerm_key_vault_secret" "cpd_delivery_key" {
@@ -61,16 +63,29 @@ resource "azurerm_key_vault_secret" "cpd_delivery_key" {
       value
     ]
   }
+  depends_on = [ azurerm_key_vault_access_policy.current_sp ]  
 }
 
 resource "azurerm_key_vault_secret" "google_analytics_tag" {
   name         = "google-analytics-tag"
   value        = "placeholder"
   key_vault_id = azurerm_key_vault.key_vault.id
+  lifecycle {
+    ignore_changes = [
+      value
+    ]
+  }
+  depends_on = [ azurerm_key_vault_access_policy.current_sp ]
 }
 
 resource "azurerm_key_vault_secret" "cpd_clarity" {
   name         = "cpd-clarity"
   value        = "placeholder"
   key_vault_id = azurerm_key_vault.key_vault.id
+  lifecycle {
+    ignore_changes = [
+      value
+    ]
+  }
+  depends_on = [ azurerm_key_vault_access_policy.current_sp ]  
 }
