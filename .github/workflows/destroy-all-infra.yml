@@ -63,7 +63,6 @@ jobs:
         github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
         enable-network-access: true
 
-      # replace hardcoded suffix when KV name is changed:
     - name: Enable Network Access for Key Vault
       uses: ./.github/actions/manage-keyvault-network-access
       with:
@@ -93,7 +92,6 @@ jobs:
         github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
         enable-network-access: false
 
-      # replace hardcoded suffix when KV name is changed:
     - name: Disable Network Access for Key Vault
       uses: ./.github/actions/manage-keyvault-network-access
       with:

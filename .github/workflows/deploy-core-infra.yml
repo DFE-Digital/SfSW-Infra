@@ -73,7 +73,7 @@ jobs:
       # - name: Enable Network Access for Key Vault
       #   uses: ./.github/actions/manage-keyvault-network-access
       #   with:
-      #     keyvault-name: "kv-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}-temp-11"
+      #     keyvault-name: "kv-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}"
       #     resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-core-infra"
       #     github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
       #     enable-network-access: true
@@ -94,12 +94,11 @@ jobs:
         id: tf_apply
         run: |
           terraform apply -auto-approve -var "resource_group_name=${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-core-infra"
-
-      # replace hardcoded suffix when KV name is changed:          
+  
       - name: Disable Network Access for Key Vault
         uses: ./.github/actions/manage-keyvault-network-access
         with:
-          keyvault-name: "kv-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}-temp-11"
+          keyvault-name: "kv-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}"
           resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-core-infra"
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: false
