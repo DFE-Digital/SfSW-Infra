@@ -1,0 +1,6 @@
+environment  = "Test"
+instance     = "d02"
+location     = "westeurope"
+prefix       = "s212d02"
+project_code = "s212"
+project_name = "sfsw"

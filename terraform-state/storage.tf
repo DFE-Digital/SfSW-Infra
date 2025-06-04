@@ -1,10 +1,3 @@
-# resource "azurerm_management_lock" "tfstate_storage_lock" {
-#   name               = "prevent-deletion-lock"
-#   scope              = azurerm_storage_account.tfstate_storage.id
-#   lock_level         = "CanNotDelete"
-#   notes              = "This lock prevents accidental deletion of the storage account."
-# }
-
 resource "azurerm_storage_account" "tfstate_storage" {
   name                             = "tfstate${var.project_name}${var.instance}"
   resource_group_name              = azurerm_resource_group.tfstate_rg.name
