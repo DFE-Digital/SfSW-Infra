@@ -37,6 +37,13 @@ jobs:
       APP_INFRA_RG_NAME: ${{ vars.APP_INFRA_RG_NAME }}
 
     steps:
+      - name: Azure CLI Login
+        uses: azure/login@v2.2.0
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      
       - name: "Check if resource group exists: '${{ env.APP_INFRA_RG_NAME }}'"
         run: |
           if ! az group show --name "$APP_INFRA_RG_NAME" --output none 2>/dev/null; then
@@ -65,13 +72,6 @@ jobs:
           GITHUB_RUNNER_IP=$(curl -s https://ifconfig.me)
           echo "GITHUB_RUNNER_IP=$GITHUB_RUNNER_IP" >> $GITHUB_ENV
           echo "GitHub Runner IP: $GITHUB_RUNNER_IP"
-
-      - name: Azure CLI Login
-        uses: azure/login@v2.2.0
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Enable Network Access for tfstate
         uses: ./.github/actions/manage-storage-network-access
