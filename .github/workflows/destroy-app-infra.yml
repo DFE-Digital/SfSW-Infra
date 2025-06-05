@@ -19,6 +19,8 @@ permissions:
   contents: read
   pull-requests: write
 
+run-name: Destroy app infra in ${{ inputs.environment || 'dev' }}
+
 jobs:
   destroy-app-infra:
     defaults:
