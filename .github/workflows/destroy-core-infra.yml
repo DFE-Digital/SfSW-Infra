@@ -17,10 +17,11 @@ permissions:
   contents: read
   pull-requests: write
 
-run-name: "Destroy core infra: ${{ inputs.environment || 'dev' }}"
+run-name: "Destroy core infra: ${{ inputs.environment }}"
   
 jobs:
   destroy-core-infra:
+    name: "Destroy core infra: ${{ inputs.environment }}"
     defaults:
       run:
         working-directory: terraform-core-infra
@@ -30,7 +31,6 @@ jobs:
       ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
       ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
       ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
-      CORE_INFRA_RG_NAME: ${{ vars.CORE_INFRA_RG_NAME }}    
 
     steps:
       - name: Checkout code

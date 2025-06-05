@@ -23,6 +23,7 @@ run-name: "Destroy app infra: ${{ inputs.environment || 'dev' }}"
 
 jobs:
   destroy-app-infra:
+    name: "Destroy app infra: ${{ inputs.environment || 'dev' }}"
     defaults:
       run:
         working-directory: terraform-app-infra
