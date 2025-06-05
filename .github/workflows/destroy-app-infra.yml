@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Deployment Environment'
+        description: 'Destroy app infra:'
         required: true
         default: dev
         type: choice
