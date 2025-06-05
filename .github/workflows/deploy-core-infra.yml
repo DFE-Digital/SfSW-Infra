@@ -20,6 +20,8 @@ permissions:
   contents: read
   pull-requests: write
 
+run-name: "Deploy core infra: ${{ inputs.environment || 'dev' }}"
+
 jobs:
   deploy-core-infra:
     if: github.event_name != 'pull_request'

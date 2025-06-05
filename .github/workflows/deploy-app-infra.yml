@@ -22,8 +22,11 @@ permissions:
   contents: read
   pull-requests: write
 
+run-name: "Deploy app infra: ${{ inputs.environment || 'dev' }}"
+
 jobs:
   deploy-app-infra:
+    name: "Deploy app infra: ${{ inputs.environment || 'dev' }}"
     if: github.event_name != 'pull_request'
     defaults:
       run:
@@ -35,9 +38,7 @@ jobs:
       ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
       ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
       ENV_NAME: "${{ inputs.environment || 'dev' }}"
-      CORE_INFRA_RG_NAME: ${{ vars.CORE_INFRA_RG_NAME }}
-      KEY_VAULT_NAME: ${{ vars.KEY_VAULT_NAME }}
-      
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
