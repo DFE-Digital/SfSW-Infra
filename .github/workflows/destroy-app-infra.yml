@@ -33,9 +33,19 @@ jobs:
       ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
       ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
       ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
-      ENV_NAME: "${{ inputs.environment || 'dev' }}"      
+      ENV_NAME: "${{ inputs.environment || 'dev' }}"
+      APP_INFRA_RG_NAME: ${{ vars.APP_INFRA_RG_NAME }}
 
     steps:
+      - name: "Check if resource group exists: '${{ env.APP_INFRA_RG_NAME }}'"
+        run: |
+          if ! az group show --name "$APP_INFRA_RG_NAME" --output none 2>/dev/null; then
+            echo ":x: Resource group '$APP_INFRA_RG_NAME' does not exist."
+            exit 1
+          else
+            echo ":white_tick: Resource group '$APP_INFRA_RG_NAME' exists."
+          fi
+
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -93,7 +103,6 @@ jobs:
           terraform destroy \
             -auto-approve -lock=false -var "resource_group_name=$APP_INFRA_RG_NAME" \
             -var-file="terraform.${ENV_NAME}.tfvars"
-
 
       - name: Disable Network Access for tfstate 
         uses: ./.github/actions/manage-storage-network-access

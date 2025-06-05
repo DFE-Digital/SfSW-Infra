@@ -151,6 +151,7 @@ jobs:
         # replace hardcoded suffix when KV name is changed:        
       - name: Disable Network Access for Key Vault
         uses: ./.github/actions/manage-keyvault-network-access
+        if: ${{ always() }}
         with:
           keyvault-name: "kv-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}-kvyxy4"
           resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-shared"
