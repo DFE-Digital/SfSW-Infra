@@ -37,6 +37,9 @@ jobs:
       APP_INFRA_RG_NAME: ${{ vars.APP_INFRA_RG_NAME }}
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
       - name: Azure CLI Login
         uses: azure/login@v2.2.0
         with:
@@ -52,9 +55,6 @@ jobs:
           else
             echo ":white_tick: Resource group '$APP_INFRA_RG_NAME' exists."
           fi
-
-      - name: Checkout code
-        uses: actions/checkout@v4
 
       - name: HashiCorp - Setup Terraform
         uses: hashicorp/setup-terraform@v3
