@@ -33,20 +33,11 @@ jobs:
       ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
       ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
       CORE_INFRA_RG_NAME: ${{ vars.CORE_INFRA_RG_NAME }}
-      KEY_VAULT_NAME: ${{ vars.KEY_VAULT_NAME }}
+      KEY_VAULT_NAME: ${{ vars.KEY_VAULT_NAME }}      
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      # - name: Read Config
-      #   id: read_config
-      #   uses: mikefarah/yq@master
-      #   with:
-      #     cmd: |
-      #       echo "PROJECT_CODE=$(yq eval '.project_code' .github/config.yml)" >> $GITHUB_ENV
-      #       echo "PROJECT_NAME=$(yq eval '.project_name' .github/config.yml)" >> $GITHUB_ENV
-      #       echo "INSTANCE=$(yq eval '.instance' .github/config.yml)" >> $GITHUB_ENV
 
       - name: HashiCorp - Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -84,8 +75,8 @@ jobs:
       # - name: Enable Network Access for Key Vault
       #   uses: ./.github/actions/manage-keyvault-network-access
       #   with:
-      #     keyvault-name: "kv-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}"
-      #     resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-core-infra"
+      #     keyvault-name: "${{ vars.KEY_VAULT_NAME }}"
+      #     resource-group-name: "${{ vars.CORE_INFRA_RG_NAME }}"
       #     github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
       #     enable-network-access: true
 

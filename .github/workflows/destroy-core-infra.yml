@@ -1,8 +1,16 @@
 name: Destroy Core Infra
 on:
   workflow_dispatch:
-  # schedule:
-  #   - cron: '0 19 * * *'
+    inputs:
+      environment:
+        description: 'Deployment Environment'
+        required: true
+        default: dev
+        type: choice
+        options:
+          - dev
+          - test
+          - pre-prod
 
 permissions:
   id-token: write
@@ -14,25 +22,17 @@ jobs:
     defaults:
       run:
         working-directory: terraform-core-infra
-    environment: dev
+    environment: ${{ inputs.environment }}
     runs-on: ubuntu-latest
     env:
       ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
       ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
       ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
+      CORE_INFRA_RG_NAME: ${{ vars.CORE_INFRA_RG_NAME }}      
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Read Config
-        id: read_config
-        uses: mikefarah/yq@master
-        with:
-          cmd: |
-            echo "PROJECT_CODE=$(yq eval '.project_code' .github/config.yml)" >> $GITHUB_ENV
-            echo "PROJECT_NAME=$(yq eval '.project_name' .github/config.yml)" >> $GITHUB_ENV
-            echo "INSTANCE=$(yq eval '.instance' .github/config.yml)" >> $GITHUB_ENV
 
       - name: HashiCorp - Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -65,16 +65,7 @@ jobs:
           resource-group-name: ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: true
-
-      # enable when modifying core infra and disable for a new deployment
-      # - name: Enable Network Access for Key Vault
-      #   uses: ./.github/actions/manage-keyvault-network-access
-      #   with:
-      #     keyvault-name: "kv-${{ env.PROJECT_NAME }}-${{ env.INSTANCE }}"
-      #     resource-group-name: "${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-core-infra"
-      #     github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
-      #     enable-network-access: true          
-
+    
       - name: Terraform init
         run: |
           terraform init \
@@ -85,7 +76,10 @@ jobs:
 
       - name: Terraform Destroy
         id: destroy
-        run: terraform destroy -auto-approve -lock=false -var "resource_group_name=${{ env.PROJECT_CODE }}${{ env.INSTANCE }}-rg-${{ env.PROJECT_NAME }}-core-infra"
+        run: |
+          terraform destroy \
+            -auto-approve -lock=false -var "resource_group_name=$CORE_INFRA_RG_NAME" \
+            -var-file="terraform.${{ inputs.environment }}.tfvars"
 
       - name: Disable Network Access for tfstate 
         uses: ./.github/actions/manage-storage-network-access
