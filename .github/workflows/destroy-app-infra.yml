@@ -50,10 +50,10 @@ jobs:
       - name: "Check if resource group exists: '${{ env.APP_INFRA_RG_NAME }}'"
         run: |
           if ! az group show --name "$APP_INFRA_RG_NAME" --output none 2>/dev/null; then
-            echo ":x: Resource group '$APP_INFRA_RG_NAME' does not exist."
+            echo "❌ Resource group '$APP_INFRA_RG_NAME' does not exist."
             exit 1
           else
-            echo ":white_tick: Resource group '$APP_INFRA_RG_NAME' exists."
+            echo "✅ Resource group '$APP_INFRA_RG_NAME' exists."
           fi
 
       - name: HashiCorp - Setup Terraform
