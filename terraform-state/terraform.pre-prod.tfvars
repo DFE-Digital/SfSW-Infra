@@ -1,0 +1,6 @@
+environment  = "Pre-Prod"
+instance     = "t01"
+location     = "westeurope"
+prefix       = "s212t01"
+project_code = "s212"
+project_name = "sfsw"
