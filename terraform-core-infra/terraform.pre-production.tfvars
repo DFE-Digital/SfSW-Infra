@@ -1,7 +1,7 @@
 app_gateway_snet           = "10.0.1.0/24"
 app_service_snet           = "10.0.2.0/24"
 app_service_delegated_snet = "10.0.4.0/24"
-environment                = "Pre-production"
+environment                = "pre-production"
 instance                   = "t01"
 location                   = "westeurope"
 monitoring_snet            = "10.0.3.0/24"
