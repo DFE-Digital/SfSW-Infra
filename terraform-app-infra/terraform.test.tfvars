@@ -1,4 +1,6 @@
 # deploy_appgw               = 1
+cpd_azure_environment      = "test"
+cpd_contentful_environment = "test"
 environment                = "Test"
 instance                   = "d02"
 location                   = "westeurope"

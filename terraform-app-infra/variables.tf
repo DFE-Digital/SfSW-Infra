@@ -3,6 +3,14 @@
 #   type        = number
 # }
 
+variable "cpd_azure_environment" {
+  description = "The environment (e.g., dev, prod) for CPD_AZURE_ENVIRONMENT"  
+}
+
+variable "cpd_contentful_environment" {
+  description = "The environment (e.g., dev, prod) for CPD_CONTENTFUL_ENVIRONMENT"  
+}
+
 variable "environment" {
   description = "The environment (e.g., dev, prod)"
   type        = string

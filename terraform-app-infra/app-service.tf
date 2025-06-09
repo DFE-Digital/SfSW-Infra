@@ -32,8 +32,8 @@ resource "azurerm_linux_web_app" "app_service" {
     CPD_SPACE_ID                                = "@Microsoft.KeyVault(VaultName=${data.azurerm_key_vault.key_vault.name};SecretName=cpd-space-id)"
     CPD_PREVIEW_KEY                             = "@Microsoft.KeyVault(VaultName=${data.azurerm_key_vault.key_vault.name};SecretName=cpd-preview-key)"
     CPD_DELIVERY_KEY                            = "@Microsoft.KeyVault(VaultName=${data.azurerm_key_vault.key_vault.name};SecretName=cpd-delivery-key)"
-    CPD_AZURE_ENVIRONMENT                       = "dev"
-    CPD_CONTENTFUL_ENVIRONMENT                  = "dev"
+    CPD_AZURE_ENVIRONMENT                       = var.cpd_azure_environment
+    CPD_CONTENTFUL_ENVIRONMENT                  = var.cpd_contentful_environment
     CPD_INSTRUMENTATION_CONNECTIONSTRING        = azurerm_application_insights.app_insights_web.connection_string
     CPD_CLARITY                                 = "@Microsoft.KeyVault(VaultName=${data.azurerm_key_vault.key_vault.name};SecretName=cpd-clarity)"
     CPD_FEATURE_POLLING_INTERVAL                = "300"

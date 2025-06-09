@@ -10,7 +10,7 @@ on:
         options:
           - dev
           - test
-          - pre-prod
+          - pre-production
   # push:
   #   branches:
   #     - main
