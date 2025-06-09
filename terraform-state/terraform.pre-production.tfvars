@@ -1,4 +1,4 @@
-environment  = "Pre-Prod"
+environment  = "Pre-production"
 instance     = "t01"
 location     = "westeurope"
 prefix       = "s212t01"
