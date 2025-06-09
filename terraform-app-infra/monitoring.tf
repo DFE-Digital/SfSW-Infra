@@ -58,4 +58,5 @@ resource "azurerm_monitor_diagnostic_setting" "appgw_diag_setting" {
   metric {
     category = "AllMetrics"
   }
+  depends_on = [ azurerm_application_gateway.appgw ]
 }
