@@ -24,7 +24,7 @@ resource "azurerm_network_security_group" "app_gateway_nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_ranges    = ["65200-65535"]
-    source_address_prefix      = "GatewayManager"
+    source_address_prefix      = "Internet"
     destination_address_prefix = var.app_gateway_snet
   }
 }
