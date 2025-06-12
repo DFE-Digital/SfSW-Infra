@@ -1,0 +1,42 @@
+name: Test workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Test workflow_dispatch:'
+        required: true
+        default: dev
+        type: choice
+        options:
+          - dev
+          - test
+          - pre-production    
+#   push:
+#     branches:
+#       - main
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+run-name: "Test workflow_dispatch: ${{ inputs.environment || 'dev' }}"
+
+jobs:
+  deploy-app-infra:
+    name: "Test workflow_dispatch: ${{ inputs.environment || 'dev' }}"
+    if: github.event_name != 'pull_request'
+    defaults:
+      run:
+        working-directory: terraform-app-infra
+    environment: "${{ inputs.environment || 'dev' }}" 
+    runs-on: ubuntu-latest
+    env:
+      ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
+      ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+      ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
+      ENV_NAME: "${{ inputs.environment || 'dev' }}"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4

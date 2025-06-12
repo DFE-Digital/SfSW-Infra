@@ -1,0 +1,62 @@
+name: Whitelist IP Address
+description: Adds an allow rule with the user's IP address to the appGw subnet
+inputs:
+  nsg-name-whitelist:
+    description: "Name of the NSG to add the IP address"
+    required: true
+  infra-resource-group-name:
+    description: "Resource Group Name for the NSG"
+    required: true
+  rule-name:
+    description: "NSG rule name"
+    required: true
+  ip-address:
+    description: "User's IP address to whitelist"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Generate value for next available rule priority
+      shell: bash      
+      run: |
+        echo "Fetching existing priorities from NSG: '${{ inputs.nsg-name-whitelist }}'"
+
+        priorities=$(az network nsg rule list \
+          --nsg-name {{ inputs.nsg-name-whitelist }} \
+          --resource-group {{ inputs.infra-resource-group-name }} \
+          --query "[].priority" -o tsv)
+
+        max_priority=500
+        for p in $priorities; do
+          if [[ $p -gt $max_priority ]]; then
+            max_priority=$p
+          fi
+        done
+
+        NEXT_PRIORITY=$((max_priority + 1))
+
+        if [[ $NEXT_PRIORITY -gt 4096 ]]; then
+          echo "Error: Next priority exceeds Azure's maximum (4096)"
+          exit 1
+        fi
+
+        echo "NEXT_PRIORITY=$NEXT_PRIORITY" >> "$GITHUB_ENV"
+
+    - name: Add NSG rule to whitelist IP
+      shell: bash    
+      run: |
+        echo "Adding NSG rule '${{ inputs.rule-name }}' to allow IP '${{
+          inputs.ip-address }}' on ports 80 and 443 with priority $NEXT_PRIORITY"
+
+        az network nsg rule create \
+          --resource-group {{ inputs.infra-resource-group-name }} \
+          --nsg-name {{ inputs.nsg-name-whitelist }} \
+          --name ${{ inputs.rule-name }} \
+          --priority "$NEXT_PRIORITY" \
+          --access Allow \
+          --direction Inbound \
+          --protocol Tcp \
+          --source-address-prefixes ${{ inputs.ip-address }} \
+          --source-port-ranges '*' \
+          --destination-address-prefixes '*' \
+          --destination-port-ranges 80 443
