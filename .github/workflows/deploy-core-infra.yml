@@ -103,7 +103,7 @@ jobs:
             -auto-approve -var "resource_group_name=$CORE_INFRA_RG_NAME" \
             -var-file="terraform.${{ inputs.environment }}.tfvars"
   
-      - name: Disable Network Access for Key Vault
+      # - name: Disable Network Access for Key Vault
         # uses: ./.github/actions/manage-keyvault-network-access
         # if: ${{ always() }}
         # with:
