@@ -16,31 +16,28 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Check for existing rule name or IP address
-          run: |
-            echo "Checking for existing rule with name '${{ inputs.rule-name }}' or IP '${{ inputs.ip-address }}'..."
-            existing_rule=$(az network nsg rule show \
-              --nsg-name ${{ inputs.nsg-name-whitelist }} \
-              --resource-group ${{ inputs.infra-resource-group-name }} \
-              --name ${{ inputs.rule-name }} \
-              --query "name" -o tsv 2>/dev/null || true)
-            if [[ -n "$existing_rule" ]]; then
-              echo "❌ A rule with the name '${{ inputs.rule-name }}' already exists."
-              exit 1
-            fi
-            ip_exists=$(az network nsg rule list \
-              --nsg-name ${{ inputs.nsg-name-whitelist }} \
-              --resource-group ${{ inputs.infra-resource-group-name }} \
-              --query "[?contains(sourceAddressPrefix, '${{ inputs.ip-address }}')]" \
-              -o tsv)
-            if [[ -n "$ip_exists" ]]; then
-              echo "❌ A rule already exists that allows IP '${{ inputs.ip-address }}'."
-              exit 1
-            fi
-            echo "✅ No existing rule or IP conflict found."
-
-
-
+    # - name: Check for existing rule name or IP address
+    #       run: |
+    #         echo "Checking for existing rule with name '${{ inputs.rule-name }}' or IP '${{ inputs.ip-address }}'..."
+    #         existing_rule=$(az network nsg rule show \
+    #           --nsg-name ${{ inputs.nsg-name-whitelist }} \
+    #           --resource-group ${{ inputs.infra-resource-group-name }} \
+    #           --name ${{ inputs.rule-name }} \
+    #           --query "name" -o tsv 2>/dev/null || true)
+    #         if [[ -n "$existing_rule" ]]; then
+    #           echo "❌ A rule with the name '${{ inputs.rule-name }}' already exists."
+    #           exit 1
+    #         fi
+    #         ip_exists=$(az network nsg rule list \
+    #           --nsg-name ${{ inputs.nsg-name-whitelist }} \
+    #           --resource-group ${{ inputs.infra-resource-group-name }} \
+    #           --query "[?contains(sourceAddressPrefix, '${{ inputs.ip-address }}')]" \
+    #           -o tsv)
+    #         if [[ -n "$ip_exists" ]]; then
+    #           echo "❌ A rule already exists that allows IP '${{ inputs.ip-address }}'."
+    #           exit 1
+    #         fi
+    #         echo "✅ No existing rule or IP conflict found."
 
     - name: Generate value for next available rule priority
       shell: bash      
