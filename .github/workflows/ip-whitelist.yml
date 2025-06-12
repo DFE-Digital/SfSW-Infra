@@ -37,9 +37,6 @@ jobs:
     if: github.event_name != 'pull_request'
     environment: "${{ inputs.environment }}" 
     runs-on: ubuntu-latest
-    env:
-      NSG_NAME_WHITELIST: ${{ secrets.NSG_NAME_WHITELIST }}
-      INFRA_RESOURCE_GROUP_NAME: ${{ secrets.INFRA_RESOURCE_GROUP_NAME }}
 
     steps:
       - name: Checkout code
@@ -55,8 +52,8 @@ jobs:
       - name: Add IP address to NSG inbound rules
         uses: ./.github/actions/whitelist-ip-address
         with:
-          nsg-name-whitelist: ${{ secrets.NSG_NAME_WHITELIST }}
-          infra-resource-group-name: ${{ secrets.INFRA_RESOURCE_GROUP_NAME }}
+          nsg-name-whitelist: "${{ vars.NSG_NAME_WHITELIST }}"
+          infra-resource-group-name: "${{ vars.CORE_INFRA_RG_NAME }}"
           rule-name: ${{ inputs.rule_name }}
           ip-address: ${{ inputs.ip_address }}
 
