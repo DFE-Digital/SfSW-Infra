@@ -22,8 +22,8 @@ runs:
         echo "Fetching existing priorities from NSG: '${{ inputs.nsg-name-whitelist }}'"
 
         priorities=$(az network nsg rule list \
-          --nsg-name {{ inputs.nsg-name-whitelist }} \
-          --resource-group {{ inputs.infra-resource-group-name }} \
+          --nsg-name ${{ inputs.nsg-name-whitelist }} \
+          --resource-group ${{ inputs.infra-resource-group-name }} \
           --query "[].priority" -o tsv)
 
         max_priority=500
@@ -49,8 +49,8 @@ runs:
           inputs.ip-address }}' on ports 80 and 443 with priority $NEXT_PRIORITY"
 
         az network nsg rule create \
-          --resource-group {{ inputs.infra-resource-group-name }} \
-          --nsg-name {{ inputs.nsg-name-whitelist }} \
+          --resource-group ${{ inputs.infra-resource-group-name }} \
+          --nsg-name ${{ inputs.nsg-name-whitelist }} \
           --name ${{ inputs.rule-name }} \
           --priority "$NEXT_PRIORITY" \
           --access Allow \
