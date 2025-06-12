@@ -18,9 +18,9 @@ on:
           - test
           - pre-production
 
-  push:
-    branches:
-      - feature/*
+  # push:
+  #   branches:
+  #     - feature/*
 
 permissions:
   id-token: write
