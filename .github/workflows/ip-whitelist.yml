@@ -29,11 +29,11 @@ permissions:
   contents: read
   pull-requests: write
 
-run-name: "Whitelist IP Address: ${{ inputs.environment }}"
+run-name: "Whitelist IP Address for ${{ inputs.rule_name }} in ${{ inputs.environment }} environment"
 
 jobs:
   whitelist-ip-address:
-    name: "Whitelist IP Address: ${{ inputs.environment }}"
+    name: "Whitelist IP Address for ${{ inputs.rule_name }} in ${{ inputs.environment }} environment"
     if: github.event_name != 'pull_request'
     environment: "${{ inputs.environment }}" 
     runs-on: ubuntu-latest
