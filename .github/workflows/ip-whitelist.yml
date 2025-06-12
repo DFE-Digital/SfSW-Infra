@@ -47,10 +47,9 @@ jobs:
       - name: Add IP address to NSG inbound rules
         uses: ./.github/actions/whitelist-ip-address
         with:
-          # nsg-name-whitelist: "${{ vars.NSG_NAME_WHITELIST }}"
-          # infra-resource-group-name: "${{ vars.CORE_INFRA_RG_NAME }}"
           nsg-name-whitelist: ${{ secrets.NSG_NAME_WHITELIST }}
           infra-resource-group-name: ${{ secrets.CORE_INFRA_RG_NAME }}          
           rule-name: ${{ inputs.rule_name }}
           ip-address: ${{ inputs.ip_address }}
-
+          # nsg-name-whitelist: "${{ vars.NSG_NAME_WHITELIST }}"
+          # infra-resource-group-name: "${{ vars.CORE_INFRA_RG_NAME }}"
