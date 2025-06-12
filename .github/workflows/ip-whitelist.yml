@@ -1,24 +1,23 @@
 name: Whitelist IP Address
+
 on:
   workflow_dispatch:
-# on:
-#   workflow_dispatch:
-#     inputs:
-#       ip_address:
-#         description: 'User IP address to whitelist'
-#         required: true
-#       rule_name:
-#         description: 'Unique name for the NSG rule'
-#         required: true        
-#       environment:
-#         description: 'Whitelist IP Address:'
-#         required: true
-#         default: dev
-#         type: choice
-#         options:
-#           - dev
-#           - test
-#           - pre-production
+    inputs:
+      ip_address:
+        description: 'User IP address to whitelist'
+        required: true
+      rule_name:
+        description: 'Unique name for the NSG rule'
+        required: true        
+      environment:
+        description: 'Whitelist IP Address:'
+        required: true
+        default: dev
+        type: choice
+        options:
+          - dev
+          - test
+          - pre-production
 
 
   # push:
