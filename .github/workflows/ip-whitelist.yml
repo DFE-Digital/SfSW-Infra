@@ -10,7 +10,7 @@ on:
         description: 'Unique name for the NSG rule'
         required: true        
       environment:
-        description: 'Whitelist IP Address:'
+        description: 'Select environment:'
         required: true
         default: dev
         type: choice
@@ -24,11 +24,11 @@ permissions:
   contents: read
   pull-requests: write
 
-run-name: "Whitelist ${{ inputs.rule_name }} for ${{ inputs.environment }} env"
+run-name: "Whitelist - ${{ inputs.rule_name }} - ${{ inputs.environment }} env"
 
 jobs:
   whitelist-ip-address:
-    name: "Whitelist ${{ inputs.rule_name }} for ${{ inputs.environment }} env"
+    name: "Whitelist - ${{ inputs.rule_name }} - ${{ inputs.environment }} env"
     if: github.event_name != 'pull_request'
     environment: "${{ inputs.environment }}" 
     runs-on: ubuntu-latest
