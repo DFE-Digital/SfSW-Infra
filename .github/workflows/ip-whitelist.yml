@@ -48,7 +48,8 @@ jobs:
         uses: ./.github/actions/whitelist-ip-address
         with:
           nsg-name-whitelist: ${{ secrets.NSG_NAME_WHITELIST }}
-          infra-resource-group-name: ${{ secrets.CORE_INFRA_RG_NAME }}          
+          infra-resource-group-name: ${{ secrets.CORE_INFRA_RG_NAME }}
+          appgw-subnet: ${{ secrets.APPGW_SUBNET }}
           rule-name: ${{ inputs.rule_name }}
           ip-address: ${{ inputs.ip_address }}
           # nsg-name-whitelist: "${{ vars.NSG_NAME_WHITELIST }}"

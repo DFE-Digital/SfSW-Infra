@@ -7,6 +7,9 @@ inputs:
   infra-resource-group-name:
     description: "Resource Group Name for the NSG"
     required: true
+  appgw-subnet:
+    description: "Application Gateway subnet name"
+    required: true
   rule-name:
     description: "NSG rule name"
     required: true
@@ -82,5 +85,5 @@ runs:
           --protocol Tcp \
           --source-address-prefixes ${{ inputs.ip-address }} \
           --source-port-ranges '*' \
-          --destination-address-prefixes '*' \
+          --destination-address-prefixes ${{ inputs.appgw-subnet }} \
           --destination-port-ranges 80 443
