@@ -1,11 +1,6 @@
 name: Deploy Core Infra - Production
 on:
   workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Deploy Core Infra'
-        required: false
-        default: 'production'
 
   # push:
   #   branches:
@@ -16,16 +11,16 @@ permissions:
   contents: read
   pull-requests: write
 
-run-name: "Deploy core infra: ${{ inputs.environment }}"
+run-name: "Deploy core infra: production"
 
 jobs:
   deploy-core-infra:
-    name: "Deploy core infra: ${{ inputs.environment }}"
+    name: "Deploy core infra: production"
     if: github.event_name != 'pull_request'
     defaults:
       run:
         working-directory: terraform-core-infra
-    environment: ${{ inputs.environment }}
+    environment: production
     runs-on: ubuntu-latest
     # env:
     #   ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
