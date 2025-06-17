@@ -1,0 +1,6 @@
+environment  = "Production"
+instance     = "p01"
+location     = "westeurope"
+prefix       = "s212p01"
+project_code = "s212"
+project_name = "sfsw"
