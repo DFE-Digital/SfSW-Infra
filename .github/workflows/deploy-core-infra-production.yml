@@ -22,46 +22,48 @@ jobs:
         working-directory: terraform-core-infra
     environment: production
     runs-on: ubuntu-latest
-    # env:
-    #   ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
-    #   ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
-    #   ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      CORE_INFRA_RG_NAME: ${{ secrets.CORE_INFRA_RG_NAME }}
+      ENVIRONMENT: production
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # - name: HashiCorp - Setup Terraform
-      #   uses: hashicorp/setup-terraform@v3
-      #   with:
-      #     terraform_version: "1.11.1"
+      - name: HashiCorp - Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.11.1"
 
-      # - name: Verify Terraform Installation
-      #   run: |
-      #     echo "PATH: $PATH"
-      #     which terraform || echo "Terraform binary not found"
-      #     terraform -version || echo "Terraform version check failed"
+      - name: Verify Terraform Installation
+        run: |
+          echo "PATH: $PATH"
+          which terraform || echo "Terraform binary not found"
+          terraform -version || echo "Terraform version check failed"
 
-      # - name: Echo GitHub Runner IP
-      #   run: |
-      #     GITHUB_RUNNER_IP=$(curl -s https://ifconfig.me)
-      #     echo "GITHUB_RUNNER_IP=$GITHUB_RUNNER_IP" >> $GITHUB_ENV
-      #     echo "GitHub Runner IP: $GITHUB_RUNNER_IP"
+      - name: Echo GitHub Runner IP
+        run: |
+          GITHUB_RUNNER_IP=$(curl -s https://ifconfig.me)
+          echo "GITHUB_RUNNER_IP=$GITHUB_RUNNER_IP" >> $GITHUB_ENV
+          echo "GitHub Runner IP: $GITHUB_RUNNER_IP"
 
-      # - name: Azure CLI Login
-      #   uses: azure/login@v2.2.0
-      #   with:
-      #     client-id: ${{ secrets.AZURE_CLIENT_ID }}
-      #     tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-      #     subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - name: Azure CLI Login
+        uses: azure/login@v2.2.0
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      # - name: Enable Network Access for tfstate
-      #   uses: ./.github/actions/manage-storage-network-access
-      #   with:
-      #     storage-account-name: ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}
-      #     resource-group-name: ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}
-      #     github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
-      #     enable-network-access: true
+      - name: Enable Network Access for tfstate
+        uses: ./.github/actions/manage-storage-network-access
+        with:
+          storage-account-name: ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}
+          resource-group-name: ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}
+          github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
+          enable-network-access: true
           
       # # use when modifying core-infra (will fail for a new deployment (i.e. no KV present)):        
       # # - name: Enable Network Access for Key Vault
@@ -72,13 +74,20 @@ jobs:
       # #     github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
       # #     enable-network-access: true
 
-      # - name: Terraform init
-      #   run: |
-      #     terraform init \
-      #       -backend-config="resource_group_name=${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}" \
-      #       -backend-config="storage_account_name=${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}" \
-      #       -backend-config="container_name=${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME }}" \
-      #       -backend-config="key=${{ secrets.CORE_INFRA_STATE_KEY }}"
+      - name: Terraform init
+        run: |
+          terraform init \
+            -backend-config="resource_group_name=${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}" \
+            -backend-config="storage_account_name=${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}" \
+            -backend-config="container_name=${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME }}" \
+            -backend-config="key=${{ secrets.CORE_INFRA_STATE_KEY }}"
+
+      - name: Terraform Plan
+        id: plan
+        run: |
+          terraform plan \
+            -var "resource_group_name=${CORE_INFRA_RG_NAME}" \
+            -var-file="terraform.${ENVIRONMENT}.tfvars"
 
       # - name: Terraform Plan
       #   id: plan
