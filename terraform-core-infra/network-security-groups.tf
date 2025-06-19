@@ -39,19 +39,6 @@ resource "azurerm_network_security_group" "app_service_nsg" {
   name                = "nsg-app-service-${var.project_name}-${var.instance}"
   location            = azurerm_resource_group.core_infra_rg.location
   resource_group_name = azurerm_resource_group.core_infra_rg.name
-
-  # enable this rule to allow direct inbound access to App Service
-  # security_rule {
-  #   name                       = "HTTP-HTTPS"
-  #   priority                   = 100
-  #   direction                  = "Inbound"
-  #   access                     = "Allow"
-  #   protocol                   = "Tcp"
-  #   source_port_range          = "*"
-  #   destination_port_ranges    = ["80", "443"]
-  #   source_address_prefix      = "Internet"
-  #   destination_address_prefix = var.app_service_snet
-  # }  
 }
 
 resource "azurerm_subnet_network_security_group_association" "app_service_subnet_nsg_association" {
@@ -64,18 +51,6 @@ resource "azurerm_network_security_group" "app_service_delegated_nsg" {
   name                = "nsg-app-service-delegated-${var.project_name}-${var.instance}"
   location            = azurerm_resource_group.core_infra_rg.location
   resource_group_name = azurerm_resource_group.core_infra_rg.name
-
-  # security_rule {
-  #   name                       = "HTTP-HTTPS"
-  #   priority                   = 100
-  #   direction                  = "Inbound"
-  #   access                     = "Allow"
-  #   protocol                   = "Tcp"
-  #   source_port_range          = "*"
-  #   destination_port_ranges    = ["80", "443"]
-  #   source_address_prefix      = "Internet"
-  #   destination_address_prefix = var.app_service_delegated_snet
-  # }
 }
 
 resource "azurerm_subnet_network_security_group_association" "app_service_delegated_subnet_nsg_association" {

@@ -66,14 +66,23 @@ jobs:
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: true
           
-      # # use when modifying core-infra (will fail for a new deployment (i.e. no KV present)):        
-      # # - name: Enable Network Access for Key Vault
-      # #   uses: ./.github/actions/manage-keyvault-network-access
-      # #   with:
-      # #     keyvault-name: "${{ vars.KEY_VAULT_NAME }}"
-      # #     resource-group-name: "${{ vars.CORE_INFRA_RG_NAME }}"
-      # #     github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
-      # #     enable-network-access: true
+      # use when modifying core-infra (will fail for a new deployment (i.e. no KV present)):        
+      # - name: Enable Network Access for Key Vault
+      #   uses: ./.github/actions/manage-keyvault-network-access
+      #   with:
+      #     keyvault-name: "${{ vars.KEY_VAULT_NAME }}"
+      #     resource-group-name: "${{ vars.CORE_INFRA_RG_NAME }}"
+      #     github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
+      #     enable-network-access: true
+
+      # use when modifying core-infra (will fail for a new deployment (i.e. no KV present)):        
+      - name: Enable Network Access for Key Vault
+        uses: ./.github/actions/manage-keyvault-network-access
+        with:
+          keyvault-name: ${{ secrets.KEY_VAULT_NAME }}
+          resource-group-name: ${{ secrets.CORE_INFRA_RG_NAME }}
+          github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
+          enable-network-access: true
 
       - name: Terraform init
         run: |
