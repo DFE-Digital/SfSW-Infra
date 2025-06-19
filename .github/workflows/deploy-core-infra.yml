@@ -11,9 +11,6 @@ on:
           - dev
           - test
           - pre-production
-  # push:
-  #   branches:
-  #     - main
 
 permissions:
   id-token: write
@@ -32,9 +29,11 @@ jobs:
     environment: ${{ inputs.environment }}
     runs-on: ubuntu-latest
     env:
-      ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
-      ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
-      ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      CORE_INFRA_RG_NAME: ${{ secrets.CORE_INFRA_RG_NAME }}
+      KEY_VAULT_NAME: ${{ secrets.KEY_VAULT_NAME }}      
 
     steps:
       - name: Checkout code
@@ -76,8 +75,8 @@ jobs:
       # - name: Enable Network Access for Key Vault
       #   uses: ./.github/actions/manage-keyvault-network-access
       #   with:
-      #     keyvault-name: "${{ vars.KEY_VAULT_NAME }}"
-      #     resource-group-name: "${{ vars.CORE_INFRA_RG_NAME }}"
+      #     keyvault-name: ${{ secrets.KEY_VAULT_NAME }}
+      #     resource-group-name: ${{ secrets.CORE_INFRA_RG_NAME }}
       #     github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
       #     enable-network-access: true
 
@@ -103,14 +102,14 @@ jobs:
             -auto-approve -var "resource_group_name=$CORE_INFRA_RG_NAME" \
             -var-file="terraform.${{ inputs.environment }}.tfvars"
   
-      # - name: Disable Network Access for Key Vault
-        # uses: ./.github/actions/manage-keyvault-network-access
-        # if: ${{ always() }}
-        # with:
-        #   keyvault-name: "${{ vars.KEY_VAULT_NAME }}"
-        #   resource-group-name: "${{ vars.CORE_INFRA_RG_NAME }}"
-        #   github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
-        #   enable-network-access: false
+      - name: Disable Network Access for Key Vault
+        uses: ./.github/actions/manage-keyvault-network-access
+        if: ${{ always() }}
+        with:
+          keyvault-name: ${{ secrets.KEY_VAULT_NAME }}
+          resource-group-name: ${{ secrets.CORE_INFRA_RG_NAME }}
+          github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
+          enable-network-access: false
 
       - name: Disable Network Access for tfstate 
         uses: ./.github/actions/manage-storage-network-access

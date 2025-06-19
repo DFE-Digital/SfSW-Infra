@@ -11,7 +11,6 @@ on:
           - dev
           - test
           - pre-production
-          - production
 
 permissions:
   id-token: write
@@ -69,15 +68,7 @@ jobs:
           storage-account-name: ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}
           resource-group-name: ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
-          enable-network-access: true
-    
-      # - name: Enable Network Access for Key Vault
-      #   uses: ./.github/actions/manage-keyvault-network-access
-      #   with:
-      #     keyvault-name: "${{ vars.KEY_VAULT_NAME }}"
-      #     resource-group-name: "${{ vars.CORE_INFRA_RG_NAME }}"
-      #     github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
-      #     enable-network-access: true
+          enable-network-access: true    
 
       - name: Enable Network Access for Key Vault
         uses: ./.github/actions/manage-keyvault-network-access

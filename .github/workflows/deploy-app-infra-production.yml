@@ -1,43 +1,31 @@
-name: Deploy App Infra
+name: Deploy App Infra - Production
 on:
   workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Deploy app infra:'
-        required: true
-        default: dev
-        type: choice
-        options:
-          - dev
-          - test
-          - pre-production    
-  schedule:
-    - cron: '0 7 * * 1-5'
-  # push:
-  #   branches:
-  #     - main
 
 permissions:
   id-token: write
   contents: read
   pull-requests: write
 
-run-name: "Deploy app infra: ${{ inputs.environment || 'dev' }}"
+run-name: "Deploy app infra: production"
 
 jobs:
-  deploy-app-infra:
-    name: "Deploy app infra: ${{ inputs.environment || 'dev' }}"
+  deploy-app-infra-production:
+    name: "Deploy app infra: production"
     if: github.event_name != 'pull_request'
     defaults:
       run:
         working-directory: terraform-app-infra
-    environment: "${{ inputs.environment || 'dev' }}" 
+    environment: production
     runs-on: ubuntu-latest
     env:
-      ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
-      ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
-      ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
-      ENV_NAME: "${{ inputs.environment || 'dev' }}"
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      APP_INFRA_RG_NAME: ${{ secrets.APP_INFRA_RG_NAME }}
+      CORE_INFRA_RG_NAME: ${{ secrets.CORE_INFRA_RG_NAME }}
+      ENVIRONMENT: production
+      KEY_VAULT_NAME: ${{ secrets.KEY_VAULT_NAME }}
 
     steps:
       - name: Checkout code
@@ -78,8 +66,8 @@ jobs:
       - name: Enable Network Access for Key Vault
         uses: ./.github/actions/manage-keyvault-network-access
         with:
-          keyvault-name: "${{ vars.KEY_VAULT_NAME }}"
-          resource-group-name: "${{ vars.CORE_INFRA_RG_NAME }}"
+          keyvault-name: ${{ secrets.KEY_VAULT_NAME }}
+          resource-group-name: ${{ secrets.CORE_INFRA_RG_NAME }}
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: true
 
@@ -95,15 +83,15 @@ jobs:
         id: plan
         run: |
           terraform plan \
-            -var "resource_group_name=$APP_INFRA_RG_NAME" \
-            -var-file="terraform.${ENV_NAME}.tfvars"        
+            -var "resource_group_name=${APP_INFRA_RG_NAME}" \
+            -var-file="terraform.${ENVIRONMENT}.tfvars"        
 
       - name: Terraform Apply
         id: tf_apply
         run: |
           terraform apply \
-            -auto-approve -var "resource_group_name=$APP_INFRA_RG_NAME" \
-            -var-file="terraform.${ENV_NAME}.tfvars"
+            -auto-approve -var "resource_group_name=${APP_INFRA_RG_NAME}" \
+            -var-file="terraform.${ENVIRONMENT}.tfvars"
             echo "storage_account_name=$(terraform output -raw storage_account_name)" >> $GITHUB_OUTPUT
             echo "resource_group_name=$(terraform output -raw resource_group_name)" >> $GITHUB_OUTPUT
             echo "container_name=$(terraform output -raw container_name)" >> $GITHUB_OUTPUT
@@ -112,8 +100,8 @@ jobs:
         uses: ./.github/actions/manage-keyvault-network-access
         if: ${{ always() }}
         with:
-          keyvault-name: "${{ vars.KEY_VAULT_NAME }}"
-          resource-group-name: "${{ vars.CORE_INFRA_RG_NAME }}"
+          keyvault-name: ${{ secrets.KEY_VAULT_NAME }}
+          resource-group-name: ${{ secrets.CORE_INFRA_RG_NAME }}
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: false
             
@@ -121,7 +109,7 @@ jobs:
         uses: ./.github/actions/manage-storage-network-access
         with:
           storage-account-name: ${{ steps.tf_apply.outputs.storage_account_name }}
-          resource-group-name: ${{ steps.tf_apply.outputs.resource_group_name }}
+          resource-group-name: ${{ secrets.APP_INFRA_RG_NAME }}
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: true
           
@@ -161,7 +149,7 @@ jobs:
         if: ${{ always() }}
         with:
           storage-account-name: ${{ steps.tf_apply.outputs.storage_account_name }}
-          resource-group-name: ${{ steps.tf_apply.outputs.resource_group_name }}
+          resource-group-name: ${{ secrets.APP_INFRA_RG_NAME }}
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: false
 
@@ -179,4 +167,4 @@ jobs:
         id: network-rules-error-pages        
         with:
           storage-account-name: ${{ steps.tf_apply.outputs.storage_account_name }}
-          resource-group-name: ${{ steps.tf_apply.outputs.resource_group_name }}
+          resource-group-name: ${{ secrets.APP_INFRA_RG_NAME }}

@@ -2,10 +2,6 @@ name: Deploy Core Infra - Production
 on:
   workflow_dispatch:
 
-  # push:
-  #   branches:
-  #     - main
-
 permissions:
   id-token: write
   contents: read
@@ -14,7 +10,7 @@ permissions:
 run-name: "Deploy core infra: production"
 
 jobs:
-  deploy-core-infra:
+  deploy-core-infra-production:
     name: "Deploy core infra: production"
     if: github.event_name != 'pull_request'
     defaults:
@@ -94,7 +90,7 @@ jobs:
         id: tf_apply
         run: |
           terraform apply \
-            -auto-approve -var "resource_group_name=$CORE_INFRA_RG_NAME" \
+            -auto-approve -var "resource_group_name=${CORE_INFRA_RG_NAME}" \
             -var-file="terraform.${ENVIRONMENT}.tfvars"
 
       - name: Disable Network Access for Key Vault
