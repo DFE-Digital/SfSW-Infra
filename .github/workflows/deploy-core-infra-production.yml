@@ -70,19 +70,10 @@ jobs:
       # - name: Enable Network Access for Key Vault
       #   uses: ./.github/actions/manage-keyvault-network-access
       #   with:
-      #     keyvault-name: "${{ vars.KEY_VAULT_NAME }}"
-      #     resource-group-name: "${{ vars.CORE_INFRA_RG_NAME }}"
+      #     keyvault-name: ${{ secrets.KEY_VAULT_NAME }}
+      #     resource-group-name: ${{ secrets.CORE_INFRA_RG_NAME }}
       #     github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
       #     enable-network-access: true
-
-      # use when modifying core-infra (will fail for a new deployment (i.e. no KV present)):        
-      - name: Enable Network Access for Key Vault
-        uses: ./.github/actions/manage-keyvault-network-access
-        with:
-          keyvault-name: ${{ secrets.KEY_VAULT_NAME }}
-          resource-group-name: ${{ secrets.CORE_INFRA_RG_NAME }}
-          github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
-          enable-network-access: true
 
       - name: Terraform init
         run: |
@@ -99,35 +90,12 @@ jobs:
             -var "resource_group_name=${CORE_INFRA_RG_NAME}" \
             -var-file="terraform.${ENVIRONMENT}.tfvars"
 
-      # - name: Terraform Plan
-      #   id: plan
-      #   run: |
-      #     terraform plan \
-      #       -var "resource_group_name=$CORE_INFRA_RG_NAME" \
-      #       -var-file="terraform.${{ inputs.environment }}.tfvars"
-
-      # - name: Terraform Apply
-      #   id: tf_apply
-      #   run: |
-      #     terraform apply \
-      #       -auto-approve -var "resource_group_name=$CORE_INFRA_RG_NAME" \
-      #       -var-file="terraform.${{ inputs.environment }}.tfvars"
-  
       - name: Terraform Apply
         id: tf_apply
         run: |
           terraform apply \
             -auto-approve -var "resource_group_name=$CORE_INFRA_RG_NAME" \
             -var-file="terraform.${ENVIRONMENT}.tfvars"
-  
-      # - name: Disable Network Access for Key Vault
-        # uses: ./.github/actions/manage-keyvault-network-access
-        # if: ${{ always() }}
-        # with:
-        #   keyvault-name: "${{ vars.KEY_VAULT_NAME }}"
-        #   resource-group-name: "${{ vars.CORE_INFRA_RG_NAME }}"
-        #   github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
-        #   enable-network-access: false
 
       - name: Disable Network Access for Key Vault
         uses: ./.github/actions/manage-keyvault-network-access
