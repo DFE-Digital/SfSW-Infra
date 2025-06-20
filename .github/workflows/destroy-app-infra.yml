@@ -103,7 +103,7 @@ jobs:
         run: |
           terraform destroy \
             -auto-approve -lock=false -var "resource_group_name=${APP_INFRA_RG_NAME}" \
-            -var-file="terraform.${ENVIRONMENT}.tfvars"
+            -var-file="terraform.${ENV_NAME}.tfvars"
 
       - name: Disable Network Access for Key Vault
         uses: ./.github/actions/manage-keyvault-network-access
