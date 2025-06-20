@@ -13,6 +13,11 @@ variable "appgw_sku_tier" {
   type = string
 }
 
+variable "appservice_sku_name" {
+  description = "value"
+  type = string
+}
+
 variable "cpd_azure_environment" {
   description = "The environment (e.g., dev, prod) for CPD_AZURE_ENVIRONMENT"
   type = string
