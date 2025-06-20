@@ -1,4 +1,6 @@
 # deploy_appgw               = 1
+appgw_sku_name             = "Standard_v2"
+appgw_sku_tier             = "Standard_v2"
 cpd_azure_environment      = "test"
 cpd_contentful_environment = "test"
 environment                = "Test"

@@ -3,12 +3,24 @@
 #   type        = number
 # }
 
+variable "appgw_sku_name" {
+  description = "Application Gateway SKU name"
+  type = string
+}
+
+variable "appgw_sku_tier" {
+  description = "Application Gateway SKU tier"
+  type = string
+}
+
 variable "cpd_azure_environment" {
-  description = "The environment (e.g., dev, prod) for CPD_AZURE_ENVIRONMENT"  
+  description = "The environment (e.g., dev, prod) for CPD_AZURE_ENVIRONMENT"
+  type = string
 }
 
 variable "cpd_contentful_environment" {
-  description = "The environment (e.g., dev, prod) for CPD_CONTENTFUL_ENVIRONMENT"  
+  description = "The environment (e.g., dev, prod) for CPD_CONTENTFUL_ENVIRONMENT"
+  type = string
 }
 
 variable "environment" {

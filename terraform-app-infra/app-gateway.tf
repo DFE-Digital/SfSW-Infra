@@ -5,8 +5,8 @@ resource "azurerm_application_gateway" "appgw" {
   resource_group_name = azurerm_resource_group.webapp_rg.name
 
   sku {
-    name     = "Standard_v2"
-    tier     = "Standard_v2"
+    name     = var.appgw_sku_name
+    tier     = var.appgw_sku_tier
     capacity = 1
   }
 

@@ -1,4 +1,6 @@
 # deploy_appgw               = 1
+appgw_sku_name             = "WAF_v2"
+appgw_sku_tier             = "WAF_v2"
 cpd_azure_environment      = "prod"
 cpd_contentful_environment = "master"
 environment                = "Production"
