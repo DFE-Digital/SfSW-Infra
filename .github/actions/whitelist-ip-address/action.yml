@@ -22,6 +22,18 @@ runs:
     - name: Check if rule exists
       shell: bash
       run: |
+        echo "Checking for existing rule with IP '${{ inputs.ip-address }}'..."
+        ip_exists=$(az network nsg rule list \
+          --nsg-name ${{ inputs.nsg-name-whitelist }} \
+          --resource-group ${{ inputs.infra-resource-group-name }} \
+          --query "[?contains(sourceAddressPrefix, '${{ inputs.ip-address }}')]" \
+          -o tsv)
+        if [[ -n "$ip_exists" ]]; then
+          echo "❌ A rule already exists that allows IP '${{ inputs.ip-address }}'."
+          exit 1
+        fi
+        echo "✅ No existing rule or IP conflict found."
+
         echo "Checking if rule '${{ inputs.rule-name }}' exists..."
         if az network nsg rule show \
           --nsg-name "${{ inputs.nsg-name-whitelist }}" \
