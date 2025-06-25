@@ -28,6 +28,11 @@ variable "cpd_contentful_environment" {
   type = string
 }
 
+variable "deploy_app_slot" {
+  description = "Controls whether the private Application Gateway is deployed. Set to 1 to include, 0 to exclude."
+  type = number
+}
+
 variable "environment" {
   description = "The environment (e.g., dev, prod)"
   type        = string

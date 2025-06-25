@@ -4,6 +4,7 @@ appgw_sku_tier             = "Standard_v2"
 appservice_sku_name        = "B1"
 cpd_azure_environment      = "test"
 cpd_contentful_environment = "test"
+deploy_app_slot            = 0
 environment                = "Test"
 instance                   = "d02"
 location                   = "westeurope"
