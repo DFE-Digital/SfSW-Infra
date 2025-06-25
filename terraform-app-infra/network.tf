@@ -49,3 +49,8 @@ resource "azurerm_app_service_virtual_network_swift_connection" "app_service_vne
   app_service_id = azurerm_linux_web_app.app_service.id
   subnet_id      = data.azurerm_subnet.app_service_delegated_subnet.id
 }
+
+resource "azurerm_app_service_virtual_network_swift_connection" "app_service_slot_vnet_integration" {
+  app_service_id = azurerm_linux_web_app_slot.staging.id
+  subnet_id      = data.azurerm_subnet.app_service_delegated_subnet.id
+}
