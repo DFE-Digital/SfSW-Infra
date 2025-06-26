@@ -200,7 +200,7 @@ resource "azurerm_application_gateway" "appgw" {
 }
 
 resource "azurerm_web_application_firewall_policy" "waf_policy" {
-  count = var.environment == "Production" ? 1 : 0
+  count               = var.environment == "Production" ? 1 : 0
   name                = "pol-${var.project_name}-${var.instance}"
   location            = azurerm_resource_group.webapp_rg.location
   resource_group_name = azurerm_resource_group.webapp_rg.name
@@ -222,5 +222,6 @@ resource "azurerm_web_application_firewall_policy" "waf_policy" {
     request_body_check          = true
     file_upload_limit_in_mb     = 100
     max_request_body_size_in_kb = 128
+    file_upload_enforcement     = true
   }
 }
