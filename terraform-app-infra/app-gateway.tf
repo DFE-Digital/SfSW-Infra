@@ -1,5 +1,4 @@
 resource "azurerm_application_gateway" "appgw" {
-  # count               = var.deploy_appgw
   name                = "appgw-${var.project_name}-${var.instance}"
   location            = azurerm_resource_group.webapp_rg.location
   resource_group_name = azurerm_resource_group.webapp_rg.name
@@ -194,6 +193,7 @@ resource "azurerm_application_gateway" "appgw" {
 }
 
 resource "azurerm_web_application_firewall_policy" "waf_policy" {
+  count = var.environment == "Production" ? 1 : 0
   name                = "pol-${var.project_name}-${var.instance}"
   location            = azurerm_resource_group.webapp_rg.location
   resource_group_name = azurerm_resource_group.webapp_rg.name

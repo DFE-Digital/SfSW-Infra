@@ -1,4 +1,3 @@
-# deploy_appgw               = 1
 appgw_sku_name             = "Standard_v2"
 appgw_sku_tier             = "Standard_v2"
 appservice_sku_name        = "B1"
