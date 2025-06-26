@@ -187,12 +187,6 @@ resource "azurerm_application_gateway" "appgw" {
   firewall_policy_id                = var.appgw_sku_tier == "WAF_v2" ? azurerm_web_application_firewall_policy.waf_policy.id : null
   force_firewall_policy_association = true
 
-  waf_configuration {
-    enabled = true
-    firewall_mode = "Prevention"
-    rule_set_type = "OWASP"
-    rule_set_version = "3.2"
-  }
   identity {
     type         = "UserAssigned"
     identity_ids = [data.azurerm_user_assigned_identity.mi_appgw.id]
