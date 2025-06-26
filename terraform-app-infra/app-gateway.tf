@@ -183,8 +183,15 @@ resource "azurerm_application_gateway" "appgw" {
     }
   }
 
-  firewall_policy_id                = var.appgw_sku_tier == "WAF_v2" ? azurerm_web_application_firewall_policy.waf_policy[count.index] : null
-  force_firewall_policy_association = true
+  # firewall_policy_id                = var.appgw_sku_tier == "WAF_v2" ? azurerm_web_application_firewall_policy.waf_policy.id : null
+  # force_firewall_policy_association = true
+
+  firewall_policy_id = (
+    var.environment == "Production"
+    && var.appgw_sku_tier == "WAF_v2"
+    && length(azurerm_web_application_firewall_policy.waf_policy) > 0
+  ) ? azurerm_web_application_firewall_policy.waf_policy[0].id : null
+
 
   identity {
     type         = "UserAssigned"
