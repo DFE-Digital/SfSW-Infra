@@ -137,7 +137,7 @@ resource "azurerm_monitor_autoscale_setting" "autoscale" {
 
     rule {
       metric_trigger {
-        metric_name        = "CpuPercentage_scale_out"
+        metric_name        = "CpuPercentage"
         metric_resource_id = azurerm_service_plan.app_service_plan.id
         time_grain         = "PT1M"
         statistic          = "Average"
@@ -157,7 +157,7 @@ resource "azurerm_monitor_autoscale_setting" "autoscale" {
 
     rule {
       metric_trigger {
-        metric_name        = "CpuPercentage_scale_in"
+        metric_name        = "CpuPercentage"
         metric_resource_id = azurerm_service_plan.app_service_plan.id
         time_grain         = "PT1M"
         statistic          = "Average"
