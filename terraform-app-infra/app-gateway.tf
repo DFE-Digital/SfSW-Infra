@@ -183,7 +183,7 @@ resource "azurerm_application_gateway" "appgw" {
     }
   }
 
-  firewall_policy_id                = var.appgw_sku_tier == "WAF_v2" ? azurerm_web_application_firewall_policy.waf_policy.id : null
+  firewall_policy_id                = var.appgw_sku_tier == "WAF_v2" ? azurerm_web_application_firewall_policy.waf_policy[count.index] : null
   force_firewall_policy_association = true
 
   identity {
