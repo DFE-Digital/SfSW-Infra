@@ -184,8 +184,42 @@ resource "azurerm_application_gateway" "appgw" {
     }
   }
 
+  firewall_policy_id                = var.appgw_sku_tier == "WAF_v2" ? azurerm_web_application_firewall_policy.waf_policy.id : null
+  force_firewall_policy_association = true
+
+  waf_configuration {
+    enabled = true
+    firewall_mode = "Prevention"
+    rule_set_type = "OWASP"
+    rule_set_version = "3.2"
+  }
   identity {
     type         = "UserAssigned"
     identity_ids = [data.azurerm_user_assigned_identity.mi_appgw.id]
+  }
+}
+
+resource "azurerm_web_application_firewall_policy" "waf_policy" {
+  name                = "pol-${var.project_name}-${var.instance}"
+  location            = azurerm_resource_group.webapp_rg.location
+  resource_group_name = azurerm_resource_group.webapp_rg.name
+
+  managed_rules {
+    managed_rule_set {
+      type    = "OWASP"
+      version = "3.2"
+    }
+
+    managed_rule_set {
+      type    = "Microsoft_BotManagerRuleSet"
+      version = "0.1"
+    }
+  }
+  policy_settings {
+    enabled                     = true
+    mode                        = "Prevention"
+    request_body_check          = true
+    file_upload_limit_in_mb     = 100
+    max_request_body_size_in_kb = 128
   }
 }
