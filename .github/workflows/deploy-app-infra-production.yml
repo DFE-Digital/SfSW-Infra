@@ -1,6 +1,14 @@
 name: Deploy App Infra - Production
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deploy application:'
+        required: true
+        default: production
+        type: choice
+        options:
+          - production  
 
 permissions:
   id-token: write
@@ -16,7 +24,7 @@ jobs:
     defaults:
       run:
         working-directory: terraform-app-infra
-    environment: production
+    environment: "${{ inputs.environment }}"
     runs-on: ubuntu-latest
     env:
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
