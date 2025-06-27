@@ -1,6 +1,6 @@
 resource "azurerm_application_insights_web_test" "availability_test" {
   name                    = "example-webtest"
-  location                = azurerm_application_insights.app_insights_web.local_authentication_disabled
+  location                = azurerm_application_insights.app_insights_web.location
   resource_group_name     = azurerm_application_insights.app_insights_web.resource_group_name
   application_insights_id = azurerm_application_insights.app_insights_web.id
   kind                    = "ping"
