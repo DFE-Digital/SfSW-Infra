@@ -29,6 +29,9 @@ resource "azurerm_application_insights_web_test" "availability_test" {
 
 }
 
+resource "random_uuid" "webtest" {}
+resource "random_uuid" "request" {}
+
 data "template_file" "webtest" {
   template = <<EOF
 <WebTest Name="${name}" Id="${idGuid}" Enabled="True" Timeout="${timeout}" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
