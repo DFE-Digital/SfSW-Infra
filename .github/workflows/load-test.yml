@@ -26,3 +26,18 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
 
+    - name: Create load test
+      shell: bash
+      run: |
+        az load test create \
+          --load-test-resource lt-sfw-p01 \
+          --resource-group "${{ secrets.APP_RESOURCE_GROUP_NAME }}" \
+          --test-id loadtest01 \
+          --test-plan load-test/test-plan.json \
+          --test-type URL
+
+        az load test-run create \
+          --load-test-resource lt-sfw-p01 \
+          --resource-group "${{ secrets.APP_RESOURCE_GROUP_NAME }}" \
+          --test-id loadtest01 \
+          --test-run-id testrun01
