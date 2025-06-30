@@ -2,7 +2,7 @@
   "requests": [
     {
       "name": "HomePage",
-      "url": "https://13.81.112.60/home",
+      "url": "http://13.81.112.60/home",
       "method": "GET"
     }
   ],
