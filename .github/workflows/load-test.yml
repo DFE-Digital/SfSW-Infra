@@ -35,14 +35,14 @@ jobs:
         shell: bash
         run: |
           az load test create \
-            --load-test-resource lt-sfw-p01 \
+            --load-test-resource lt-sfsw-p01 \
             --resource-group s212p01-rg-sfsw-app \
             --test-id loadtest01 \
             --test-plan load-test/test-plan.json \
             --test-type URL
 
           az load test-run create \
-            --load-test-resource lt-sfw-p01 \
+            --load-test-resource lt-sfsw-p01 \
             --resource-group s212p01-rg-sfsw-app \
             --test-id loadtest01 \
             --test-run-id testrun01
