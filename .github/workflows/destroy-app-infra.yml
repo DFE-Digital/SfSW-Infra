@@ -10,8 +10,7 @@ on:
         options:
           - dev
           - test
-          - pre-production
-          - production
+
   schedule:
     - cron: '0 19 * * 1-5'
 

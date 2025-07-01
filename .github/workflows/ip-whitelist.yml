@@ -18,7 +18,6 @@ on:
           - dev
           - test
           - pre-production
-          - production
 
 permissions:
   id-token: write
