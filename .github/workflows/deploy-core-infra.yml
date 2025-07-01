@@ -10,7 +10,6 @@ on:
         options:
           - dev
           - test
-          - pre-production
 
 permissions:
   id-token: write
