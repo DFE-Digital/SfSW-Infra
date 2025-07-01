@@ -1,0 +1,13 @@
+displayName: URLTest
+testPlan: url_test.jmx
+description: ''
+engineInstances: 2
+testId: test_01
+testType: JMX
+splitAllCSVs: False
+failureCriteria:
+- p90(response_time_ms) > 4000
+- percentage(error) > 10
+autoStop:
+  errorPercentage: 80
+  timeWindow: 120
