@@ -18,8 +18,8 @@
           <collectionProp name="ThreadSchedule1">
             <stringProp name="threadsnum">50</stringProp>
             <stringProp name="initdelay">0</stringProp>
-            <stringProp name="startime">60</stringProp>
-            <stringProp name="holdload">60</stringProp>
+            <stringProp name="startime">300</stringProp>
+            <stringProp name="holdload">0</stringProp>
             <stringProp name="shutdown"></stringProp>
           </collectionProp>
         </collectionProp>
