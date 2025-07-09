@@ -2,13 +2,14 @@ name: Azure Load Test
 
 on:
   workflow_dispatch:
-    # inputs:
-    #   test_id:
-    #     description: 'Load test ID'
-    #     required: true
-    #   target_url:
-    #     description: 'Target URL for the load test'
-    #     required: true
+    inputs:
+      display_name:
+        description: 'Enter a display name for the test run in Azure'
+        required: true
+        default: 'URLTest'
+      url:
+        description: 'URL must start with www.'
+        required: true
 
 permissions:
     id-token: write
@@ -17,9 +18,7 @@ permissions:
 env:
   RESOURCE_GROUP: s212p01-rg-sfsw-app
   LOAD_TEST_RESOURCE: lt-sfsw-p01
-  WEBAPP_URL: https://support-for-social-workers.education.gov.uk
 
-    
 jobs:
   run-load-test:
     runs-on: ubuntu-latest
@@ -28,6 +27,21 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Validate URL input starts with 'www.'
+        run: |
+          if [[ ! "${{ github.event.inputs.url }}" =~ ^www\. ]]; then
+            echo "❌ Invalid input: URL must start with 'www.' (e.g., www.example.com)"
+            exit 1
+          fi
+
+      - name: Generate test ID
+        id: generate_testid
+        run: |
+          TIMESTAMP=$(date -u +'%Y%m%d%H%M%S')
+          TEST_ID="loadtest-$TIMESTAMP"
+          echo "Generated testId: $TEST_ID"
+          echo "test_id=$TEST_ID" >> "$GITHUB_OUTPUT"
 
       - name: Azure CLI Login
         uses: azure/login@v2.2.0
@@ -45,8 +59,16 @@ jobs:
           env: |
             [
               {
-              "name": "webapp",
-              "value": "${{ env.AZURE_WEBAPP_URL }}"
+                "name": "url",
+                "value": "${{ github.event.inputs.url }}"
+              },
+              {
+                "name": "display_name",
+                "value": "${{ github.event.inputs.display_name }}"
+              },
+              {
+                "name": "test_id",
+                "value": "${{ steps.generate_testid.outputs.test_id }}"
               }
             ]
 

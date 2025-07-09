@@ -1,13 +1,13 @@
-displayName: URLTest
+displayName: ${display_name}
 testPlan: url_test.jmx
 description: ''
 engineInstances: 2
-testId: test_02
+testId: ${test_id}
 testType: JMX
-splitAllCSVs: False
+splitAllCSVs: false
 failureCriteria:
-- p90(response_time_ms) > 4000
-- percentage(error) > 10
+  - p90(response_time_ms) > 4000
+  - percentage(error) > 10
 autoStop:
   errorPercentage: 80
   timeWindow: 120
