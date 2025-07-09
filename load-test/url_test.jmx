@@ -7,19 +7,16 @@
 			<boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
 			<boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
 			<elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-				<collectionProp name="Arguments.arguments"/>
+				<collectionProp name="Arguments.arguments">
+				<elementProp name="url" elementType="Argument">
+					<stringProp name="Argument.name">url</stringProp>
+					<stringProp name="Argument.value">${url}</stringProp>
+					<stringProp name="Argument.metadata">=</stringProp>
+				</elementProp>
+				</collectionProp>
 			</elementProp>
 			<stringProp name="TestPlan.user_define_classpath"></stringProp>
 		</TestPlan>
-        <elementProp name="TestPlan.user_defined_variables" elementType="Arguments">
-        <collectionProp name="Arguments.arguments">
-            <elementProp name="url" elementType="Argument">
-            <stringProp name="Argument.name">url</stringProp>
-            <stringProp name="Argument.value">${url}</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-            </elementProp>
-        </collectionProp>
-        </elementProp>
 		<hashTree>
 			<ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Web endpoint test" enabled="true">
 				<stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
@@ -58,3 +55,5 @@
 		</hashTree>
 	</hashTree>
 </jmeterTestPlan>
+
+# Error: TestPlan validation failed
