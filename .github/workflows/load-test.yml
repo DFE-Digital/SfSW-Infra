@@ -56,7 +56,6 @@ jobs:
           loadTestConfigFile: 'load-test/config.yml'
           loadTestResource: ${{ env.LOAD_TEST_RESOURCE}}
           resourceGroup: ${{ env.RESOURCE_GROUP }}
-          testId: ${{ steps.generate_testid.outputs.test_id }}
           env: |
             [
               {
@@ -66,6 +65,10 @@ jobs:
               {
                 "name": "display_name",
                 "value": "${{ github.event.inputs.display_name }}"
+              },
+              {
+                "name": "test_id",
+                "value": "${{ steps.generate_testid.outputs.test_id }}"
               }
             ]
 

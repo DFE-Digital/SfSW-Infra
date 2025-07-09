@@ -1,7 +1,8 @@
-displayName: ${display_name}
+displayName: temp_name_01
 testPlan: url_test.jmx
 description: ''
 engineInstances: 2
+testId: temp_testid_01
 testType: JMX
 splitAllCSVs: false
 failureCriteria:
