@@ -2,7 +2,6 @@ displayName: ${display_name}
 testPlan: url_test.jmx
 description: ''
 engineInstances: 2
-testId: ${test_id}
 testType: JMX
 splitAllCSVs: false
 failureCriteria:
