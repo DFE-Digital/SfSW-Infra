@@ -1,0 +1,65 @@
+// retrieve all logs for both categories (ApplicationGatewayFirewallLog and ApplicationGatewayAccessLog)
+
+AzureDiagnostics
+| where TimeGenerated >= ago(24hr)
+| limit 30000
+| project-reorder timeStamp_t, clientIp_s, action_s, requestUri_s, hostname_s, Message, ruleSetType_s, ruleGroup_s, ruleId_s, details_data_s, details_message_s, userAgent_s, clientPort_d, sslProtocol_s
+
+ 
+
+ 
+
+// filter WAF logs for blocked IP traffic
+
+AzureDiagnostics
+| where TimeGenerated >= ago(24hr)
+| where clientIp_s has "<IP ADDRESS>"
+| limit 30000
+| project-reorder timeStamp_t, clientIp_s, action_s, requestUri_s, hostname_s, Message, ruleSetType_s, ruleGroup_s, ruleId_s, details_data_s, details_message_s, userAgent_s, clientPort_d, sslProtocol_s, Category
+
+ 
+
+ 
+
+// all requests in ApplicationGatewayFirewallLog
+
+AzureDiagnostics
+| where TimeGenerated >= ago(24hr)
+| where Category == "ApplicationGatewayFirewallLog"
+| limit 30000
+| project-reorder timeStamp_t, clientIp_s, action_s, requestUri_s, hostname_s, Message, ruleSetType_s, ruleGroup_s, ruleId_s, details_data_s, details_message_s, userAgent_s, clientPort_d, sslProtocol_s
+
+ 
+
+ 
+
+// all requests in ApplicationGatewayAccessLog
+
+AzureDiagnostics
+| where TimeGenerated >= ago(24hr)
+| where Category == "ApplicationGatewayAccessLog"
+| limit 30000
+| project-reorder timeStamp_t, clientIP_s, requestUri_s, originalRequestUriWithArgs_s, serverStatus_s, userAgent_s, originalHost_s, action_s
+
+ 
+
+ 
+
+// summary of largest number of requests by IP address
+
+AzureDiagnostics
+| where TimeGenerated >= ago(24hr)
+| summarize requestCount = count() by clientIp_s
+| top 10 by requestCount desc
+
+ 
+
+ 
+
+// summary of distinct client IPs over the last 30 days
+
+AzureDiagnostics
+| where TimeGenerated >= ago(30d)
+| summarize distinctIPCount = dcount(clientIP_s) by bin(TimeGenerated, 1d)
+| order by TimeGenerated asc
+

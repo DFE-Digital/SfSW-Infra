@@ -1,0 +1,47 @@
+// all App Service requests
+
+AppServiceHTTPLogs
+| where TimeGenerated >= ago(24hr)
+| where CsUriStem !has "/application/status"
+| where UserAgent !has "Uptime-Kuma"
+| where UserAgent !has "AlwaysOn"
+| where UserAgent !has "ElasticScaleControllerExtension"
+| where UserAgent !has "NCSC"
+| limit 30000
+| project-reorder TimeGenerated, CsUriStem, ScStatus, Result, UserAgent, Referer
+
+ 
+
+ 
+
+// all App Service requests (Application Insights)
+
+requests
+| where timestamp >= ago(24hr)
+| where name !has "application/status"
+| limit 30000
+| project-reorder timestamp, client_IP, name, url, success, resultCode, client_City, client_StateOrProvince, client_CountryOrRegion, client_Browser
+
+ 
+
+ 
+
+// summarise the count and result of all HTTP response codes
+
+AppServiceHTTPLogs
+| where TimeGenerated >= ago(24hr)
+| summarize Count=count() by ScStatus, Result
+| order by ScStatus asc
+
+ 
+
+ 
+
+// summarise 4xx HTTP response codes
+
+requests
+| where timestamp >= ago(24hr)
+| extend numericResultCode = toint(resultCode)
+| where numericResultCode between (400 .. 499)
+| project timestamp, numericResultCode, client_IP, client_City, client_StateOrProvince, client_CountryOrRegion
+
