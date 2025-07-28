@@ -27,6 +27,14 @@ resource "azurerm_subnet" "app_gateway_subnet" {
   virtual_network_name              = azurerm_virtual_network.webapp_vnet.name
   address_prefixes                  = ["${var.app_gateway_snet}"]
   private_endpoint_network_policies = "NetworkSecurityGroupEnabled"
+
+  delegation {
+    name = "appgw_delegation"
+    service_delegation {
+      name    = "Microsoft.Network/applicationGateways"
+      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
+    }
+  }
 }
 
 resource "azurerm_subnet" "app_service_subnet" {
