@@ -50,6 +50,7 @@ resource "azurerm_storage_management_policy" "error_page_storage_policy" {
     enabled = true
     filters {
       blob_types = ["blockBlob"]
+      prefix_match = ["error-pages-${var.instance}/"]
     }
     actions {
       version {
