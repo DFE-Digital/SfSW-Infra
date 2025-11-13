@@ -9,7 +9,7 @@ data "azurerm_user_assigned_identity" "mi_appgw" {
 }
 
 resource "azurerm_role_assignment" "mi_app_service_sa_access" {
-  scope = azurerm_storage_account.error_page_sa
-  principal_id = data.azurerm_user_assigned_identity.mi_app_service
+  scope = azurerm_storage_account.error_page_sa.id
+  principal_id = data.azurerm_user_assigned_identity.mi_app_service.id
   role_definition_name = "Storage Blob Data Contributor"
 }
