@@ -38,6 +38,11 @@ resource "azurerm_storage_container" "error_page_container" {
   container_access_type = "private"
 }
 
+resource "azurerm_storage_container" "data_protection_container" {
+  name                  = "data-protection-${var.instance}"
+  storage_account_id    = azurerm_storage_account.error_page_sa.id
+  container_access_type = "private"
+}
 resource "azurerm_storage_management_policy" "error_page_storage_policy" {
   storage_account_id = azurerm_storage_account.error_page_sa.id
   rule {
