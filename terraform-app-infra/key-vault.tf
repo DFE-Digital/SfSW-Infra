@@ -1,6 +1,7 @@
 data "azurerm_key_vault" "key_vault" {
-  name                = "kv-${var.project_name}-${var.instance}"
-  resource_group_name = data.azurerm_resource_group.core_infra_rg.name
+  name                     = "kv-${var.project_name}-${var.instance}"
+  resource_group_name      = data.azurerm_resource_group.core_infra_rg.name
+  purge_protection_enabled = true
 }
 
 data "azurerm_key_vault_certificate" "sfsw_cert" {
@@ -10,9 +11,9 @@ data "azurerm_key_vault_certificate" "sfsw_cert" {
 
 
 resource "azurerm_key_vault_access_policy" "access_policy_app_kv" {
-  key_vault_id       = data.azurerm_key_vault.key_vault.id
-  tenant_id          = data.azurerm_client_config.current.tenant_id
-  object_id          = data.azurerm_user_assigned_identity.mi_app_service.principal_id
+  key_vault_id = data.azurerm_key_vault.key_vault.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = data.azurerm_user_assigned_identity.mi_app_service.principal_id
   secret_permissions = [
     "Get",
     "List"
@@ -30,5 +31,5 @@ resource "azurerm_key_vault_access_policy" "access_policy_appgw_kv" {
   secret_permissions = [
     "Get",
     "List"
-  ]  
+  ]
 }
