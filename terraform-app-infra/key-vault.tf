@@ -1,7 +1,6 @@
 data "azurerm_key_vault" "key_vault" {
-  name                     = "kv-${var.project_name}-${var.instance}"
-  resource_group_name      = data.azurerm_resource_group.core_infra_rg.name
-  purge_protection_enabled = true
+  name                = "kv-${var.project_name}-${var.instance}"
+  resource_group_name = data.azurerm_resource_group.core_infra_rg.name
 }
 
 data "azurerm_key_vault_certificate" "sfsw_cert" {

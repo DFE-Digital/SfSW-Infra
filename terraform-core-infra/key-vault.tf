@@ -1,5 +1,5 @@
 resource "azurerm_key_vault" "key_vault" {
-  name                       = "kv-${var.project_name}-${var.instance}"  
+  name                          = "kv-${var.project_name}-${var.instance}"
   location                      = azurerm_resource_group.core_infra_rg.location
   resource_group_name           = azurerm_resource_group.core_infra_rg.name
   tenant_id                     = data.azurerm_client_config.current.tenant_id
@@ -7,12 +7,13 @@ resource "azurerm_key_vault" "key_vault" {
   soft_delete_retention_days    = 7
   enable_rbac_authorization     = false
   public_network_access_enabled = true
+  purge_protection_enabled      = true
 }
 
 resource "azurerm_key_vault_access_policy" "current_sp" {
   key_vault_id = azurerm_key_vault.key_vault.id
-  tenant_id = data.azurerm_client_config.current.tenant_id
-  object_id = data.azurerm_client_config.current.object_id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = data.azurerm_client_config.current.object_id
   secret_permissions = [
     "Get", "List", "Set", "Delete", "Recover", "Backup", "Restore", "Purge"
   ]
@@ -32,7 +33,7 @@ resource "azurerm_key_vault_secret" "cpd_space_id" {
       value
     ]
   }
-  depends_on = [ azurerm_key_vault_access_policy.current_sp ]
+  depends_on = [azurerm_key_vault_access_policy.current_sp]
 }
 
 resource "azurerm_key_vault_secret" "cpd_preview_key" {
@@ -44,7 +45,7 @@ resource "azurerm_key_vault_secret" "cpd_preview_key" {
       value
     ]
   }
-  depends_on = [ azurerm_key_vault_access_policy.current_sp ]  
+  depends_on = [azurerm_key_vault_access_policy.current_sp]
 }
 
 resource "azurerm_key_vault_secret" "cpd_delivery_key" {
@@ -56,7 +57,7 @@ resource "azurerm_key_vault_secret" "cpd_delivery_key" {
       value
     ]
   }
-  depends_on = [ azurerm_key_vault_access_policy.current_sp ]  
+  depends_on = [azurerm_key_vault_access_policy.current_sp]
 }
 
 resource "azurerm_key_vault_secret" "google_analytics_tag" {
@@ -68,7 +69,7 @@ resource "azurerm_key_vault_secret" "google_analytics_tag" {
       value
     ]
   }
-  depends_on = [ azurerm_key_vault_access_policy.current_sp ]
+  depends_on = [azurerm_key_vault_access_policy.current_sp]
 }
 
 resource "azurerm_key_vault_secret" "cpd_clarity" {
@@ -80,5 +81,5 @@ resource "azurerm_key_vault_secret" "cpd_clarity" {
       value
     ]
   }
-  depends_on = [ azurerm_key_vault_access_policy.current_sp ]  
+  depends_on = [azurerm_key_vault_access_policy.current_sp]
 }
