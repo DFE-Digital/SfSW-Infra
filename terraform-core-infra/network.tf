@@ -4,6 +4,10 @@ resource "azurerm_public_ip" "appgw_ip" {
   resource_group_name = azurerm_resource_group.core_infra_rg.name
   allocation_method   = "Static"
   sku                 = "Standard"
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "azurerm_virtual_network" "webapp_vnet" {
