@@ -153,9 +153,8 @@ resource "azurerm_application_gateway" "appgw" {
       }
 
       response_header_configuration {
-        header_name = "Content-Security-Policy"
-        # header_value = "upgrade-insecure-requests; base-uri 'self'; frame-ancestors 'self'; form-action 'self'; object-src 'none';"
-        header_value = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'self'; form-action 'self'; object-src 'none'; base-uri 'self';"
+        header_name  = "Content-Security-Policy"
+        header_value = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://rsms.me; img-src 'self' data:; font-src 'self' data: https://rsms.me; connect-src 'self'; frame-ancestors 'self'; form-action 'self'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests;"
       }
 
       response_header_configuration {
@@ -170,7 +169,7 @@ resource "azurerm_application_gateway" "appgw" {
 
       response_header_configuration {
         header_name  = "Permissions-Policy"
-        header_value = "accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), speaker-selection=(), sync-xhr=self, usb=(), xr-spatial-tracking=()"
+        header_value = "accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), sync-xhr=self, usb=(), xr-spatial-tracking=()"
       }
 
       response_header_configuration {
