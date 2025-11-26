@@ -62,6 +62,22 @@ resource "azurerm_linux_web_app" "app_service" {
     failed_request_tracing  = true
     detailed_error_messages = true
   }
+
+  lifecycle {
+    ignore_changes = [
+      tags,
+      # Ignore changes to the currently deployed image - CD will be changing this
+      site_config.0.application_stack,
+      # This is particularly sneaky. When the swift network connection is set later on, the
+      # virtual_network_subnet_id is updated and the next time around, Terraform will reset
+      # it back to null, removing the vnet / dbs integration. Then re-create it. 
+      # Then set it to null...So the behaviour will alternate on each GA workflow run.
+      # Hence we ignore any changes to virtual_network_subnet_id.
+      virtual_network_subnet_id,
+      logs
+    ]
+  }
+
   depends_on = [azurerm_application_insights.app_insights_web]
 }
 
@@ -120,7 +136,7 @@ resource "azurerm_linux_web_app_slot" "staging" {
 }
 
 resource "azurerm_monitor_autoscale_setting" "autoscale" {
-  count = var.environment == "Production" ? 1 : 0  
+  count               = var.environment == "Production" ? 1 : 0
   name                = "autoscale-${var.project_name}-${var.instance}"
   resource_group_name = azurerm_resource_group.webapp_rg.name
   location            = azurerm_resource_group.webapp_rg.location
