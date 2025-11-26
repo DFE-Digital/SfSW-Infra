@@ -154,7 +154,7 @@ resource "azurerm_application_gateway" "appgw" {
 
       response_header_configuration {
         header_name  = "Content-Security-Policy"
-        header_value = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://rsms.me; img-src 'self' data:; font-src 'self' data: https://rsms.me; connect-src 'self'; frame-ancestors 'self'; form-action 'self'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests;"
+        header_value = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://rsms.me; img-src 'self' data: https://images.ctfassets.net; font-src 'self' data: https://rsms.me; connect-src 'self'; frame-ancestors 'self'; form-action 'self'; object-src 'none'; base-uri 'self';"
       }
 
       response_header_configuration {
