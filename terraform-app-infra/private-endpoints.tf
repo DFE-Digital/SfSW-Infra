@@ -16,11 +16,23 @@ resource "azurerm_private_endpoint" "key_vault_private_endpoint" {
     name                 = "keyvault-dns-group"
     private_dns_zone_ids = [azurerm_private_dns_zone.key_vault_private_dns_zone.id]
   }
+
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
+  }
 }
 
 resource "azurerm_private_dns_zone" "key_vault_private_dns_zone" {
   name                = "privatelink.vaultcore.azure.net"
   resource_group_name = azurerm_resource_group.private_endpoints_rg.name
+
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
+  }
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "keyvault_dns_link" {
@@ -28,6 +40,12 @@ resource "azurerm_private_dns_zone_virtual_network_link" "keyvault_dns_link" {
   resource_group_name   = azurerm_resource_group.private_endpoints_rg.name
   private_dns_zone_name = azurerm_private_dns_zone.key_vault_private_dns_zone.name
   virtual_network_id    = data.azurerm_virtual_network.webapp_vnet.id
+
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
+  }
 }
 
 
@@ -50,12 +68,24 @@ resource "azurerm_private_endpoint" "app_service_private_endpoint" {
     name                 = "app-service-dns-group"
     private_dns_zone_ids = [azurerm_private_dns_zone.app_service_private_dns_zone.id]
   }
+
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
+  }
 }
 
 resource "azurerm_private_dns_zone" "app_service_private_dns_zone" {
   name                = "privatelink.azurewebsites.net"
   resource_group_name = azurerm_resource_group.private_endpoints_rg.name
-  depends_on = [ azurerm_linux_web_app.app_service ]
+  depends_on          = [azurerm_linux_web_app.app_service]
+
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
+  }
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "app_service_dns_link" {
@@ -63,6 +93,12 @@ resource "azurerm_private_dns_zone_virtual_network_link" "app_service_dns_link" 
   resource_group_name   = azurerm_resource_group.private_endpoints_rg.name
   private_dns_zone_name = azurerm_private_dns_zone.app_service_private_dns_zone.name
   virtual_network_id    = data.azurerm_virtual_network.webapp_vnet.id
+
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
+  }
 }
 
 
@@ -85,12 +121,24 @@ resource "azurerm_private_endpoint" "app_sa_private_endpoint" {
     name                 = "storage-dns-zone-group"
     private_dns_zone_ids = [azurerm_private_dns_zone.app_sa_private_dns_zone.id]
   }
+
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
+  }
 }
 
 resource "azurerm_private_dns_zone" "app_sa_private_dns_zone" {
   name                = "privatelink.blob.core.windows.net"
   resource_group_name = azurerm_resource_group.private_endpoints_rg.name
-  depends_on = [ azurerm_storage_account.error_page_sa ]
+  depends_on          = [azurerm_storage_account.error_page_sa]
+
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
+  }
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "app_sa_dns_link" {
@@ -98,6 +146,12 @@ resource "azurerm_private_dns_zone_virtual_network_link" "app_sa_dns_link" {
   resource_group_name   = azurerm_resource_group.private_endpoints_rg.name
   private_dns_zone_name = azurerm_private_dns_zone.app_sa_private_dns_zone.name
   virtual_network_id    = data.azurerm_virtual_network.webapp_vnet.id
+
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
+  }
 }
 
 
@@ -119,6 +173,13 @@ resource "azurerm_private_endpoint" "ampls_pe" {
     name                 = "monitor-dns-group"
     private_dns_zone_ids = [azurerm_private_dns_zone.monitor_dns.id]
   }
+
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
+  }
+
   depends_on = [
     azurerm_monitor_private_link_scoped_service.log_analytics_link,
     azurerm_monitor_private_link_scoped_service.app_insights_link
@@ -128,6 +189,12 @@ resource "azurerm_private_endpoint" "ampls_pe" {
 resource "azurerm_private_dns_zone" "monitor_dns" {
   name                = "privatelink.monitor.azure.com"
   resource_group_name = azurerm_resource_group.private_endpoints_rg.name
+
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
+  }
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "monitor_vnet_link" {
@@ -135,12 +202,24 @@ resource "azurerm_private_dns_zone_virtual_network_link" "monitor_vnet_link" {
   resource_group_name   = azurerm_resource_group.private_endpoints_rg.name
   private_dns_zone_name = azurerm_private_dns_zone.monitor_dns.name
   virtual_network_id    = data.azurerm_virtual_network.webapp_vnet.id
+
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
+  }
 }
 
 # Azure Monitor Private Link Scope (AMPLS) for both Log Analytics and Application Insights
 resource "azurerm_monitor_private_link_scope" "ampls" {
   name                = "ampls-${var.project_name}-${var.instance}"
   resource_group_name = azurerm_resource_group.private_endpoints_rg.name
+
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
+  }
 }
 
 # Link Log Analytics to AMPLS

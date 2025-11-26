@@ -4,6 +4,12 @@ resource "azurerm_service_plan" "app_service_plan" {
   location            = azurerm_resource_group.webapp_rg.location
   os_type             = "Linux"
   sku_name            = var.appservice_sku_name
+
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
+  }
 }
 
 resource "azurerm_linux_web_app" "app_service" {

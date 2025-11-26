@@ -5,18 +5,30 @@ resource "azurerm_log_analytics_workspace" "log_analytics_ws" {
   sku                        = "PerGB2018"
   internet_ingestion_enabled = true
   internet_query_enabled     = true
-  retention_in_days = 30
+  retention_in_days          = 30
+
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
+  }
 }
 
 resource "azurerm_application_insights" "app_insights_web" {
-  name                = "ai-${var.project_name}-${var.instance}"
-  location            = azurerm_resource_group.webapp_rg.location
-  resource_group_name = azurerm_resource_group.webapp_rg.name
-  workspace_id        = azurerm_log_analytics_workspace.log_analytics_ws.id
-  application_type    = "web"
-  disable_ip_masking = true
+  name                       = "ai-${var.project_name}-${var.instance}"
+  location                   = azurerm_resource_group.webapp_rg.location
+  resource_group_name        = azurerm_resource_group.webapp_rg.name
+  workspace_id               = azurerm_log_analytics_workspace.log_analytics_ws.id
+  application_type           = "web"
+  disable_ip_masking         = true
   internet_ingestion_enabled = true
-  internet_query_enabled = true
+  internet_query_enabled     = true
+
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
+  }
 }
 
 resource "azurerm_monitor_diagnostic_setting" "app_diag_setting" {
@@ -42,10 +54,10 @@ resource "azurerm_monitor_diagnostic_setting" "app_diag_setting" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "appgw_diag_setting" {
-  name               = "diag-${azurerm_application_gateway.appgw.name}"
-  target_resource_id = azurerm_application_gateway.appgw.id
+  name                       = "diag-${azurerm_application_gateway.appgw.name}"
+  target_resource_id         = azurerm_application_gateway.appgw.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics_ws.id
-  
+
   enabled_log {
     category = "ApplicationGatewayAccessLog"
   }
@@ -58,5 +70,5 @@ resource "azurerm_monitor_diagnostic_setting" "appgw_diag_setting" {
   metric {
     category = "AllMetrics"
   }
-  depends_on = [ azurerm_application_gateway.appgw ]
+  depends_on = [azurerm_application_gateway.appgw]
 }

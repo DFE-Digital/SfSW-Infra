@@ -198,6 +198,14 @@ resource "azurerm_application_gateway" "appgw" {
     type         = "UserAssigned"
     identity_ids = [data.azurerm_user_assigned_identity.mi_appgw.id]
   }
+
+  lifecycle {
+    ignore_changes = [
+      tags,
+      probe,
+      backend_http_settings
+    ]
+  }
 }
 
 resource "azurerm_web_application_firewall_policy" "waf_policy" {
