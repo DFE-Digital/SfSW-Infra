@@ -97,6 +97,7 @@ resource "azurerm_application_gateway" "appgw" {
     backend_address_pool_name  = "backendpool"
     backend_http_settings_name = "https-settings"
     priority                   = 2
+    rewrite_rule_set_name      = "rewrite-set"
   }
 
   probe {
@@ -153,7 +154,7 @@ resource "azurerm_application_gateway" "appgw" {
 
       response_header_configuration {
         header_name  = "Content-Security-Policy"
-        header_value = "upgrade-insecure-requests; base-uri 'self'; frame-ancestors 'self'; form-action 'self'; object-src 'none';"
+        header_value = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://rsms.me; img-src 'self' data: https://images.ctfassets.net; font-src 'self' data: https://rsms.me; connect-src 'self'; frame-ancestors 'self'; form-action 'self'; object-src 'none'; base-uri 'self';"
       }
 
       response_header_configuration {
@@ -168,7 +169,7 @@ resource "azurerm_application_gateway" "appgw" {
 
       response_header_configuration {
         header_name  = "Permissions-Policy"
-        header_value = "accelerometer=(), ambient-light-sensor=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), speaker=(), sync-xhr=self, usb=(), vr=()"
+        header_value = "accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), sync-xhr=self, usb=(), xr-spatial-tracking=()"
       }
 
       response_header_configuration {
@@ -196,6 +197,14 @@ resource "azurerm_application_gateway" "appgw" {
   identity {
     type         = "UserAssigned"
     identity_ids = [data.azurerm_user_assigned_identity.mi_appgw.id]
+  }
+
+  lifecycle {
+    ignore_changes = [
+      tags,
+      probe,
+      backend_http_settings
+    ]
   }
 }
 
