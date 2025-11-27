@@ -35,6 +35,12 @@ resource "azurerm_storage_account" "error_page_sa" {
     default_action = "Deny"
     bypass         = ["AzureServices"]
   }
+
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
+  }
 }
 
 resource "azurerm_storage_container" "error_page_container" {
