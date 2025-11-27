@@ -1,3 +1,8 @@
+data "azurerm_key_vault" "key_vault" {
+  name                = "kv-${var.project_name}-${var.instance}"
+  resource_group_name = data.azurerm_resource_group.core_infra_rg.name
+}
+
 resource "azurerm_storage_account" "error_page_sa" {
   name                             = "sa${var.project_name}${var.instance}"
   resource_group_name              = azurerm_resource_group.webapp_rg.name
@@ -43,13 +48,14 @@ resource "azurerm_storage_container" "data_protection_container" {
   storage_account_id    = azurerm_storage_account.error_page_sa.id
   container_access_type = "private"
 }
+
 resource "azurerm_storage_management_policy" "error_page_storage_policy" {
   storage_account_id = azurerm_storage_account.error_page_sa.id
   rule {
     name    = "error-page-versioning-${var.instance}"
     enabled = true
     filters {
-      blob_types = ["blockBlob"]
+      blob_types   = ["blockBlob"]
       prefix_match = ["error-pages-${var.instance}/"]
     }
     actions {
@@ -58,4 +64,11 @@ resource "azurerm_storage_management_policy" "error_page_storage_policy" {
       }
     }
   }
+}
+
+resource "azurerm_key_vault_secret" "storage_connection" {
+  name         = "DataProtectionStorageConnection"
+  value        = azurerm_storage_account.error_page_sa.primary_connection_string
+  key_vault_id = data.azurerm_key_vault.key_vault.id
+  content_type = "connection-string"
 }
