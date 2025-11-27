@@ -48,7 +48,7 @@ resource "azurerm_linux_web_app" "app_service" {
     CPD_SEARCH_INDEX_NAME                       = ""
     DOCKER_ENABLE_CI                            = "false"
     WEBSITES_ENABLE_APP_SERVICE_STORAGE         = "false"
-    CPD_AZURE_STORAGE_ACCOUNT_CONNECTION_STRING = "Microsoft.KeyVault(VaultName=${data.azurerm_key_vault.key_vault.name};SecretName=DataProtectionStorageConnection)"
+    CPD_AZURE_STORAGE_ACCOUNT_CONNECTION_STRING = "@Microsoft.KeyVault(VaultName=${data.azurerm_key_vault.key_vault.name};SecretName=DataProtectionStorageConnection)"
   }
 
   identity {
@@ -110,7 +110,7 @@ resource "azurerm_linux_web_app_slot" "staging" {
     CPD_SEARCH_INDEX_NAME                       = ""
     DOCKER_ENABLE_CI                            = "false"
     WEBSITES_ENABLE_APP_SERVICE_STORAGE         = "false"
-    CPD_AZURE_STORAGE_ACCOUNT_CONNECTION_STRING = "Microsoft.KeyVault(VaultName=${data.azurerm_key_vault.key_vault.name};SecretName=DataProtectionStorageConnection)"
+    CPD_AZURE_STORAGE_ACCOUNT_CONNECTION_STRING = "@Microsoft.KeyVault(VaultName=${data.azurerm_key_vault.key_vault.name};SecretName=DataProtectionStorageConnection)"
   }
 
   site_config {
