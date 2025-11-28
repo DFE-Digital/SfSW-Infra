@@ -34,6 +34,13 @@ jobs:
           echo "GITHUB_RUNNER_IP=$GITHUB_RUNNER_IP" >> $GITHUB_ENV
           echo "GitHub Runner IP: $GITHUB_RUNNER_IP"
 
+      - name: Azure CLI Login
+        uses: azure/login@v2.2.0
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
       - name: Whitelist GH Runner IP address
         uses: ./.github/actions/whitelist-ip-address
         with:
