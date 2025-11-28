@@ -15,6 +15,9 @@ on:
           - test
           - pre-production
 
+permissions:
+  id-token: write
+
 run-name: "OWASP Base ZAP Security Scan: ${{ inputs.environment }} environment"
 
 jobs:
