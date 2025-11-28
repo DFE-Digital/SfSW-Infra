@@ -1,10 +1,8 @@
 # can this output to $GITHUB_STEP_SUMMARY?
 
-name: OWASP Base ZAP Security Scan
+name: OWASP Base ZAP Security Scan (Lower Environments)
 
 on:
-  push:
-    branches: [SFSW-3541-content-security-policy]
   workflow_dispatch:
     inputs:
       environment:
