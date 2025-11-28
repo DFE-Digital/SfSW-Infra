@@ -3,6 +3,8 @@
 name: OWASP Base ZAP Security Scan (Lower Environments)
 
 on:
+  push:
+    branches: [SFSW-3541-content-security-policy]
   workflow_dispatch:
     inputs:
       environment:
