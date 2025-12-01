@@ -45,7 +45,7 @@ resource "azurerm_storage_container" "error_page_container" {
 }
 
 resource "azurerm_storage_container" "data_protection_container" {
-  name                  = "data-protection-${var.instance}"
+  name                  = "data-protection"
   storage_account_id    = azurerm_storage_account.error_page_sa.id
   container_access_type = "private"
 }

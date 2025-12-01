@@ -49,6 +49,7 @@ resource "azurerm_linux_web_app" "app_service" {
     DOCKER_ENABLE_CI                            = "false"
     WEBSITES_ENABLE_APP_SERVICE_STORAGE         = "false"
     CPD_AZURE_STORAGE_ACCOUNT_CONNECTION_STRING = "@Microsoft.KeyVault(VaultName=${data.azurerm_key_vault.key_vault.name};SecretName=DataProtectionStorageConnection)"
+    CPD_DATA_PROTECTION_KEY                     = "@Microsoft.KeyVault(VaultName=${data.azurerm_key_vault.key_vault.name};SecretName=data-protection)"
   }
 
   identity {

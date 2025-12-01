@@ -10,9 +10,9 @@ data "azurerm_key_vault_certificate" "sfsw_cert" {
 
 
 resource "azurerm_key_vault_access_policy" "access_policy_app_kv" {
-  key_vault_id       = data.azurerm_key_vault.key_vault.id
-  tenant_id          = data.azurerm_client_config.current.tenant_id
-  object_id          = data.azurerm_user_assigned_identity.mi_app_service.principal_id
+  key_vault_id = data.azurerm_key_vault.key_vault.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = data.azurerm_user_assigned_identity.mi_app_service.principal_id
   secret_permissions = [
     "Get",
     "List"
@@ -30,5 +30,22 @@ resource "azurerm_key_vault_access_policy" "access_policy_appgw_kv" {
   secret_permissions = [
     "Get",
     "List"
-  ]  
+  ]
+}
+
+resource "azurerm_key_vault_key" "data_protection_key" {
+  name         = "data-protection"
+  key_vault_id = data.azurerm_key_vault.key_vault.id
+  key_type     = "RSA"
+  key_size     = 2048
+
+  # These operations are required by ASP.NET Core Data Protection
+  key_opts = [
+    "decrypt",
+    "encrypt",
+    "sign",
+    "unwrapKey",
+    "verify",
+    "wrapKey",
+  ]
 }
