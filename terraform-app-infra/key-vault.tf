@@ -17,6 +17,11 @@ resource "azurerm_key_vault_access_policy" "access_policy_app_kv" {
     "Get",
     "List"
   ]
+  key_permissions = [
+    "Get",
+    "WrapKey",
+    "UnwrapKey"
+  ]
 }
 
 resource "azurerm_key_vault_access_policy" "access_policy_appgw_kv" {
