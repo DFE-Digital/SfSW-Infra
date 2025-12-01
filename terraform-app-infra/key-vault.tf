@@ -44,7 +44,6 @@ resource "azurerm_key_vault_key" "data_protection_key" {
   key_type     = "RSA"
   key_size     = 2048
 
-  # These operations are required by ASP.NET Core Data Protection
   key_opts = [
     "decrypt",
     "encrypt",
