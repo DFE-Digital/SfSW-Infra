@@ -4,6 +4,9 @@ resource "azurerm_public_ip" "appgw_ip" {
   resource_group_name = azurerm_resource_group.core_infra_rg.name
   allocation_method   = "Static"
   sku                 = "Standard"
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "azurerm_virtual_network" "webapp_vnet" {
@@ -11,6 +14,10 @@ resource "azurerm_virtual_network" "webapp_vnet" {
   address_space       = ["${var.webapp_vnet}"]
   location            = azurerm_resource_group.core_infra_rg.location
   resource_group_name = azurerm_resource_group.core_infra_rg.name
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "azurerm_subnet" "private_endpoints_subnet" {
