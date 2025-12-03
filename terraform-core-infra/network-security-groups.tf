@@ -27,6 +27,10 @@ resource "azurerm_network_security_group" "app_gateway_nsg" {
     source_address_prefix      = "GatewayManager"
     destination_address_prefix = "*"
   }
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "azurerm_subnet_network_security_group_association" "app_gateway_subnet_nsg_association" {
@@ -39,6 +43,10 @@ resource "azurerm_network_security_group" "app_service_nsg" {
   name                = "nsg-app-service-${var.project_name}-${var.instance}"
   location            = azurerm_resource_group.core_infra_rg.location
   resource_group_name = azurerm_resource_group.core_infra_rg.name
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "azurerm_subnet_network_security_group_association" "app_service_subnet_nsg_association" {
@@ -51,6 +59,10 @@ resource "azurerm_network_security_group" "app_service_delegated_nsg" {
   name                = "nsg-app-service-delegated-${var.project_name}-${var.instance}"
   location            = azurerm_resource_group.core_infra_rg.location
   resource_group_name = azurerm_resource_group.core_infra_rg.name
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "azurerm_subnet_network_security_group_association" "app_service_delegated_subnet_nsg_association" {
@@ -63,6 +75,10 @@ resource "azurerm_network_security_group" "private_endpoints_nsg" {
   name                = "nsg-private-endpoints-${var.project_name}-${var.instance}"
   location            = azurerm_resource_group.core_infra_rg.location
   resource_group_name = azurerm_resource_group.core_infra_rg.name
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "azurerm_subnet_network_security_group_association" "private_endpoints_subnet_nsg_association" {
@@ -75,6 +91,10 @@ resource "azurerm_network_security_group" "monitoring_nsg" {
   name                = "nsg-monitoring-${var.project_name}-${var.instance}"
   location            = azurerm_resource_group.core_infra_rg.location
   resource_group_name = azurerm_resource_group.core_infra_rg.name
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "azurerm_subnet_network_security_group_association" "monitoring_subnet_nsg_association" {

@@ -44,13 +44,20 @@ resource "azurerm_storage_container" "error_page_container" {
   container_access_type = "private"
 }
 
+resource "azurerm_storage_container" "data_protection_container" {
+  name                  = "data-protection"
+  storage_account_id    = azurerm_storage_account.error_page_sa.id
+  container_access_type = "private"
+}
+
 resource "azurerm_storage_management_policy" "error_page_storage_policy" {
   storage_account_id = azurerm_storage_account.error_page_sa.id
   rule {
     name    = "error-page-versioning-${var.instance}"
     enabled = true
     filters {
-      blob_types = ["blockBlob"]
+      blob_types   = ["blockBlob"]
+      prefix_match = ["error-pages-${var.instance}/"]
     }
     actions {
       version {
@@ -58,4 +65,11 @@ resource "azurerm_storage_management_policy" "error_page_storage_policy" {
       }
     }
   }
+}
+
+resource "azurerm_key_vault_secret" "storage_connection" {
+  name         = "DataProtectionStorageConnection"
+  value        = azurerm_storage_account.error_page_sa.primary_connection_string
+  key_vault_id = data.azurerm_key_vault.key_vault.id
+  content_type = "connection-string"
 }
