@@ -4,17 +4,17 @@ resource "azurerm_network_security_group" "app_gateway_nsg" {
   location            = azurerm_resource_group.core_infra_rg.location
   resource_group_name = azurerm_resource_group.core_infra_rg.name
 
-  # security_rule {
-  #   name                       = "HTTP-HTTPS"
-  #   priority                   = 100
-  #   direction                  = "Inbound"
-  #   access                     = "Allow"
-  #   protocol                   = "Tcp"
-  #   source_port_range          = "*"
-  #   destination_port_ranges    = ["80", "443"]
-  #   source_address_prefix      = "Internet"
-  #   destination_address_prefix = var.app_gateway_snet
-  # }
+  security_rule {
+    name                       = "HTTP-HTTPS"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_ranges    = ["80", "443"]
+    source_address_prefix      = "Internet"
+    destination_address_prefix = var.app_gateway_snet
+  }
 
   security_rule {
     name                       = "Gateway-Manager"
