@@ -35,7 +35,6 @@ resource "azurerm_linux_web_app" "app_service" {
   app_settings = {
     APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.app_insights_web.instrumentation_key
     ASPNETCORE_HTTP_PORTS                       = 80
-    ASPNETCORE_HTTPS_PORT                       = 443
     CPD_GOOGLEANALYTICSTAG                      = "@Microsoft.KeyVault(VaultName=${data.azurerm_key_vault.key_vault.name};SecretName=google-analytics-tag)"
     CPD_SPACE_ID                                = "@Microsoft.KeyVault(VaultName=${data.azurerm_key_vault.key_vault.name};SecretName=cpd-space-id)"
     CPD_PREVIEW_KEY                             = "@Microsoft.KeyVault(VaultName=${data.azurerm_key_vault.key_vault.name};SecretName=cpd-preview-key)"
@@ -100,7 +99,6 @@ resource "azurerm_linux_web_app_slot" "staging" {
   app_settings = {
     APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.app_insights_web.instrumentation_key
     ASPNETCORE_HTTP_PORTS                       = 80
-    ASPNETCORE_HTTPS_PORT                       = 443
     CPD_GOOGLEANALYTICSTAG                      = "@Microsoft.KeyVault(VaultName=${data.azurerm_key_vault.key_vault.name};SecretName=google-analytics-tag)"
     CPD_SPACE_ID                                = "@Microsoft.KeyVault(VaultName=${data.azurerm_key_vault.key_vault.name};SecretName=cpd-space-id)"
     CPD_PREVIEW_KEY                             = "@Microsoft.KeyVault(VaultName=${data.azurerm_key_vault.key_vault.name};SecretName=cpd-preview-key)"
