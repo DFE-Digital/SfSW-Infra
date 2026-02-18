@@ -75,8 +75,7 @@ resource "azurerm_key_vault_secret" "storage_connection" {
   expiration_date = timeadd(timestamp(), "8760h")
   lifecycle {
     ignore_changes = [
-      value,
-      expiration_date
+      value
     ]
   }
 }
