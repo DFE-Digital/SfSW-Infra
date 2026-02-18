@@ -40,8 +40,7 @@ resource "azurerm_key_vault_secret" "cpd_space_id" {
   expiration_date = timeadd(timestamp(), "8760h")
   lifecycle {
     ignore_changes = [
-      value,
-      expiration_date
+      value
     ]
   }
   depends_on = [azurerm_key_vault_access_policy.current_sp]
@@ -54,8 +53,7 @@ resource "azurerm_key_vault_secret" "cpd_preview_key" {
   expiration_date = timeadd(timestamp(), "8760h")
   lifecycle {
     ignore_changes = [
-      value,
-      expiration_date
+      value
     ]
   }
   depends_on = [azurerm_key_vault_access_policy.current_sp]
@@ -68,8 +66,7 @@ resource "azurerm_key_vault_secret" "cpd_delivery_key" {
   expiration_date = timeadd(timestamp(), "8760h")
   lifecycle {
     ignore_changes = [
-      value,
-      expiration_date
+      value
     ]
   }
   depends_on = [azurerm_key_vault_access_policy.current_sp]
@@ -82,8 +79,7 @@ resource "azurerm_key_vault_secret" "google_analytics_tag" {
   expiration_date = timeadd(timestamp(), "8760h")
   lifecycle {
     ignore_changes = [
-      value,
-      expiration_date
+      value
     ]
   }
   depends_on = [azurerm_key_vault_access_policy.current_sp]
@@ -96,8 +92,7 @@ resource "azurerm_key_vault_secret" "cpd_clarity" {
   expiration_date = timeadd(timestamp(), "8760h")
   lifecycle {
     ignore_changes = [
-      value,
-      expiration_date
+      value
     ]
   }
   depends_on = [azurerm_key_vault_access_policy.current_sp]
