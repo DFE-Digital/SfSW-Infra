@@ -1,0 +1,51 @@
+name: "Infrastructure Security Scan"
+
+on:
+  pull_request:
+    paths:
+      - "terraform-app-infra/**"
+      - "terraform-core-infra/**"
+      - "terraform-state/**"
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  checkov-scan:
+    name: "Checkov Scan: ${{ matrix.directory }}"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+
+    strategy:
+      matrix:
+        directory: [terraform-app-infra, terraform-core-infra, terraform-state]
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Run Checkov
+        id: checkov
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: ${{ matrix.directory }}
+
+          soft_fail: true
+
+          skip_path: "**/.terraform/**/*"
+
+          output_format: cli,sarif
+          output_file_path: console,results_${{ matrix.directory }}.sarif
+
+          framework: terraform
+
+      - name: Upload SARIF results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v4
+        if: always()
+        with:
+          sarif_file: results_${{ matrix.directory }}.sarif
+          category: checkov-${{ matrix.directory }}
