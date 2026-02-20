@@ -6,6 +6,7 @@ on:
       - "terraform-app-infra/**"
       - "terraform-core-infra/**"
       - "terraform-state/**"
+  workflow_dispatch:
 
 jobs:
   checkov-scan:
