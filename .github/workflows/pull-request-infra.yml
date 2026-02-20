@@ -81,7 +81,7 @@ jobs:
         run: echo "CHECKOV_RESULT=$(cat results.sarif)" >> $GITHUB_ENV
 
       - name: Run Trivy file scan
-        uses: aquasecurity/trivy-action@18f2510ee396bbf400402947b394f2dd8c87dbb0
+        uses: aquasecurity/trivy-action@c1824fd6edce30d7ab345a9989de00bbd46ef284
         with:
           scan-type: "fs"
           scan-ref: "."
