@@ -44,7 +44,7 @@ jobs:
           framework: terraform
 
       - name: Upload SARIF results to GitHub Security
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         if: always()
         with:
           sarif_file: results_${{ matrix.directory }}.sarif
