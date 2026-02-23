@@ -39,10 +39,11 @@ resource "azurerm_key_vault_access_policy" "access_policy_appgw_kv" {
 }
 
 resource "azurerm_key_vault_key" "data_protection_key" {
-  name         = "data-protection"
-  key_vault_id = data.azurerm_key_vault.key_vault.id
-  key_type     = "RSA"
-  key_size     = 2048
+  name            = "data-protection"
+  key_vault_id    = data.azurerm_key_vault.key_vault.id
+  key_type        = "RSA"
+  key_size        = 2048
+  expiration_date = timeadd(timestamp(), "8760h")
 
   key_opts = [
     "decrypt",
