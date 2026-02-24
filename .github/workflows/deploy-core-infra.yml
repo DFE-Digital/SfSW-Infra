@@ -95,12 +95,12 @@ jobs:
             -var "resource_group_name=$CORE_INFRA_RG_NAME" \
             -var-file="terraform.${{ inputs.environment }}.tfvars"
 
-      - name: Terraform Apply
-        id: tf_apply
-        run: |
-          terraform apply \
-            -auto-approve -var "resource_group_name=$CORE_INFRA_RG_NAME" \
-            -var-file="terraform.${{ inputs.environment }}.tfvars"
+      # - name: Terraform Apply
+      #   id: tf_apply
+      #   run: |
+      #     terraform apply \
+      #       -auto-approve -var "resource_group_name=$CORE_INFRA_RG_NAME" \
+      #       -var-file="terraform.${{ inputs.environment }}.tfvars"
 
       - name: Disable Network Access for Key Vault
         uses: ./.github/actions/manage-keyvault-network-access
