@@ -3,12 +3,12 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Deploy application:'
+        description: "Deploy application:"
         required: true
         default: production
         type: choice
         options:
-          - production  
+          - production
 
 permissions:
   id-token: write
@@ -70,7 +70,7 @@ jobs:
           resource-group-name: ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: true
-          
+
       - name: Enable Network Access for Key Vault
         uses: ./.github/actions/manage-keyvault-network-access
         with:
@@ -92,17 +92,17 @@ jobs:
         run: |
           terraform plan \
             -var "resource_group_name=${APP_INFRA_RG_NAME}" \
-            -var-file="terraform.${ENVIRONMENT}.tfvars"        
-
-      - name: Terraform Apply
-        id: tf_apply
-        run: |
-          terraform apply \
-            -auto-approve -var "resource_group_name=${APP_INFRA_RG_NAME}" \
             -var-file="terraform.${ENVIRONMENT}.tfvars"
-            echo "storage_account_name=$(terraform output -raw storage_account_name)" >> $GITHUB_OUTPUT
-            echo "resource_group_name=$(terraform output -raw resource_group_name)" >> $GITHUB_OUTPUT
-            echo "container_name=$(terraform output -raw container_name)" >> $GITHUB_OUTPUT
+
+      # - name: Terraform Apply
+      #   id: tf_apply
+      #   run: |
+      #     terraform apply \
+      #       -auto-approve -var "resource_group_name=${APP_INFRA_RG_NAME}" \
+      #       -var-file="terraform.${ENVIRONMENT}.tfvars"
+      #       echo "storage_account_name=$(terraform output -raw storage_account_name)" >> $GITHUB_OUTPUT
+      #       echo "resource_group_name=$(terraform output -raw resource_group_name)" >> $GITHUB_OUTPUT
+      #       echo "container_name=$(terraform output -raw container_name)" >> $GITHUB_OUTPUT
 
       - name: Disable Network Access for Key Vault
         uses: ./.github/actions/manage-keyvault-network-access
@@ -112,7 +112,7 @@ jobs:
           resource-group-name: ${{ secrets.CORE_INFRA_RG_NAME }}
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: false
-            
+
       - name: Enable Network Access for Error Page Storage
         uses: ./.github/actions/manage-storage-network-access
         with:
@@ -120,7 +120,7 @@ jobs:
           resource-group-name: ${{ secrets.APP_INFRA_RG_NAME }}
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: true
-          
+
       - name: Upload Error Pages
         run: |
           for file in ../error-pages/*.html; do
@@ -143,7 +143,7 @@ jobs:
                 fi
               done
 
-      - name: Disable Network Access for tfstate 
+      - name: Disable Network Access for tfstate
         uses: ./.github/actions/manage-storage-network-access
         if: ${{ always() }}
         with:
@@ -161,18 +161,18 @@ jobs:
           github-runner-ip: ${{ env.GITHUB_RUNNER_IP }}
           enable-network-access: false
 
-      - name: Check Network Rules for tfstate 
-        uses: ./.github/actions/check-storage-network-rules      
+      - name: Check Network Rules for tfstate
+        uses: ./.github/actions/check-storage-network-rules
         if: ${{ always() }}
-        id: network-rules        
+        id: network-rules
         with:
           storage-account-name: ${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME }}
           resource-group-name: ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}
 
       - name: Check Network Rules for Error Page Storage
-        uses: ./.github/actions/check-storage-network-rules      
+        uses: ./.github/actions/check-storage-network-rules
         if: ${{ always() }}
-        id: network-rules-error-pages        
+        id: network-rules-error-pages
         with:
           storage-account-name: ${{ steps.tf_apply.outputs.storage_account_name }}
           resource-group-name: ${{ secrets.APP_INFRA_RG_NAME }}
