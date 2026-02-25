@@ -6,7 +6,7 @@ resource "azurerm_network_security_group" "app_gateway_nsg" {
 
   # conditional rule for production only
   dynamic "security_rule" {
-    for_each = var.environment == "production" ? [1] : [0]
+    for_each = var.environment == "production" ? [1] : []
     content {
       name                       = "HTTP-HTTPS"
       priority                   = 100

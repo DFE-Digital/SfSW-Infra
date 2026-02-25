@@ -48,7 +48,7 @@ resource "azurerm_monitor_diagnostic_setting" "app_diag_setting" {
     category = "AppServiceAppLogs"
   }
 
-  metric {
+  enabled_metric {
     category = "AllMetrics"
   }
 }
@@ -67,7 +67,7 @@ resource "azurerm_monitor_diagnostic_setting" "appgw_diag_setting" {
   enabled_log {
     category = "ApplicationGatewayFirewallLog"
   }
-  metric {
+  enabled_metric {
     category = "AllMetrics"
   }
   depends_on = [azurerm_application_gateway.appgw]

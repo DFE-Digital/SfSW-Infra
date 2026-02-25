@@ -68,8 +68,14 @@ resource "azurerm_storage_management_policy" "error_page_storage_policy" {
 }
 
 resource "azurerm_key_vault_secret" "storage_connection" {
-  name         = "DataProtectionStorageConnection"
-  value        = azurerm_storage_account.error_page_sa.primary_connection_string
-  key_vault_id = data.azurerm_key_vault.key_vault.id
-  content_type = "connection-string"
+  name            = "DataProtectionStorageConnection"
+  value           = azurerm_storage_account.error_page_sa.primary_connection_string
+  key_vault_id    = data.azurerm_key_vault.key_vault.id
+  content_type    = "connection-string"
+  expiration_date = timeadd(timestamp(), "8760h")
+  lifecycle {
+    ignore_changes = [
+      value
+    ]
+  }
 }
