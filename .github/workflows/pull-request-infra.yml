@@ -175,7 +175,7 @@ jobs:
           resource-group-name: ${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME }}
 
       - name: Update Pull Request with Checkov and Terraform Plan
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         env:
           CHECKOV_RESULT: "${{ steps.checkov.outputs.stdout }}"
           PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
