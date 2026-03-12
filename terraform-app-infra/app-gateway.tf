@@ -217,7 +217,31 @@ resource "azurerm_web_application_firewall_policy" "waf_policy" {
 
     managed_rule_set {
       type    = "Microsoft_BotManagerRuleSet"
-      version = "0.1"
+      version = "1.1"
+    }
+
+    exclusion {
+      match_variable          = "RequestCookieNames"
+      selector                = ".AspNetCore.Antiforgery"
+      selector_match_operator = "Equals"
+    }
+
+    exclusion {
+      match_variable          = "RequestArgNames"
+      selector                = "__RequestVerificationToken"
+      selector_match_operator = "StartsWith"
+    }
+
+    exclusion {
+      match_variable          = "RequestArgValues"
+      selector                = "returnUrl"
+      selector_match_operator = "Contains"
+      excluded_rule_set {
+        rule_group {
+          rule_group_name = "REQUEST-942-APPLICATION-ATTACK-SQLI"
+          excluded_rules  = ["942360"]
+        }
+      }
     }
   }
   policy_settings {
