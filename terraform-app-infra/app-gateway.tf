@@ -179,7 +179,7 @@ resource "azurerm_application_gateway" "appgw" {
     }
   }
 
-  firewall_policy_id = azurerm_web_application_firewall_policy.waf_policy[0].id
+  firewall_policy_id = azurerm_web_application_firewall_policy.waf_policy.id
 
   identity {
     type         = "UserAssigned"
