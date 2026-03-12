@@ -179,15 +179,7 @@ resource "azurerm_application_gateway" "appgw" {
     }
   }
 
-  # firewall_policy_id                = var.appgw_sku_tier == "WAF_v2" ? azurerm_web_application_firewall_policy.waf_policy.id : null
-  # force_firewall_policy_association = true
-
-  firewall_policy_id = (
-    var.environment == "Production"
-    && var.appgw_sku_tier == "WAF_v2"
-    && length(azurerm_web_application_firewall_policy.waf_policy) > 0
-  ) ? azurerm_web_application_firewall_policy.waf_policy[0].id : null
-
+  firewall_policy_id = azurerm_web_application_firewall_policy.waf_policy[0].id
 
   identity {
     type         = "UserAssigned"
@@ -204,7 +196,6 @@ resource "azurerm_application_gateway" "appgw" {
 }
 
 resource "azurerm_web_application_firewall_policy" "waf_policy" {
-  count               = var.environment == "Production" ? 1 : 0
   name                = "pol-${var.project_name}-${var.instance}"
   location            = azurerm_resource_group.webapp_rg.location
   resource_group_name = azurerm_resource_group.webapp_rg.name
