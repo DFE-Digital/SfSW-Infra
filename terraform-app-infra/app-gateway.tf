@@ -179,15 +179,7 @@ resource "azurerm_application_gateway" "appgw" {
     }
   }
 
-  # firewall_policy_id                = var.appgw_sku_tier == "WAF_v2" ? azurerm_web_application_firewall_policy.waf_policy.id : null
-  # force_firewall_policy_association = true
-
-  firewall_policy_id = (
-    var.environment == "Production"
-    && var.appgw_sku_tier == "WAF_v2"
-    && length(azurerm_web_application_firewall_policy.waf_policy) > 0
-  ) ? azurerm_web_application_firewall_policy.waf_policy[0].id : null
-
+  firewall_policy_id = azurerm_web_application_firewall_policy.waf_policy.id
 
   identity {
     type         = "UserAssigned"
@@ -204,7 +196,6 @@ resource "azurerm_application_gateway" "appgw" {
 }
 
 resource "azurerm_web_application_firewall_policy" "waf_policy" {
-  count               = var.environment == "Production" ? 1 : 0
   name                = "pol-${var.project_name}-${var.instance}"
   location            = azurerm_resource_group.webapp_rg.location
   resource_group_name = azurerm_resource_group.webapp_rg.name
@@ -217,7 +208,31 @@ resource "azurerm_web_application_firewall_policy" "waf_policy" {
 
     managed_rule_set {
       type    = "Microsoft_BotManagerRuleSet"
-      version = "0.1"
+      version = "1.1"
+    }
+
+    exclusion {
+      match_variable          = "RequestCookieNames"
+      selector                = ".AspNetCore.Antiforgery"
+      selector_match_operator = "Equals"
+    }
+
+    exclusion {
+      match_variable          = "RequestArgNames"
+      selector                = "__RequestVerificationToken"
+      selector_match_operator = "StartsWith"
+    }
+
+    exclusion {
+      match_variable          = "RequestArgValues"
+      selector                = "returnUrl"
+      selector_match_operator = "Contains"
+      excluded_rule_set {
+        rule_group {
+          rule_group_name = "REQUEST-942-APPLICATION-ATTACK-SQLI"
+          excluded_rules  = ["942360"]
+        }
+      }
     }
   }
   policy_settings {
