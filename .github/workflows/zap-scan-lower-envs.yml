@@ -65,7 +65,7 @@ jobs:
           artifact_name: "zap-base-scan-report"
 
       - name: Download ZAP report artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: zap-base-scan-report
           path: ./zap-report
