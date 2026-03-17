@@ -214,7 +214,16 @@ resource "azurerm_web_application_firewall_policy" "waf_policy" {
     exclusion {
       match_variable          = "RequestCookieNames"
       selector                = ".AspNetCore.Antiforgery"
-      selector_match_operator = "Equals"
+      selector_match_operator = "StartsWith"
+
+      excluded_rule_set {
+        type    = "OWASP"
+        version = "3.2"
+        rule_group {
+          rule_group_name = "REQUEST-942-APPLICATION-ATTACK-SQLI"
+          excluded_rules  = ["942440"]
+        }
+      }
     }
 
     exclusion {
